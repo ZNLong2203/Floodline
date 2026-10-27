@@ -24,6 +24,12 @@ PALETTE = [
 WATER = (30, 90, 255)
 
 
+def encode_jpeg(img: Image.Image, quality: int = 88) -> bytes:
+    buf = io.BytesIO()
+    img.convert("RGB").save(buf, format="JPEG", quality=quality)
+    return buf.getvalue()
+
+
 def normalise(data: bytes) -> tuple[Media, Image.Image]:
     """Apply EXIF rotation, cap the long side and re-encode as JPEG.
 

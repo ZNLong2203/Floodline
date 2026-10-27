@@ -18,7 +18,7 @@ from floodline.config import DATA
 from floodline.estimate import Reading
 
 PATH = DATA / "calibration.json"
-KINDS = ("landmark", "fraction", "scale", "spark")
+KINDS = ("landmark", "fraction", "scale", "spark", "closeup-landmark", "closeup-fraction")
 
 
 def kind_of(source: str) -> str:

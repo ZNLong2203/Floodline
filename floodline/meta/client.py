@@ -122,6 +122,7 @@ class ModelClient:
         system: str,
         text: str,
         images: list[Media] | None = None,
+        videos: list[Media] | None = None,
         schema_name: str,
         schema: dict[str, Any],
         effort: str = "low",
@@ -129,8 +130,8 @@ class ModelClient:
     ) -> dict[str, Any]:
         """One Muse Spark call whose answer is constrained to `schema`."""
         content: list[dict[str, Any]] = [
-            {"type": "image_url", "image_url": {"url": m.data_url()}} for m in images or []
-        ]
+            {"type": "video_url", "video_url": {"url": m.data_url()}} for m in videos or []
+        ] + [{"type": "image_url", "image_url": {"url": m.data_url()}} for m in images or []]
         content.append({"type": "text", "text": text})
         request = {
             "model": model or self.cfg.spark_model,
@@ -162,17 +163,20 @@ class ModelClient:
         *,
         prompt: str,
         image: Media | None = None,
+        video: Media | None = None,
         video_file_id: str | None = None,
         propagation: str | None = None,
     ) -> str:
         """Run SAM 3.1 and return its raw output text (one line per frame)."""
-        if (image is None) == (video_file_id is None):
-            raise ValueError("pass exactly one of image or video_file_id")
-        media: dict[str, Any] = (
-            {"type": "input_image", "image_url": image.data_url()}
-            if image is not None
-            else {"type": "input_video", "file_id": video_file_id}
-        )
+        if sum(x is not None for x in (image, video, video_file_id)) != 1:
+            raise ValueError("pass exactly one of image, video or video_file_id")
+        media: dict[str, Any]
+        if image is not None:
+            media = {"type": "input_image", "image_url": image.data_url()}
+        elif video is not None:
+            media = {"type": "input_video", "video_url": video.data_url()}
+        else:
+            media = {"type": "input_video", "file_id": video_file_id}
         metadata = {"mask_encoding": "one_bit", "include_confidence": "true"}
         if propagation:
             metadata["propagation_direction"] = propagation

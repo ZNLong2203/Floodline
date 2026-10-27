@@ -43,7 +43,8 @@ OBJECT_VARIANTS = {
     "landmark": ("landmark:",),
     "fraction": ("fraction:",),
     "geometry": ("scale:",),
-    "consensus": ("landmark:", "fraction:", "scale:"),
+    "closeup": ("closeup-landmark:", "closeup-fraction:"),
+    "consensus": ("landmark:", "fraction:", "scale:", "closeup-landmark:", "closeup-fraction:"),
 }
 MATCH_IOU = 0.3
 # Score the raw pipeline here; evals/calibrate.py fits and scores the calibration.

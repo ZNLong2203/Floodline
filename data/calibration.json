@@ -19,9 +19,19 @@
       "bias_m": 0.1937,
       "sigma_scale": 2.625,
       "sigma_floor_m": 0.04
+    },
+    "closeup-landmark": {
+      "bias_m": 0.0631,
+      "sigma_scale": 4.7734,
+      "sigma_floor_m": 0.04
+    },
+    "closeup-fraction": {
+      "bias_m": 0.126,
+      "sigma_scale": 1.6721,
+      "sigma_floor_m": 0.04
     }
   },
-  "combine_factor": 1.7081,
+  "combine_factor": 1.5954,
   "meta": {
     "fitted": "2026-10-28",
     "dataset": "FloodDET (CC BY 4.0), 292 flooded photos, DeepFlood level-to-depth table",

@@ -19,6 +19,7 @@ import numpy as np
 
 from floodline import calibration as calibration_mod
 from floodline import catalog as catalog_mod
+from floodline.closeup import closeup
 from floodline.estimate import DepthEstimate, Reading, combine
 from floodline.geometry import Contact, union, waterline_contact
 from floodline.imaging import normalise, overlay, to_pixels
@@ -32,7 +33,7 @@ WATER_PROMPTS = ("flood water", "water")
 
 # Which estimators the pipeline uses. The eval harness switches them off one at a
 # time to show what each adds.
-ALL_ESTIMATORS = frozenset({"scale", "landmark", "fraction", "holistic"})
+ALL_ESTIMATORS = frozenset({"scale", "landmark", "fraction", "holistic", "closeup"})
 
 
 @dataclass
@@ -127,11 +128,21 @@ def analyse(
     refs = [r for r in seen.get("references", []) if r["label"] in cat.objects][:8]
     boxes = [to_pixels(r["box"], size) for r in refs]
     masks: dict[str, sam.Segment] = {}
-    if refs and water is not None and water.any():
-        prompt = sam.box_prompt(size, boxes)
-        if prompt.strip():
-            for seg in sam.parse(client.sam(prompt=prompt, image=image), size):
-                masks[seg.object_id] = seg
+    closer: dict[int, dict[str, Any]] = {}
+    wading = [i for i, r in enumerate(refs) if r["standing_in_water"]]
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        closer_job = None
+        if "closeup" in estimators and wading:
+            closer_job = pool.submit(
+                closeup, client, img, [refs[i]["label"] for i in wading], [boxes[i] for i in wading]
+            )
+        if refs and water is not None and water.any():
+            prompt = sam.box_prompt(size, boxes)
+            if prompt.strip():
+                for seg in sam.parse(client.sam(prompt=prompt, image=image), size):
+                    masks[seg.object_id] = seg
+        if closer_job is not None:
+            closer = {wading[k]: v for k, v in closer_job.result().items()}
 
     objects: list[ObjectFinding] = []
     readings: list[Reading] = []
@@ -160,6 +171,20 @@ def analyse(
                 candidates.append(landmark_reading(tag, spec, ref["waterline_landmark"]))
             if "fraction" in estimators:
                 candidates.append(fraction_reading(tag, spec, ref["submerged_fraction"]))
+            near = closer.get(i)
+            if near is not None:
+                lm = landmark_reading(tag, spec, near["waterline_landmark"])
+                fr = fraction_reading(tag, spec, near["submerged_fraction"])
+                for r, kind in ((lm, "closeup-landmark"), (fr, "closeup-fraction")):
+                    if r is not None:
+                        candidates.append(
+                            Reading(
+                                f"{kind}:{tag}",
+                                r.low_m,
+                                r.high_m,
+                                f"{r.note} ({near['confidence']})",
+                            )
+                        )
             raw = [r for r in candidates if r is not None]
             found.raw_readings = raw
             found.readings = cal.apply(raw)
@@ -181,19 +206,23 @@ def analyse(
     if seen.get("quality_flags"):
         warnings.extend(f"photo: {f.replace('_', ' ')}" for f in seen["quality_flags"])
 
-    drawn = b"" if not draw else overlay(
-        img,
-        water,
-        [
-            {
-                "index": o.index,
-                "label": o.label,
-                "mask": masks[str(o.index + 1)].mask,
-                "waterline_y": o.contact.waterline_y if o.contact else None,
-            }
-            for o in objects
-            if str(o.index + 1) in masks
-        ],
+    drawn = (
+        b""
+        if not draw
+        else overlay(
+            img,
+            water,
+            [
+                {
+                    "index": o.index,
+                    "label": o.label,
+                    "mask": masks[str(o.index + 1)].mask,
+                    "waterline_y": o.contact.waterline_y if o.contact else None,
+                }
+                for o in objects
+                if str(o.index + 1) in masks
+            ],
+        )
     )
     return PhotoAnalysis(
         size=size,

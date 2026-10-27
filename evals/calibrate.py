@@ -141,7 +141,31 @@ def main() -> None:
         raw += [(r, estimate(r, IDENTITY)) for r in test]
         calibrated += [(r, estimate(r, cal)) for r in test]
 
+    # each kind on its own, at the labelled object, out of fold
+    per_kind = {}
+    for kind in KINDS:
+        errs, cover = [], 0
+        for k in range(FOLDS):
+            cal = fit([r for r in rows if fold_of(r["path"]) != k])
+            for r in rows:
+                if fold_of(r["path"]) != k:
+                    continue
+                src = r["photo_readings"] if kind == "spark" else r["object_readings"]
+                rs = [reading(d) for d in src if kind_of(d["source"]) == kind]
+                est = combine(cal.apply(rs))
+                if est is None:
+                    continue
+                errs.append(abs(est.mean_m - truth(r)))
+                cover += est.low_m <= r["truth_high"] and est.high_m >= r["truth_low"]
+        if errs:
+            per_kind[kind] = {
+                "n": len(errs),
+                "mae_m": round(sum(errs) / len(errs), 3),
+                "coverage": round(cover / len(errs), 3),
+            }
+
     report = {
+        "per_kind_out_of_fold": per_kind,
         "rows": args.rows,
         "photos": len(rows),
         "folds": FOLDS,
@@ -190,6 +214,7 @@ def main() -> None:
                 f"needless={d['needless_impassable']:<3} "
                 f"right-when-decided={d['decided_right']}/{d['decided']}"
             )
+    print("per kind:", json.dumps(per_kind))
     print("by class:", json.dumps(report["by_class"]))
     print("final:", json.dumps(final.to_dict()["kinds"]), "combine", final.combine_factor)
 
