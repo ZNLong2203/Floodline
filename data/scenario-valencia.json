@@ -1,0 +1,104 @@
+{
+  "name": "Horta Sud DANA night (simulated)",
+  "about": "Real flood photos and clips from Valencia province during the DANA of 29-31 October 2024 (Wikimedia Commons, see data/demo/valencia/ATTRIBUTION.md). Photos from Xirivella, Alaquàs and Alfafar are placed at the GPS position on their Commons page; Commons gives only a town-level point for the Catarroja photos and none for the others, so those are placed on named streets in the same area, and two clips were filmed in other places (Alginet; the Picanya clip is the day after the peak). Times, residents' messages and the three urgent calls are written for the demo; no real person sent them and the urgent cases are not what the photos show.",
+  "reports": [
+    {
+      "photo": "valencia/photos/xirivella-2024-boy-wading-car-wake-01.jpg",
+      "lat": 39.468028,
+      "lon": -0.424859,
+      "minutes_ago": 118,
+      "note": "Rotonda de la carretera de Torrent en Xirivella: el agua ya cubre toda la calzada, a los críos les llega por los tobillos. Los coches pasan despacio levantando ola"
+    },
+    {
+      "photo": "valencia/photos/xirivella-2024-flooded-roundabout-car-01.jpg",
+      "lat": 39.46814,
+      "lon": -0.424891,
+      "minutes_ago": 106,
+      "note": "Rotonda inundada, un coche pequeño ha conseguido salir de milagro. Si no es un todoterreno yo no pasaría"
+    },
+    {
+      "photo": "valencia/photos/xirivella-2024-flooded-street-garage-doors-01.jpg",
+      "lat": 39.468088,
+      "lon": -0.424979,
+      "minutes_ago": 97,
+      "note": "En mi calle el agua ya llega al bordillo y empieza a colarse por las puertas de los garajes. Algunos vecinos han subido los coches a la acera"
+    },
+    {
+      "photo": "valencia/photos/alaquas-2024-suv-woman-muddy-street-01.jpg",
+      "lat": 39.458095,
+      "lon": -0.457799,
+      "minutes_ago": 89,
+      "note": "Alaquàs: calle con barro y agua por los tobillos. A pie se puede pasar, pero los coches aparcados están encharcados hasta las ruedas"
+    },
+    {
+      "photo": "valencia/photos/alaquas-2024-cars-muddy-water-01.jpg",
+      "lat": 39.459444,
+      "lon": -0.449444,
+      "minutes_ago": 81,
+      "note": "La corriente ha apilado dos coches junto a la acera y el agua ya baja, pero queda barro hasta media rueda. Cuidado con los bajos"
+    },
+    {
+      "photo": "valencia/photos/picanya-2024-woman-car-muddy-water-01.jpg",
+      "lat": 39.4331,
+      "lon": -0.43146,
+      "minutes_ago": 74,
+      "note": "Avinguda de la Generalitat, Picanya: agua marrón de poco fondo, la gente cruza andando. Hay un coche atravesado en medio"
+    },
+    {
+      "photo": "valencia/photos/catarroja-2024-water-entering-garage-01.jpg",
+      "lat": 39.40301,
+      "lon": -0.40227,
+      "minutes_ago": 67,
+      "note": "Entra el agua a chorro por la rampa del garaje, no da tiempo a sacar el coche. Calle Joaquim Olmos, Catarroja"
+    },
+    {
+      "clip": "valencia/videos/alginet-2024-street-flood-cars-01.mp4",
+      "lat": 39.42566,
+      "lon": -0.39451,
+      "minutes_ago": 60,
+      "note": "Vídeo desde mi balcón en Benetússer, avenida del Camí Nou: la corriente baja con fuerza y los coches se van quedando parados. Nadie debería cruzar en coche"
+    },
+    {
+      "photo": "valencia/photos/paiporta-2024-puddles-mud-street-01.jpg",
+      "lat": 39.42661,
+      "lon": -0.41491,
+      "minutes_ago": 52,
+      "note": "Paiporta, calle Colombicultura: ya ha bajado el agua, solo quedan charcos y mucho barro. Con botas se va andando"
+    },
+    {
+      "photo": "valencia/photos/catarroja-2024-street-people-wading-cars-01.jpg",
+      "lat": 39.40406,
+      "lon": -0.40313,
+      "minutes_ago": 44,
+      "note": "Calle Sant Antoni, el agua llega por los tobillos. Los vecinos andan por el medio de la calle y los coches están llenos de barro"
+    },
+    {
+      "photo": "valencia/photos/alfafar-2024-flooded-street-submerged-car-01.jpg",
+      "lat": 39.41911,
+      "lon": -0.3918,
+      "minutes_ago": 34,
+      "transcript": "Por favor, necesitamos ayuda. Estoy en un balcón en Alfafar y abajo, en la calle, hay un coche atrapado con dos personas dentro. El agua les llega ya a las ventanillas y no pueden abrir las puertas. Una mujer está gritando. Avisen a emergencias, rápido."
+    },
+    {
+      "photo": "valencia/photos/catarroja-2024-garage-flood-neighbours-01.jpg",
+      "lat": 39.40271,
+      "lon": -0.40414,
+      "minutes_ago": 25,
+      "transcript": "Hola, soy vecina de Catarroja, cerca de la plaza Mayor. Se ha llenado el garaje y el agua ya sube por la escalera del portal. Mi padre tiene ochenta y seis años, está solo en el segundo piso, no puede caminar sin andador y necesita su medicación. No podemos salir. Por favor, que alguien venga."
+    },
+    {
+      "photo": "valencia/photos/catarroja-2024-garage-flood-night-01.jpg",
+      "lat": 39.40454,
+      "lon": -0.39776,
+      "minutes_ago": 14,
+      "transcript": "Estamos en el garaje de mi bloque, calle de les Germanies. El agua nos llega por la cintura y sigue subiendo. Tengo a mi hija de cinco años en brazos y no hay luz. Por favor, que vengan a sacarnos."
+    },
+    {
+      "clip": "valencia/videos/picanya-2024-people-wading-muddy-street-01.mp4",
+      "lat": 39.43738,
+      "lon": -0.42941,
+      "minutes_ago": 6,
+      "note": "Polígono de Raga, junto a la calle Alqueria de Raga: ya queda poca agua, la gente cruza con barro hasta los tobillos y una furgoneta pasa despacio"
+    }
+  ]
+}

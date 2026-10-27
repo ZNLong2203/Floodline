@@ -1,0 +1,41 @@
+# A city Floodline serves: its streets, its residents' language, its demo.
+id: valencia
+name: Valencia (Horta Sud)
+country: Spain
+language: Spanish             # residents' language: voice bias, local summaries
+center: [39.425, -0.405]      # lat, lon
+zoom: 13
+roads: valencia_roads.json    # scripts/build_roads.py from an OSM extract
+                              # bbox lat 39.395..39.472, lon -0.465..-0.375 (Alaquàs to Alfafar, Catarroja to Xirivella)
+scenario: scenario-valencia.json
+story: >-
+  On 29 October 2024 a cut-off low (DANA) stalled over eastern Spain: AEMET's Turís station
+  recorded 185 mm in one hour and 621 mm in six hours, and Chiva nearly 500 mm in eight hours,
+  while the Poyo ravine (Barranc de Xiva) overflowed through the Horta Sud towns of Paiporta,
+  Sedaví, Alfafar, Benetússer, Catarroja and Massanassa. The official toll for Valencia province
+  stands at 232 dead and more than 100,000 vehicles were damaged, most of it within a few hours
+  of the water arriving.
+# Adult height range: NCD-RisC mean for Spanish adults born 1996 is 176.6 cm (men) and 163.4 cm
+# (women); women's mean - 1 SD to men's mean + 1 SD, with SD taken as about 6 cm.
+person_height_m: [1.57, 1.83]
+sources:
+  - https://science.nasa.gov/earth/earth-observatory/valencia-floods-153533
+  - https://repositorio.aemet.es/bitstream/20.500.11765/16360/1/informe_episodio_dana_29_oct_2024_.pdf
+  - https://www.eldebate.com/sociedad/sociedad-medio-ambiente/20241129/primer-informe-aemet-mes-despues-dana-cayeron-621-litros-metro-cuadrado-seis-horas_249313.html
+  - https://www.esdiario.com/comunidad-valenciana/valencia/260902/196752/cifra-oficial-fallecidos-dana-valencia-aumenta-232-personas.html
+  - https://en.wikipedia.org/wiki/2024_Spanish_floods
+  - https://elifesciences.org/articles/13410
+  - https://ncdrisc.org/data-downloads-height.html
+presets:
+  - name: Paiporta health centre → Town hall (across the Poyo ravine bridge)
+    name_local: Centro Sanitario Integrado de Paiporta → Ayuntamiento (cruce del barranco)
+    from: [39.42466, -0.41625]
+    to: [39.42937, -0.41767]
+  - name: Catarroja school → Paiporta health centre (CV-400)
+    name_local: Colegio Sant Antoni de Pàdua (Catarroja) → Centro Sanitario de Paiporta (CV-400)
+    from: [39.40404, -0.40255]
+    to: [39.42466, -0.41625]
+  - name: Alfafar town hall → Doctor Peset hospital
+    name_local: Ayuntamiento de Alfafar → Hospital Universitario Doctor Peset
+    from: [39.42269, -0.39066]
+    to: [39.45321, -0.39446]
