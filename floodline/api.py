@@ -16,14 +16,14 @@ from pathlib import Path
 from typing import Any
 
 from fastapi import FastAPI, File, Form, HTTPException, Query, UploadFile
-from fastapi.responses import FileResponse, StreamingResponse
+from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
 from floodline import catalog as catalog_mod
 from floodline import roads as roads_mod
-from floodline.config import ROOT, settings
+from floodline.config import DATA, ROOT, settings
 from floodline.fusion import fuse
-from floodline.meta.client import ModelClient
+from floodline.meta.client import CassetteMissingError, ModelClient
 from floodline.pipeline import analyse
 from floodline.store import Store, StoredReport
 
@@ -31,6 +31,17 @@ app = FastAPI(title="Floodline", version="0.1.0")
 store = Store(settings().state_dir / "reports")
 client = ModelClient()
 _subscribers: set[asyncio.Queue] = set()
+
+
+@app.exception_handler(CassetteMissingError)
+async def _no_cassette(_, exc: CassetteMissingError) -> JSONResponse:
+    return JSONResponse(
+        status_code=503,
+        content={
+            "detail": "This server replays recorded answers only, and this photo was "
+            "never recorded. Try a demo photo, or run with an API key."
+        },
+    )
 
 
 def _publish(kind: str, payload: dict[str, Any]) -> None:
@@ -189,8 +200,14 @@ async def demo_seed(reset: bool = True) -> dict[str, Any]:
             _publish("reports.reset", {})
         loop = asyncio.get_running_loop()
 
+        total = len(scenario.load()["reports"])
+        count = 0
+
         def publish(report: StoredReport) -> None:
-            loop.call_soon_threadsafe(_publish, "report.created", report.public())
+            nonlocal count
+            count += 1
+            payload = {**report.public(), "seed": {"index": count, "total": total}}
+            loop.call_soon_threadsafe(_publish, "report.created", payload)
 
         created = await asyncio.to_thread(scenario.seed, store, client, on_report=publish)
     return {"created": len(created)}
@@ -201,6 +218,12 @@ def demo_reset() -> dict[str, Any]:
     store.clear()
     _publish("reports.reset", {})
     return {"ok": True}
+
+
+@app.get("/api/attribution")
+def attribution() -> Any:
+    """Author, licence and source of every demo photo and clip."""
+    return json.loads((DATA / "demo" / "photos.json").read_text())
 
 
 @app.get("/api/catalog")
