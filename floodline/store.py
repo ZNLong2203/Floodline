@@ -33,7 +33,10 @@ class StoredReport:
         e = self.analysis.get("estimate")
         if not e:
             return None
-        used = [Reading(**r) for r in e.get("used", [])]
+        used = [
+            Reading(r["source"], r["low_m"], r["high_m"], r.get("note", ""), mu=r.get("mean_m"))
+            for r in e.get("used", [])
+        ]
         return DepthEstimate(mean_m=e["mean_m"], sigma_m=e["sigma_m"], used=used)
 
     def for_fusion(self) -> Report | None:

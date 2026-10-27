@@ -17,6 +17,7 @@ from typing import Any
 
 import numpy as np
 
+from floodline import calibration as calibration_mod
 from floodline import catalog as catalog_mod
 from floodline.estimate import DepthEstimate, Reading, combine
 from floodline.geometry import Contact, union, waterline_contact
@@ -45,6 +46,7 @@ class ObjectFinding:
     sam_confidence: float | None
     contact: Contact | None
     readings: list[Reading] = field(default_factory=list)
+    raw_readings: list[Reading] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -56,7 +58,7 @@ class ObjectFinding:
             "standing_in_water": self.standing_in_water,
             "sam_confidence": self.sam_confidence,
             "contact": self.contact.to_dict() if self.contact else None,
-            "readings": [r.__dict__ for r in self.readings],
+            "readings": [r.to_dict() for r in self.readings],
         }
 
 
@@ -72,6 +74,7 @@ class PhotoAnalysis:
     water_fraction: float
     seconds: float
     warnings: list[str]
+    raw_readings: list[Reading] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -83,6 +86,7 @@ class PhotoAnalysis:
             "water_fraction": round(self.water_fraction, 4),
             "seconds": round(self.seconds, 2),
             "warnings": self.warnings,
+            "calibration": calibration_mod.default().meta.get("fitted"),
         }
 
 
@@ -100,11 +104,14 @@ def analyse(
     *,
     estimators: frozenset[str] = ALL_ESTIMATORS,
     flowing: bool | None = None,
+    calibration: calibration_mod.Calibration | None = None,
+    draw: bool = True,
 ) -> PhotoAnalysis:
     started = time.monotonic()
     image, img = normalise(photo)
     size = img.size
     cat = catalog_mod.default()
+    cal = calibration if calibration is not None else calibration_mod.default()
     warnings: list[str] = []
 
     # The water mask does not depend on what Spark finds, so both run at once.
@@ -153,23 +160,28 @@ def analyse(
                 candidates.append(landmark_reading(tag, spec, ref["waterline_landmark"]))
             if "fraction" in estimators:
                 candidates.append(fraction_reading(tag, spec, ref["submerged_fraction"]))
-            found.readings = [r for r in candidates if r is not None]
+            raw = [r for r in candidates if r is not None]
+            found.raw_readings = raw
+            found.readings = cal.apply(raw)
             readings.extend(found.readings)
         objects.append(found)
 
+    raw_holistic: list[Reading] = []
     if "holistic" in estimators and seen.get("water_visible"):
         h = seen["holistic_depth_m"]
         if 0 <= h["low"] <= h["high"] <= 5:
-            readings.append(Reading("spark:holistic", h["low"], h["high"], "Spark's own range"))
+            holistic = Reading("spark:holistic", h["low"], h["high"], "Spark's own range")
+            raw_holistic = [holistic]
+            readings.extend(cal.apply(raw_holistic))
 
-    estimate = combine(readings)
+    estimate = combine(readings, sigma_factor=cal.combine_factor)
     if flowing is None:
         flowing = seen.get("water_flow") == "fast"
     verdicts = assess(estimate, cat.vehicles, flowing=flowing) if estimate else []
     if seen.get("quality_flags"):
         warnings.extend(f"photo: {f.replace('_', ' ')}" for f in seen["quality_flags"])
 
-    drawn = overlay(
+    drawn = b"" if not draw else overlay(
         img,
         water,
         [
@@ -190,6 +202,7 @@ def analyse(
         estimate=estimate,
         verdicts=verdicts,
         overlay_jpeg=drawn,
+        raw_readings=[r for o in objects for r in o.raw_readings] + raw_holistic,
         image_jpeg=image.data,
         water_fraction=float(water.mean()) if water is not None else 0.0,
         seconds=time.monotonic() - started,

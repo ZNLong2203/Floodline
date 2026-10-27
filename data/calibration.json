@@ -1,0 +1,30 @@
+{
+  "kinds": {
+    "landmark": {
+      "bias_m": 0.1433,
+      "sigma_scale": 4.2687,
+      "sigma_floor_m": 0.04
+    },
+    "fraction": {
+      "bias_m": 0.1773,
+      "sigma_scale": 1.7679,
+      "sigma_floor_m": 0.04
+    },
+    "scale": {
+      "bias_m": 0.105,
+      "sigma_scale": 3.2074,
+      "sigma_floor_m": 0.04
+    },
+    "spark": {
+      "bias_m": 0.1937,
+      "sigma_scale": 2.625,
+      "sigma_floor_m": 0.04
+    }
+  },
+  "combine_factor": 1.7081,
+  "meta": {
+    "fitted": "2026-10-28",
+    "dataset": "FloodDET (CC BY 4.0), 292 flooded photos, DeepFlood level-to-depth table",
+    "method": "per-kind median bias and 90% |z| scale; 5-fold out-of-fold scores in evals/reports/calibration.json"
+  }
+}

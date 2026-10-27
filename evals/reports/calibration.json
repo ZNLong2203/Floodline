@@ -1,0 +1,305 @@
+{
+  "rows": "evals/runs/20261028-000744/rows.jsonl",
+  "photos": 292,
+  "folds": 5,
+  "raw": {
+    "answered": 291,
+    "mae_m": 0.257,
+    "interval_coverage": 0.581,
+    "mean_interval_m": 0.431,
+    "decisions": {
+      "pedestrian": {
+        "unsafe_passable": 3,
+        "passable": 88,
+        "risky": 51,
+        "impassable": 118,
+        "needless_impassable": 19,
+        "decided_right": 184,
+        "decided": 206,
+        "n": 257
+      },
+      "scooter": {
+        "unsafe_passable": 0,
+        "passable": 31,
+        "risky": 33,
+        "impassable": 193,
+        "needless_impassable": 23,
+        "decided_right": 201,
+        "decided": 224,
+        "n": 257
+      },
+      "car": {
+        "unsafe_passable": 0,
+        "passable": 60,
+        "risky": 23,
+        "impassable": 174,
+        "needless_impassable": 36,
+        "decided_right": 198,
+        "decided": 234,
+        "n": 257
+      },
+      "suv": {
+        "unsafe_passable": 2,
+        "passable": 68,
+        "risky": 35,
+        "impassable": 154,
+        "needless_impassable": 24,
+        "decided_right": 196,
+        "decided": 222,
+        "n": 257
+      },
+      "truck": {
+        "unsafe_passable": 3,
+        "passable": 88,
+        "risky": 51,
+        "impassable": 118,
+        "needless_impassable": 19,
+        "decided_right": 184,
+        "decided": 206,
+        "n": 257
+      }
+    }
+  },
+  "calibrated_out_of_fold": {
+    "answered": 291,
+    "mae_m": 0.211,
+    "interval_coverage": 0.935,
+    "mean_interval_m": 0.902,
+    "decisions": {
+      "pedestrian": {
+        "unsafe_passable": 4,
+        "passable": 92,
+        "risky": 71,
+        "impassable": 94,
+        "needless_impassable": 8,
+        "decided_right": 174,
+        "decided": 186,
+        "n": 257
+      },
+      "scooter": {
+        "unsafe_passable": 2,
+        "passable": 39,
+        "risky": 51,
+        "impassable": 167,
+        "needless_impassable": 12,
+        "decided_right": 192,
+        "decided": 206,
+        "n": 257
+      },
+      "car": {
+        "unsafe_passable": 1,
+        "passable": 59,
+        "risky": 65,
+        "impassable": 133,
+        "needless_impassable": 11,
+        "decided_right": 180,
+        "decided": 192,
+        "n": 257
+      },
+      "suv": {
+        "unsafe_passable": 4,
+        "passable": 74,
+        "risky": 61,
+        "impassable": 122,
+        "needless_impassable": 4,
+        "decided_right": 188,
+        "decided": 196,
+        "n": 257
+      },
+      "truck": {
+        "unsafe_passable": 4,
+        "passable": 92,
+        "risky": 71,
+        "impassable": 94,
+        "needless_impassable": 8,
+        "decided_right": 174,
+        "decided": 186,
+        "n": 257
+      }
+    }
+  },
+  "by_class": {
+    "bicycle": {
+      "raw_mae_m": 0.167,
+      "calibrated_mae_m": 0.211,
+      "calibrated_coverage": 0.796
+    },
+    "bus": {
+      "raw_mae_m": 0.474,
+      "calibrated_mae_m": 0.383,
+      "calibrated_coverage": 0.894
+    },
+    "car": {
+      "raw_mae_m": 0.251,
+      "calibrated_mae_m": 0.162,
+      "calibrated_coverage": 1.0
+    },
+    "person": {
+      "raw_mae_m": 0.205,
+      "calibrated_mae_m": 0.178,
+      "calibrated_coverage": 0.959
+    }
+  },
+  "fold_params": [
+    {
+      "kinds": {
+        "landmark": {
+          "bias_m": 0.1433,
+          "sigma_scale": 4.2687,
+          "sigma_floor_m": 0.04
+        },
+        "fraction": {
+          "bias_m": 0.1773,
+          "sigma_scale": 1.7041,
+          "sigma_floor_m": 0.04
+        },
+        "scale": {
+          "bias_m": 0.0846,
+          "sigma_scale": 3.0109,
+          "sigma_floor_m": 0.04
+        },
+        "spark": {
+          "bias_m": 0.1937,
+          "sigma_scale": 2.625,
+          "sigma_floor_m": 0.04
+        }
+      },
+      "combine_factor": 1.8336,
+      "meta": {}
+    },
+    {
+      "kinds": {
+        "landmark": {
+          "bias_m": 0.1433,
+          "sigma_scale": 4.2687,
+          "sigma_floor_m": 0.04
+        },
+        "fraction": {
+          "bias_m": 0.187,
+          "sigma_scale": 1.6561,
+          "sigma_floor_m": 0.04
+        },
+        "scale": {
+          "bias_m": 0.0936,
+          "sigma_scale": 3.237,
+          "sigma_floor_m": 0.04
+        },
+        "spark": {
+          "bias_m": 0.1937,
+          "sigma_scale": 2.5417,
+          "sigma_floor_m": 0.04
+        }
+      },
+      "combine_factor": 1.6525,
+      "meta": {}
+    },
+    {
+      "kinds": {
+        "landmark": {
+          "bias_m": 0.1433,
+          "sigma_scale": 4.2687,
+          "sigma_floor_m": 0.04
+        },
+        "fraction": {
+          "bias_m": 0.158,
+          "sigma_scale": 1.7663,
+          "sigma_floor_m": 0.04
+        },
+        "scale": {
+          "bias_m": 0.0855,
+          "sigma_scale": 3.2581,
+          "sigma_floor_m": 0.04
+        },
+        "spark": {
+          "bias_m": 0.1875,
+          "sigma_scale": 2.625,
+          "sigma_floor_m": 0.04
+        }
+      },
+      "combine_factor": 1.7402,
+      "meta": {}
+    },
+    {
+      "kinds": {
+        "landmark": {
+          "bias_m": 0.1433,
+          "sigma_scale": 4.0844,
+          "sigma_floor_m": 0.04
+        },
+        "fraction": {
+          "bias_m": 0.1867,
+          "sigma_scale": 1.7451,
+          "sigma_floor_m": 0.04
+        },
+        "scale": {
+          "bias_m": 0.172,
+          "sigma_scale": 3.2928,
+          "sigma_floor_m": 0.04
+        },
+        "spark": {
+          "bias_m": 0.1937,
+          "sigma_scale": 2.625,
+          "sigma_floor_m": 0.04
+        }
+      },
+      "combine_factor": 1.6722,
+      "meta": {}
+    },
+    {
+      "kinds": {
+        "landmark": {
+          "bias_m": 0.118,
+          "sigma_scale": 4.0875,
+          "sigma_floor_m": 0.04
+        },
+        "fraction": {
+          "bias_m": 0.1681,
+          "sigma_scale": 1.8325,
+          "sigma_floor_m": 0.04
+        },
+        "scale": {
+          "bias_m": 0.13,
+          "sigma_scale": 3.0567,
+          "sigma_floor_m": 0.04
+        },
+        "spark": {
+          "bias_m": 0.1813,
+          "sigma_scale": 2.5833,
+          "sigma_floor_m": 0.04
+        }
+      },
+      "combine_factor": 1.7997,
+      "meta": {}
+    }
+  ],
+  "final": {
+    "kinds": {
+      "landmark": {
+        "bias_m": 0.1433,
+        "sigma_scale": 4.2687,
+        "sigma_floor_m": 0.04
+      },
+      "fraction": {
+        "bias_m": 0.1773,
+        "sigma_scale": 1.7679,
+        "sigma_floor_m": 0.04
+      },
+      "scale": {
+        "bias_m": 0.105,
+        "sigma_scale": 3.2074,
+        "sigma_floor_m": 0.04
+      },
+      "spark": {
+        "bias_m": 0.1937,
+        "sigma_scale": 2.625,
+        "sigma_floor_m": 0.04
+      }
+    },
+    "combine_factor": 1.7081,
+    "meta": {
+      "fitted": "2026-10-28",
+      "dataset": "FloodDET (CC BY 4.0), 292 flooded photos, DeepFlood level-to-depth table",
+      "method": "per-kind median bias and 90% |z| scale; 5-fold out-of-fold scores in evals/reports/calibration.json"
+    }
+  }
+}

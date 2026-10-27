@@ -24,13 +24,27 @@ class Reading:
     low_m: float
     high_m: float
     note: str = ""
+    # Set by calibration: the centre and sigma, when the interval was clipped at 0
+    mu: float | None = None
+    sd: float | None = None
 
     @property
     def mean(self) -> float:
-        return (self.low_m + self.high_m) / 2
+        return self.mu if self.mu is not None else (self.low_m + self.high_m) / 2
+
+    def to_dict(self) -> dict:
+        return {
+            "source": self.source,
+            "low_m": round(self.low_m, 3),
+            "high_m": round(self.high_m, 3),
+            "mean_m": round(self.mean, 3),
+            "note": self.note,
+        }
 
     @property
     def sigma(self) -> float:
+        if self.sd is not None:
+            return self.sd
         return max(MIN_SIGMA_M, (self.high_m - self.low_m) / 4)
 
 
@@ -60,13 +74,19 @@ class DepthEstimate:
             "sigma_m": round(self.sigma_m, 3),
             "low_m": round(self.low_m, 3),
             "high_m": round(self.high_m, 3),
-            "used": [r.__dict__ for r in self.used],
-            "rejected": [r.__dict__ for r in self.rejected],
+            "used": [r.to_dict() for r in self.used],
+            "rejected": [r.to_dict() for r in self.rejected],
         }
 
 
-def combine(readings: list[Reading], *, mad_k: float = 3.0) -> DepthEstimate | None:
-    """Combine readings into one estimate, or None when there are none."""
+def combine(
+    readings: list[Reading], *, mad_k: float = 3.0, sigma_factor: float = 1.0
+) -> DepthEstimate | None:
+    """Combine readings into one estimate, or None when there are none.
+
+    `sigma_factor` widens the result: readings from one photo share the model's
+    errors, so inverse-variance weighting alone is overconfident.
+    """
     readings = [r for r in readings if r.high_m >= 0 and r.high_m >= r.low_m]
     if not readings:
         return None
@@ -88,6 +108,7 @@ def combine(readings: list[Reading], *, mad_k: float = 3.0) -> DepthEstimate | N
             sum(w * (r.mean - mean) ** 2 for w, r in zip(weights, used, strict=True)) / total
         )
         sigma = max(sigma, spread)
+    sigma *= sigma_factor
     return DepthEstimate(
         mean_m=max(0.0, mean), sigma_m=max(sigma, MIN_SIGMA_M), used=used, rejected=rejected
     )

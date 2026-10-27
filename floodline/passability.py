@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from floodline.catalog import VehicleClass
 from floodline.estimate import DepthEstimate
 
-PASSABLE_BELOW = 0.10
+PASSABLE_BELOW = 0.05  # chosen on out-of-fold FloodDET results: halves unsafe "passable" calls
 IMPASSABLE_ABOVE = 0.60
 
 

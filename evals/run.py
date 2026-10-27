@@ -30,6 +30,7 @@ from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from floodline import calibration as calibration_mod
 from floodline import catalog as catalog_mod
 from floodline.config import ROOT
 from floodline.estimate import combine
@@ -45,6 +46,8 @@ OBJECT_VARIANTS = {
     "consensus": ("landmark:", "fraction:", "scale:"),
 }
 MATCH_IOU = 0.3
+# Score the raw pipeline here; evals/calibrate.py fits and scores the calibration.
+CALIBRATION = calibration_mod.IDENTITY
 
 
 def band(depth: float) -> int:
@@ -70,6 +73,8 @@ class Row:
     truth_high: float
     matched: bool = False
     results: dict[str, dict | None] = field(default_factory=dict)
+    object_readings: list[dict] = field(default_factory=list)  # raw, before calibration
+    photo_readings: list[dict] = field(default_factory=list)
     error: str | None = None
 
     @property
@@ -95,7 +100,7 @@ def run_one(client: ModelClient, item: dict, vehicles) -> Row:
     path = Path(item["path"])
     try:
         data = (path if path.is_absolute() else ROOT / path).read_bytes()
-        res = analyse(client, data, flowing=False)
+        res = analyse(client, data, flowing=False, calibration=CALIBRATION, draw=False)
     except Exception as e:  # a failed photo is reported, not fatal
         row.error = f"{type(e).__name__}: {e}"
         return row
@@ -108,10 +113,12 @@ def run_one(client: ModelClient, item: dict, vehicles) -> Row:
     best = max(res.objects, key=lambda o: iou(o.box_px, target), default=None)
     if best is not None and iou(best.box_px, target) >= MATCH_IOU:
         row.matched = True
+        row.object_readings = [r.to_dict() for r in best.raw_readings]
         for name, prefixes in OBJECT_VARIANTS.items():
             readings = [r for r in best.readings if r.source.startswith(prefixes)]
             row.results[f"object:{name}"] = _result(combine(readings), vehicles)
 
+    row.photo_readings = [r.to_dict() for r in res.raw_readings]
     used = res.estimate.used if res.estimate else []
     holistic = [r for r in used if r.source == "spark:holistic"]
     row.results["photo:spark-only"] = _result(combine(holistic), vehicles)
