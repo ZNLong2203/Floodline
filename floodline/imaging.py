@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import io
 
 import numpy as np
@@ -24,6 +25,11 @@ PALETTE = [
 WATER = (30, 90, 255)
 
 
+def source_key(data: bytes) -> str:
+    """Name an upload by its own bytes, so recordings survive re-encoding elsewhere."""
+    return hashlib.sha256(data).hexdigest()[:32]
+
+
 def encode_jpeg(img: Image.Image, quality: int = 88) -> bytes:
     buf = io.BytesIO()
     img.convert("RGB").save(buf, format="JPEG", quality=quality)
@@ -39,7 +45,7 @@ def normalise(data: bytes) -> tuple[Media, Image.Image]:
     img.thumbnail((MAX_SIDE, MAX_SIDE), Image.Resampling.LANCZOS)
     buf = io.BytesIO()
     img.save(buf, format="JPEG", quality=90)
-    return Media(buf.getvalue(), "image/jpeg"), img
+    return Media(buf.getvalue(), "image/jpeg", key=f"photo:{source_key(data)}"), img
 
 
 def to_pixels(box: dict, size: tuple[int, int]) -> tuple[int, int, int, int]:

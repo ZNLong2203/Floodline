@@ -29,7 +29,7 @@ class Settings(BaseSettings):
 
     # live: call the API. record: call it and save every answer as a cassette.
     # replay: answer only from cassettes, so the demo and tests run without a key.
-    model_mode: Literal["live", "record", "replay"] = Field(
+    model_mode: Literal["live", "record", "replay", "migrate"] = Field(
         "live", validation_alias=_env("FLOODLINE_MODEL_MODE")
     )
     cassette_dir: Path = Field(DATA / "cassettes", validation_alias=_env("FLOODLINE_CASSETTES"))

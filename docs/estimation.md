@@ -56,7 +56,7 @@ each kind, the median bias is subtracted and sigma is scaled so 90% of truths fa
 kind               bias    sigma ×
 landmark          +0.14 m    4.3
 fraction          +0.18 m    1.8
-scale             +0.11 m    3.2
+scale             +0.11 m    3.3
 spark (holistic)  +0.19 m    2.6
 closeup-landmark  +0.06 m    4.8
 closeup-fraction  +0.13 m    1.7

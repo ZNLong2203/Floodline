@@ -1,0 +1,28 @@
+{
+ "request": {
+  "input": [
+   {
+    "content": [
+     {
+      "text": "flood water",
+      "type": "input_text"
+     },
+     {
+      "image_url": "image/jpeg;key,photo:deb53edacd37823a27282f5bc207f278",
+      "type": "input_image"
+     }
+    ],
+    "role": "user",
+    "type": "message"
+   }
+  ],
+  "metadata": {
+   "include_confidence": "true",
+   "mask_encoding": "one_bit"
+  },
+  "model": "sam-3.1"
+ },
+ "response": {
+  "text": "<0f>0<|box;x1=0;y1=114;x2=327;y2=238;w=328;h=240;c=0.9609756469726562|><|mask;x=0;y=0;c=0.9609756469726562;data=125,328,!!!!#4Da[_'PY{9Uk+fa!j734Wk[Vc0vDo+p!c#dYD_bicr3CW/liYX$l-t2Xk/eiGP7y&l5w5']8)v4FV?8?K4R&h^?%G3PWKV5ULhZx2`x^Hl]LDhRE9pnldmtX16jK@M7rd|>"
+ }
+}

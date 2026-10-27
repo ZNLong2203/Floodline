@@ -42,11 +42,11 @@ the other four folds. Every calibrated number below is out of fold.
 | | MAE | interval contains truth | mean interval width |
 |---|---|---|---|
 | Spark alone, raw | 0.277 m | 52% | 0.36 m |
-| Floodline, raw | 0.228 m | 67% | 0.51 m |
+| Floodline, raw | 0.229 m | 67% | 0.51 m |
 | Spark alone, calibrated (out of fold) | 0.220 m | 93% | — |
 | **Floodline, calibrated (out of fold)** | **0.199 m** | **95%** | 0.82 m |
 
-Raw, Floodline's error is 18% below Spark answering alone. Calibrated, it is 10% lower at the same
+Raw, Floodline's error is 17% below Spark answering alone. Calibrated, it is 10% lower at the same
 coverage. The raw intervals were overconfident (true depth inside only 52–67% of the time);
 calibrated, they hold the truth 95% of the time. They are wide, about ±0.4 m, and that is the honest
 width of a single photo. Several reports on one street narrow it (see `floodline/fusion.py`).
@@ -60,11 +60,11 @@ width of a single photo. Several reports on one street narrow it (see `floodline
 | close-up fraction | share of the object under water, from the crop | 248 | 0.208 m | 93% |
 | fraction | share under water, from the whole photo | 249 | 0.225 m | 92% |
 | Spark holistic | Spark's own range for the photo | 290 | 0.220 m | 93% |
-| geometry | waterline on the SAM 3.1 mask × known object size | 67 | 0.407 m | 94% |
+| geometry | waterline on the SAM 3.1 mask × known object size | 60 | 0.427 m | 97% |
 
-Per class (calibrated, photo level): persons 0.166 m, cars 0.160 m, bicycles 0.223 m, buses 0.323 m.
+Per class (calibrated, photo level): persons 0.164 m, cars 0.160 m, bicycles 0.223 m, buses 0.323 m.
 
-Adding the close-up look lowered the raw photo MAE from 0.257 to 0.228 m and the calibrated one from
+Adding the close-up look lowered the raw photo MAE from 0.257 to 0.229 m and the calibrated one from
 0.211 to 0.199 m. Single-photo geometry is the weakest reading: in street photos the reference
 objects are small, oblique and often partly hidden, so few qualify and pixel errors are large. It is
 kept because the calibration weights it accordingly, and because in a clip SAM 3.1 tracks the same
@@ -77,11 +77,11 @@ A route is shown **passable** only when P(depth > limit) < 5%, **impassable** wh
 
 | vehicle (limit, still water) | passable | risky | impassable | right when decided | **passable but over the limit** |
 |---|---|---|---|---|---|
-| on foot (0.50 m) | 101 | 62 | 94 | 94% | 3 |
+| on foot (0.50 m) | 100 | 61 | 96 | 94% | 3 |
 | scooter (0.21 m) | 49 | 52 | 156 | 94% | 3 |
 | car (0.30 m) | 67 | 61 | 129 | 94% | 2 |
-| SUV / pickup (0.40 m) | 78 | 64 | 115 | 95% | 5 |
-| rescue truck (0.50 m) | 101 | 62 | 94 | 94% | 3 |
+| SUV / pickup (0.40 m) | 79 | 63 | 115 | 95% | 6 |
+| rescue truck (0.50 m) | 100 | 61 | 96 | 94% | 3 |
 
 Without calibration, the same pipeline marked 25 photos impassable for cars that were in fact below
 the limit; calibrated, 9. The 5% threshold was chosen on these results (it halved the unsafe

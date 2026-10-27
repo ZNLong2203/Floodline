@@ -1,0 +1,28 @@
+{
+ "request": {
+  "input": [
+   {
+    "content": [
+     {
+      "text": "flood water",
+      "type": "input_text"
+     },
+     {
+      "image_url": "image/jpeg;key,photo:d6490bc273615b8681b71b1c3d23c5c8",
+      "type": "input_image"
+     }
+    ],
+    "role": "user",
+    "type": "message"
+   }
+  ],
+  "metadata": {
+   "include_confidence": "true",
+   "mask_encoding": "one_bit"
+  },
+  "model": "sam-3.1"
+ },
+ "response": {
+  "text": "<0f>0<|box;x1=0;y1=3;x2=799;y2=599;w=800;h=600;c=0.9298245906829834|><|mask;x=0;y=0;c=0.9298245906829834;data=597,800,!!!!2f?y4$@A#{ouMsLB_a]2BN7/aOWTBCvjy7ZgUaOjr%1W{rxruxUE^wssCULeWze[ernxHHP).kKw@1'W[.Xdlq5R1ryldO)*Lav4'm)KRmOqSE2QEc_(ol5kkVYHa+RieL4ju(2F=Kn{1HD*#QJYGXaQ7+IELbW=nmJ*p!'mv.=TwJkG])u{LJeS+nL%du'KSqXQ{uQV4*?z$dHXYq?.H#cmTc'9ucIp?!tS8spInh0H.&`Iik4V_Q7&-QB2U%Q6vBsCvV/=9r.$I@7w6IGO(k6M__p5DiW-cuP-&1CrPHs.tW'#6b]t'a9ylwmV=vO2*Kd$'4DQJ_RbV)Jw.bkp+78W%!R--405NDQiWh^OEh9Gu6flrV=I$$@.MS``${w_16um:qO?M81zeZYmyhXLlL{y(kth*p($P4[nUC1r`Y#4z%]=ASebA1:PzLR%mKd`6{b?kZR7I-YgXPH&?WYYf('A/3XWi1UM^zRmk`^-Zso71(I-GsM4%N_'h=yZKC+*%a.*8I8Sf=xD`8{0n9].P-`JBAo-JAHO[{WBWDu?@EfUdc:Ht[V@UX*IrJ$17:UvxG?B6mT8JcTY{IJeu0rY1xvnhn@sh4DW1t%%D{qC/u[7'0!-n&697qjuC2f`$5Vp[d-L8]g5^vj7%F#tnRl%Yo-3N9=C6lH%fAuch*m9z#1.mQTKkXh#3EEsOQDu2w4)zQR4'X!&%#HRLH*0q.Y&`jBowe=wLLNdUoN1&i]7Zt2[wgrh3Z^/ZLPS?S%9yw[jJ4hQmJfY*0%WyGPI3..tpyIN9Ke*5uofF.c@57%aITX.tc!znxpke6(0Ma/m!CPL##nN%TB&a[I@j`OuJavdSwnZtUNb{e24ZcgJPQU##]5huZJ!Num1_Jj&a?zMtFkW@jh3KZ$'`@O't?AjAJgHPL*V&2#!Xu4uR%TBgLg'FnCi])Qxm]Ai*#$[(&[D=?0!a(k63)`D4Nd1hE$w/T#Ql)QzihPVVy((MJePm8pU%#v13A6)kE(J0%-Csaw[`CN*A0F1`V1[Ok2%kJ:Jb8s%x#h2nm0h`vy7{-Oqov/l:jl@ancXWN-pi.nYZsP]_3n8:YN=awPfsdjEBx[w./'r^=U8Amv`CID(2=$m'FE^{2re^7YBclyQy8Ha7gmI.ZemAL4r#B$X=ZQ#`0wNigvf+KTwanAnr2[Yrr[`GOJY.[6I`aXNvlJrcC{AhPA%'^1!v0rUWU2RN(VVex8]SJK[Tx00l/f`)+_7PeT-gIih!?Te{vx?RhPR/dJL$c(l=eudAeYEn.]ul&crd!QlnLbFtn5sj@rDF)x@y1k1I+%NnJMMxpjXlyRc=5=v_N0*J{dRujQd:X:{v)![iiyoZJ0b4^O??yBZKk3e2n@McW[aHJ]ql97O1U$NtnRIl]_6eR/UMPW-MNlOtk^L`aok]nU8NFL4._M{m$*ZBY.NnH1gZ-'U=0.kIn]jo:V[Cn#4.79Mn$IXpN2q'6io5aduFnw%7OHzzY7%QkAk3Mw2tWy5y84X?/)_%f3zZjBNu+jJ[j&(e&'Fa_R*eg#isr]OjK@psP*K0b'sO4yEFX%XTm(KVgG`86aVl=0kj?GF1zu?)r2dy6AZl@__v2:%T0*b{x7by02{i`wUsKZK[F:N9IWIZ@P8mwgm{B2dY:J[yjBGN=ezgi`ReZJ[#=:|>"
+ }
+}

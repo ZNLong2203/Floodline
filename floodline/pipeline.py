@@ -135,7 +135,12 @@ def analyse(
         closer_job = None
         if "closeup" in estimators and wading:
             closer_job = pool.submit(
-                closeup, client, img, [refs[i]["label"] for i in wading], [boxes[i] for i in wading]
+                closeup,
+                client,
+                img,
+                [refs[i]["label"] for i in wading],
+                [boxes[i] for i in wading],
+                image.key,
             )
         if refs and water is not None and water.any():
             prompt = sam.box_prompt(size, boxes)

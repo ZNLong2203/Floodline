@@ -61,4 +61,7 @@ reading, every reading to an object on the overlay, and every size to a source i
 ## Running without a key
 
 `FLOODLINE_MODEL_MODE=replay` answers every model call from `data/cassettes/`, recorded with
-`FLOODLINE_MODEL_MODE=record`. The demo scenario and the tests run this way.
+`FLOODLINE_MODEL_MODE=record`. The demo scenario and CI run this way. A recording is keyed by the
+request with each image, clip or audio replaced by a name derived from the file the user sent
+(`photo:<sha>`, `photo:<sha>/crop2:…`, `clip:<sha>/frame138`), not by the bytes Floodline re-encodes
+from it, because ffmpeg and libjpeg builds differ between machines.

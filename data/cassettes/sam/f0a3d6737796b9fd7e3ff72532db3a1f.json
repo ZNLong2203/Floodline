@@ -1,0 +1,28 @@
+{
+ "request": {
+  "input": [
+   {
+    "content": [
+     {
+      "text": "flood water",
+      "type": "input_text"
+     },
+     {
+      "image_url": "image/jpeg;key,photo:b5e51a98bb94e096e33249199a9ae3d0",
+      "type": "input_image"
+     }
+    ],
+    "role": "user",
+    "type": "message"
+   }
+  ],
+  "metadata": {
+   "include_confidence": "true",
+   "mask_encoding": "one_bit"
+  },
+  "model": "sam-3.1"
+ },
+ "response": {
+  "text": "<0f>0<|box;x1=0;y1=304;x2=563;y2=618;w=564;h=619;c=0.5151515007019043|><|mask;x=0;y=0;c=0.5151515007019043;data=315,564,!!!!):?+hTd=D8S4Ys$6n-/O1.mBRJ.$vQAD]P'1yEJ3pB[wU1yR0ID16'cRxozig8E`LUBKYu6fnkWvaNB]&qH/f]m&ZzI&GjveCy1fb[=W]%-1GLyB#^TC1QIJ*'$/)JwgPOw0@nQgAn2:a.PvS.9L8uV^N9I4B_n#b9giAq:Xr'F!L.{(8L5lC-s+Cj]DOj!'']5ltG1bqvdpVor)M[Uzo1fRh+dapZ'3`OZg5)3jFlJHlxl[[u7{LgXqHR`{F?e'#/oHhuey:ezhXB+G.1CHl=*jVRsDvtxYFl9'1pnAUxC&J2rXT.iQ/V=[=uAL-DFD*?-]IUPf9]3!jepqe&5wD(fWJ5@)$'4qbtsQqSqrRA6@5g4*RC1xD(MO[G#8ZnVF2qms'Fze?6T/YKH1.lw:.YrCQ$*_$tJAef+Az][1sl'lgZi^oqD@JZ@p)DV5!afM?`9%U8*ehj3yTK$U5XH]A2wccT$nwhl$[Idt^W3eNg6.o8R#02udZ!G.YGXpx6W&3heEc&IQ23?{b3Z&idV6XDt@Vh_Hi3g#aa!KEX1&!F=UCAhk`7jFV6yN9]s/q*UIENlbpXKWm?s3hDoagLx#JpT%!x47ba)@D'*biHSE@s/b^9Wjxb?7`ao5hV1i81jaE?Pzu%bm%x%XISL:#xmKrZ]-gb#SyD9*Xl:*FBO^j)faX%R9N1TaAt72P28Si@'C:oljj](nu7MQQ^h-wH4Y_o.513U1!!!!+t?wEJ!$t!PZg*(/NUXbJ3CuvdFi_*ru'l9'!!!|>"
+ }
+}

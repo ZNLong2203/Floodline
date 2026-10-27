@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import subprocess
 import tempfile
 from pathlib import Path
@@ -38,5 +39,6 @@ def to_wav(data: bytes) -> bytes:
 
 
 def transcribe_upload(client: ModelClient, data: bytes, language: str = "Vietnamese") -> str:
-    result = client.transcribe(Media(to_wav(data), "audio/wav"), [language])
+    key = f"audio:{hashlib.sha256(data).hexdigest()[:32]}"
+    result = client.transcribe(Media(to_wav(data), "audio/wav", key=key), [language])
     return result.get("transcript", "").strip()

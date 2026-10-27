@@ -1,0 +1,28 @@
+{
+ "request": {
+  "input": [
+   {
+    "content": [
+     {
+      "text": "<0f>1<|box;x1=156;y1=337;x2=984;y2=629;w=1191;h=720|>",
+      "type": "input_text"
+     },
+     {
+      "image_url": "image/jpeg;key,photo:ee870db788758f5fcab9da7b151fe59c",
+      "type": "input_image"
+     }
+    ],
+    "role": "user",
+    "type": "message"
+   }
+  ],
+  "metadata": {
+   "include_confidence": "true",
+   "mask_encoding": "one_bit"
+  },
+  "model": "sam-3.1"
+ },
+ "response": {
+  "text": "<0f>1<|box;x1=159;y1=363;x2=979;y2=604;w=1191;h=720;c=0.55078125|><|mask;x=0;y=0;c=0.55078125;data=242,821,!!!!0b9I$&GCYKWv&1tfjP_Xq&EDe)v[IMCy-&iu1Rrt.hFf1#:WKg.k6**4r:K[NJGtE(gbo*n?YS#Q4xSI#[=$5'=D3M-:*fx/Y*RI^6v{=Cwq%[g+LFq&HdZ:TzBU5K^c'?yZ`2-3wg*vk2fk*GO*!#Bq`dr.z_*{+QF#oHpFQoyZ$x&+NG$]^AJ{cMC?xm{U(3P])'GqZ#O(+GOGdi.TSF26YqX1*$r_ixSOcuTkJoWG%m]e%pw7-%Qe#:i)di{er3*oP.1N2[gvm_qn0@unD/:C`_HdQ!E-/cT!PfXk#JK:&..qKk@aq[@'FK7q[]34Jr:l1nN])6Q@p:V*ii]ZV=-?PODHD!*j`_**AXh__Tfaf#QS{WKl/l9g:4o=&)wcTy8'u2!j3)dfI&:*`be=[]kiqla3VJIb]p%!x$x_:Y!o^lH*tU`:r_Aw#%y.mprshpe:**1G2*6wmy^s'tr4`NSNJIEj81na`T:Brm30o]{Fvuxa_?9I=Uan2T@.$t437TkHXb.1hYgas*Nc&)Z`.#o^-CCplaSWL3?$8N]2J+`c)EwnP*hp&k.'FoAWii6Z%Fd/Z*SeBplou/7Xu*piv4It0YD{6=q`%=tY1[%h8=FpVZaxawoNl&Q@SuBg-(IV?8!m-96vv!`pR4Mz@K.z*8wO5O^Vg']tp{&Ith`DBS:ePz/56Xo@/j4?KZrSL03MHhP)g*PnPhMFbV'#Gc]tLSfv[+[f3^K-'^'V5e=!ImwrP_%$PNj!pVQkSMqVql-(!rmg[reS^g{!N$-+9i?q&))*%9eM-NCLbnsHWCz+h(gI%XPYz9P+61^a@bX:N&n4RAa0c@iAQ=]Y0Ji-a:svAN_OgILKNsn!h(WOn(O**^a6y3!G=!38yYRGq9/PW4I`CLqX1Kn=MfjaCW`aI)17*:)F*?%?6*C0w`JsNa*^4tL'j&No(O=pQ%OrX]bq71AV)=%^He*m=+B#DA!^#vRVGeO{a6X=(^m_$JbWa_XY*N@k9ezLViavU'mtx0GEIJEO&6VR6KMXpZP%%fXJR8N^WuI%9yL:EmVFxT'^)]9{hoa]GEA)l$3@dgxJanX^?N/E$Y*y3elYSNC5/u/[5^'$aJR(Z2ZV_O%!TcMI!C.+%o!gkVH/W)5MJ-?]y/K=FHAS*t(@mTgcJE9+pBAGXMOePokRvejr')X*$k_M9J[GH4*u])+[QGsYHBQYBry[8SZU.L/SpJ1H`-OTqw-Q(!!KGthM/pjnWUWWuP[Va)S{7DCeIh`T/`^GeAaAVeErLhd^T-YiVPGhh]KZn{]6qXmM%:=aNjH3.MLA#tooV#@!s4)e(0d1tbFGv)_lKg[3`UsCjsChq70[o'3w?E`sDfcDWr4[_/Z][)/H$p/*e3LL(fq.{/[LIN$n$a#fg&agGk*43M5boTuW1pMwbZf'yPk@!4]LHTSD-g[h_j%_kn[4GdFI0/J7f|>"
+ }
+}

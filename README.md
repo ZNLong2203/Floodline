@@ -43,7 +43,7 @@ queue ordered by a published formula.
 | **Muse Spark 1.3**: perception grounding | Finds reference objects and boxes them on its 0–1000 grid, says which way each faces and which part of it the water reaches, flags blurred or edited photos. JSON Schema-constrained. |
 | **SAM 3.1**: concept prompt | `flood water` → the water mask, in parallel with Spark. |
 | **SAM 3.1**: box prompts from Spark | Spark's boxes become SAM prompts, so every object Spark named gets a pixel-exact mask under a known id. The waterline is measured where the two masks meet. |
-| **Muse Spark**: close-up second look | Every object standing in water is cropped, enlarged and re-examined in one multi-image call. Adding it cut the raw error by 11% (0.257 → 0.228 m). |
+| **Muse Spark**: close-up second look | Every object standing in water is cropped, enlarged and re-examined in one multi-image call. Adding it cut the raw error by 11% (0.257 → 0.229 m). |
 | **SAM 3.1**: video tracking | In a walk-by clip, each object is tracked through hundreds of frames from one box prompt, and measured on every frame. |
 | **Muse Spark**: video understanding | Watches the whole clip with its sound: its own depth range, what happens, anything said. |
 | **Muse Voice Transcribe** | Vietnamese voice notes, for people who can't type with wet hands in the dark. |
@@ -64,7 +64,7 @@ is **out of fold**: 5-fold cross-validation, grouped by photo.
 | | depth error (MAE) | true depth inside the interval |
 |---|---|---|
 | Muse Spark answering alone | 0.277 m | 52% |
-| Floodline, raw | 0.228 m | 67% |
+| Floodline, raw | 0.229 m | 67% |
 | Muse Spark alone, calibrated | 0.220 m | 93% |
 | **Floodline, calibrated** | **0.199 m** | **95%** |
 

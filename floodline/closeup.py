@@ -82,12 +82,21 @@ def closeup(
     img: Image.Image,
     labels: list[str],
     boxes: list[tuple[int, int, int, int]],
+    parent_key: str | None = None,
 ) -> dict[int, dict[str, Any]]:
     """Return {object index: closer judgement} for up to MAX_CROPS objects."""
     if not boxes:
         return {}
     chosen = list(range(len(boxes)))[:MAX_CROPS]
-    images = [Media(encode_jpeg(c), "image/jpeg") for c in crops(img, [boxes[i] for i in chosen])]
+    picked = [boxes[i] for i in chosen]
+    images = [
+        Media(
+            encode_jpeg(c),
+            "image/jpeg",
+            key=f"{parent_key}/crop{n}:{','.join(map(str, box))}" if parent_key else None,
+        )
+        for n, (c, box) in enumerate(zip(crops(img, picked), picked, strict=True))
+    ]
     listing = "; ".join(f"{n + 1} is a {labels[i]}" for n, i in enumerate(chosen))
     answer = client.spark_json(
         system="You are an object grounding expert helping flood rescue teams read photos.",

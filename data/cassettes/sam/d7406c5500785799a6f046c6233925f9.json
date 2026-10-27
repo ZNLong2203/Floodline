@@ -1,0 +1,28 @@
+{
+ "request": {
+  "input": [
+   {
+    "content": [
+     {
+      "text": "<0f>1<|box;x1=309;y1=447;x2=1215;y2=767;w=1300;h=936|>,2<|box;x1=260;y1=125;x2=412;y2=553;w=1300;h=936|>,3<|box;x1=1180;y1=289;x2=1234;y2=446;w=1300;h=936|>",
+      "type": "input_text"
+     },
+     {
+      "image_url": "image/jpeg;key,photo:9be9a962bb35ac08b107afdca0047b58",
+      "type": "input_image"
+     }
+    ],
+    "role": "user",
+    "type": "message"
+   }
+  ],
+  "metadata": {
+   "include_confidence": "true",
+   "mask_encoding": "one_bit"
+  },
+  "model": "sam-3.1"
+ },
+ "response": {
+  "text": "<0f>1<|box;x1=317;y1=449;x2=1163;y2=743;w=1300;h=936;c=0.91796875|><|mask;x=0;y=0;c=0.91796875;data=295,847,!!!!)O=]`C4bS@v5LoY44vQsA!t=o8X)d98C`jBARv{TFmGIMh2_L4/EjRB7)Ci`dHezE7um8&0vj(YZaVHwD'KzIlb&6H]('Fyt&v+9OX:xh3cC)L0IHYTtxpp`Ig?kmUCFWX8_uIJf])[/kMTh{u$-Ko/Z0/JBg-o5w+y4+eBZ48/tU'9P(*`1M0eMSRVIzxsvws.Kx(.J_Y/!Msl4/4^9[ZV#9AtX'9r*gJv1A1Cpf4AhfhRGi:+G/M7t.E0DqPzn.C[-S'M1Ffg7=d]U'zCqI[(E)@`c?tG^!'V{Y6Mx'D8IEwcytJ$mFvApmKxb:lqEn6YWVGjp8RZnmeL8&fB[xv=DOB.gPDb{pj6c(5/ohid#qqpBD@5%WnwKIa%sg5V@k9exNUas[j4E/NVPo..U7u04H`2yj/-tP^qZ7R0C%i!M%qWS0Y]4.MGIp0jT#pAxDs4!.kaG^jD_m4I0J0O_spW9SIJNCb).mR+{4ngP?fGM?qZ+gWu?_iJ]9.[PF)2z0ZUoiB#wiQ=LcnKtN5dA:{u-.LqbKF6%%)JNBtJp(Vm?h/]F4(9mVoH11?QwLLe&#=KQOHrX!!E^4b+Lk{WWNf4N8_5jS9WseXHjl)EH!IN3SdB(LS/dTgIjpP_J0I1yoBtSC&gX2F[FQNUXXWJ$[@jan'Q00*aVgaDaHxBJp44tO84[r/`A/=rejJPQe#uT?Kj!j[fd_5t/dV$c/{9QVbUi^gR!_!Iew+*K0*ctm9&SK6H%YJx1Pxek:2d]bQAPF&1q@CL`X[Kdt[56q97J8bRqMo??s|>,2<|box;x1=268;y1=142;x2=403;y2=518;w=1300;h=936;c=0.94921875|><|mask;x=0;y=0;c=0.94921875;data=377,136,!!!!#VIUQo-eWO4+Q_356ivweMOx5%4dmwY#/6eSruk%#`*5@Bavsi!`Iek6piAt(]$UaMr4_lwD(&KutFK[O?NnH/si+IQRsvu#F'SR@0H=HkEO]&k{v`Y0GcX_NT/_Z/Su-33Vb)NK+o4S:ymV2gp6basjJ8La-G7WeQpmy/2ID|>,3<|box;x1=1165;y1=268;x2=1226;y2=439;w=1300;h=936;c=0.6484375|><|mask;x=0;y=0;c=0.6484375;data=172,62,!!!!#LG*kR%CM=IX[-HJSs@'GBGmIdGJQ^!lJ7_'7:-5bAllLqOe@+8#u*l*qnABu!Az(:JmlJ!-i6dln$X+!ccdqWhS*Y&*?#xMRl`Eth]IyQ(dGLh82Xm5'^sUp6q+0MXCr*DfOOOXDG0dPW-*2(UGA#u]NOd'|>"
+ }
+}

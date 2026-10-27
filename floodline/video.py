@@ -35,7 +35,7 @@ from floodline import calibration as calibration_mod
 from floodline import catalog as catalog_mod
 from floodline.estimate import DepthEstimate, Reading, combine
 from floodline.geometry import waterline_contact
-from floodline.imaging import PALETTE, WATER, encode_jpeg, to_pixels
+from floodline.imaging import PALETTE, WATER, encode_jpeg, source_key, to_pixels
 from floodline.meta import sam
 from floodline.meta.client import Media, ModelClient
 from floodline.passability import Verdict, assess
@@ -255,7 +255,8 @@ def analyse_clip(
         path, w, h, n = prepare(data, workdir)
         if n < MIN_FRAMES:
             raise ValueError("clip too short")
-        clip = Media(path.read_bytes(), "video/mp4")
+        source = f"clip:{source_key(data)}"
+        clip = Media(path.read_bytes(), "video/mp4", key=source)
         key = n // 2
         key_img = None
         for i, frame in enumerate(frames(path, w, h)):
@@ -263,7 +264,7 @@ def analyse_clip(
                 key_img = Image.fromarray(frame)
                 break
         assert key_img is not None
-        key_media = Media(encode_jpeg(key_img, 92), "image/jpeg")
+        key_media = Media(encode_jpeg(key_img, 92), "image/jpeg", key=f"{source}/frame{key}")
 
         seen = perceive(client, key_media)
         refs = [r for r in seen.get("references", []) if r["label"] in cat.objects][:8]

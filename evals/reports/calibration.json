@@ -11,9 +11,9 @@
       "coverage": 0.92
     },
     "scale": {
-      "n": 67,
-      "mae_m": 0.407,
-      "coverage": 0.94
+      "n": 60,
+      "mae_m": 0.427,
+      "coverage": 0.967
     },
     "spark": {
       "n": 290,
@@ -31,23 +31,23 @@
       "coverage": 0.931
     }
   },
-  "rows": "evals/runs/20261028-002411/rows.jsonl",
+  "rows": "evals/runs/20261028-012246/rows.jsonl",
   "photos": 292,
   "folds": 5,
   "raw": {
     "answered": 291,
-    "mae_m": 0.228,
+    "mae_m": 0.229,
     "interval_coverage": 0.67,
-    "mean_interval_m": 0.512,
+    "mean_interval_m": 0.506,
     "decisions": {
       "pedestrian": {
         "unsafe_passable": 3,
-        "passable": 88,
-        "risky": 62,
+        "passable": 89,
+        "risky": 61,
         "impassable": 107,
         "needless_impassable": 13,
-        "decided_right": 179,
-        "decided": 195,
+        "decided_right": 180,
+        "decided": 196,
         "n": 257
       },
       "scooter": {
@@ -82,12 +82,12 @@
       },
       "truck": {
         "unsafe_passable": 3,
-        "passable": 88,
-        "risky": 62,
+        "passable": 89,
+        "risky": 61,
         "impassable": 107,
         "needless_impassable": 13,
-        "decided_right": 179,
-        "decided": 195,
+        "decided_right": 180,
+        "decided": 196,
         "n": 257
       }
     }
@@ -100,12 +100,12 @@
     "decisions": {
       "pedestrian": {
         "unsafe_passable": 3,
-        "passable": 101,
-        "risky": 62,
-        "impassable": 94,
+        "passable": 100,
+        "risky": 61,
+        "impassable": 96,
         "needless_impassable": 8,
-        "decided_right": 184,
-        "decided": 195,
+        "decided_right": 185,
+        "decided": 196,
         "n": 257
       },
       "scooter": {
@@ -129,23 +129,23 @@
         "n": 257
       },
       "suv": {
-        "unsafe_passable": 5,
-        "passable": 78,
-        "risky": 64,
+        "unsafe_passable": 6,
+        "passable": 79,
+        "risky": 63,
         "impassable": 115,
         "needless_impassable": 4,
         "decided_right": 184,
-        "decided": 193,
+        "decided": 194,
         "n": 257
       },
       "truck": {
         "unsafe_passable": 3,
-        "passable": 101,
-        "risky": 62,
-        "impassable": 94,
+        "passable": 100,
+        "risky": 61,
+        "impassable": 96,
         "needless_impassable": 8,
-        "decided_right": 184,
-        "decided": 195,
+        "decided_right": 185,
+        "decided": 196,
         "n": 257
       }
     }
@@ -158,7 +158,7 @@
     },
     "bus": {
       "raw_mae_m": 0.388,
-      "calibrated_mae_m": 0.323,
+      "calibrated_mae_m": 0.324,
       "calibrated_coverage": 0.915
     },
     "car": {
@@ -167,8 +167,8 @@
       "calibrated_coverage": 0.99
     },
     "person": {
-      "raw_mae_m": 0.169,
-      "calibrated_mae_m": 0.166,
+      "raw_mae_m": 0.172,
+      "calibrated_mae_m": 0.164,
       "calibrated_coverage": 0.979
     }
   },
@@ -186,8 +186,8 @@
           "sigma_floor_m": 0.04
         },
         "scale": {
-          "bias_m": 0.0846,
-          "sigma_scale": 3.0109,
+          "bias_m": 0.0971,
+          "sigma_scale": 3.5046,
           "sigma_floor_m": 0.04
         },
         "spark": {
@@ -206,7 +206,7 @@
           "sigma_floor_m": 0.04
         }
       },
-      "combine_factor": 1.6829,
+      "combine_factor": 1.6821,
       "meta": {}
     },
     {
@@ -223,7 +223,7 @@
         },
         "scale": {
           "bias_m": 0.0936,
-          "sigma_scale": 3.237,
+          "sigma_scale": 3.5145,
           "sigma_floor_m": 0.04
         },
         "spark": {
@@ -258,8 +258,8 @@
           "sigma_floor_m": 0.04
         },
         "scale": {
-          "bias_m": 0.0855,
-          "sigma_scale": 3.2581,
+          "bias_m": 0.0936,
+          "sigma_scale": 3.5145,
           "sigma_floor_m": 0.04
         },
         "spark": {
@@ -294,8 +294,8 @@
           "sigma_floor_m": 0.04
         },
         "scale": {
-          "bias_m": 0.172,
-          "sigma_scale": 3.2928,
+          "bias_m": 0.2281,
+          "sigma_scale": 3.6587,
           "sigma_floor_m": 0.04
         },
         "spark": {
@@ -330,8 +330,8 @@
           "sigma_floor_m": 0.04
         },
         "scale": {
-          "bias_m": 0.13,
-          "sigma_scale": 3.0567,
+          "bias_m": 0.1766,
+          "sigma_scale": 3.3428,
           "sigma_floor_m": 0.04
         },
         "spark": {
@@ -367,8 +367,8 @@
         "sigma_floor_m": 0.04
       },
       "scale": {
-        "bias_m": 0.105,
-        "sigma_scale": 3.2074,
+        "bias_m": 0.1101,
+        "sigma_scale": 3.3297,
         "sigma_floor_m": 0.04
       },
       "spark": {

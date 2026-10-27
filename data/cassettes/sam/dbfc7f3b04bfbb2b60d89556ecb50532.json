@@ -1,0 +1,28 @@
+{
+ "request": {
+  "input": [
+   {
+    "content": [
+     {
+      "text": "water",
+      "type": "input_text"
+     },
+     {
+      "image_url": "image/jpeg;key,photo:ce6cf42100550e9639fa716feba9c48e",
+      "type": "input_image"
+     }
+    ],
+    "role": "user",
+    "type": "message"
+   }
+  ],
+  "metadata": {
+   "include_confidence": "true",
+   "mask_encoding": "one_bit"
+  },
+  "model": "sam-3.1"
+ },
+ "response": {
+  "text": "<0f>0<|box;x1=0;y1=458;x2=1599;y2=891;w=1600;h=894;c=0.5311355590820312|><|mask;x=0;y=0;c=0.5311355590820312;data=278,1024,!!!!%(7`bOdq6mCH9Enk#fI]`4].tbse(zx6_NNKRLq^DMrrI%(PsK9K?p?$jRhu*eLozjRx^pOVji7Qooj$UlC'.P5e_WD-5?/S'o8(*b-$+aG`AYP&%qy30Llvw?2n08w+@`FY6We%{K+:HQTfDERX!5hmh{MhmKSZHz4t%5@5AyF?mab7&n_CQxBX!k_e?{IC=)9zW8Vx+Nx63#?]z5i$bnRBu?cHGAhUw7:HG#44xqx?(uxo#-U`?.eXCB6)?m)3VjOy:IKbF`%$58PhvZG=nb8)4Kq]OX$]s9pY.0]P[r10Hpo.s]8K%.^UlXJZ1V+Fo3l.&g:!!|>"
+ }
+}
