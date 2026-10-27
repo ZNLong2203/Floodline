@@ -1,0 +1,191 @@
+"""Photo in, depth and passability out.
+
+    Muse Spark  -> which reference objects, where, facing which way, water at which part
+    SAM 3.1     -> the water, and a mask for every object Spark boxed
+    geometry    -> the waterline on each object, in pixels
+    catalog     -> pixels to metres, landmarks to metres
+    estimate    -> one depth with an interval, outliers named
+    passability -> per vehicle: passable, risky or impassable, with a probability
+"""
+
+from __future__ import annotations
+
+import time
+from dataclasses import dataclass, field
+from typing import Any
+
+import numpy as np
+
+from floodline import catalog as catalog_mod
+from floodline.estimate import DepthEstimate, Reading, combine
+from floodline.geometry import Contact, union, waterline_contact
+from floodline.imaging import normalise, overlay, to_pixels
+from floodline.meta import sam
+from floodline.meta.client import ModelClient
+from floodline.passability import Verdict, assess
+from floodline.perceive import perceive
+from floodline.readings import fraction_reading, landmark_reading, scale_reading
+
+WATER_PROMPTS = ("flood water", "water")
+
+# Which estimators the pipeline uses. The eval harness switches them off one at a
+# time to show what each adds.
+ALL_ESTIMATORS = frozenset({"scale", "landmark", "fraction", "holistic"})
+
+
+@dataclass
+class ObjectFinding:
+    index: int
+    label: str
+    orientation: str
+    landmark: str
+    box_px: tuple[int, int, int, int]
+    standing_in_water: bool
+    sam_confidence: float | None
+    contact: Contact | None
+    readings: list[Reading] = field(default_factory=list)
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "index": self.index,
+            "label": self.label,
+            "orientation": self.orientation,
+            "landmark": self.landmark,
+            "box_px": list(self.box_px),
+            "standing_in_water": self.standing_in_water,
+            "sam_confidence": self.sam_confidence,
+            "contact": self.contact.to_dict() if self.contact else None,
+            "readings": [r.__dict__ for r in self.readings],
+        }
+
+
+@dataclass
+class PhotoAnalysis:
+    size: tuple[int, int]
+    perception: dict[str, Any]
+    objects: list[ObjectFinding]
+    estimate: DepthEstimate | None
+    verdicts: list[Verdict]
+    overlay_jpeg: bytes
+    image_jpeg: bytes
+    water_fraction: float
+    seconds: float
+    warnings: list[str]
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "size": list(self.size),
+            "perception": self.perception,
+            "objects": [o.to_dict() for o in self.objects],
+            "estimate": self.estimate.to_dict() if self.estimate else None,
+            "verdicts": [v.to_dict() for v in self.verdicts],
+            "water_fraction": round(self.water_fraction, 4),
+            "seconds": round(self.seconds, 2),
+            "warnings": self.warnings,
+        }
+
+
+def segment_water(client: ModelClient, image, size) -> np.ndarray:
+    for prompt in WATER_PROMPTS:
+        segments = sam.parse(client.sam(prompt=prompt, image=image), size)
+        if segments:
+            return union([s.mask for s in segments], (size[1], size[0]))
+    return np.zeros((size[1], size[0]), dtype=bool)
+
+
+def analyse(
+    client: ModelClient,
+    photo: bytes,
+    *,
+    estimators: frozenset[str] = ALL_ESTIMATORS,
+    flowing: bool | None = None,
+) -> PhotoAnalysis:
+    started = time.monotonic()
+    image, img = normalise(photo)
+    size = img.size
+    cat = catalog_mod.default()
+    warnings: list[str] = []
+
+    seen = perceive(client, image)
+    water = segment_water(client, image, size) if seen.get("water_visible") else None
+    if water is None or not water.any():
+        warnings.append("no water found in the photo")
+
+    refs = [r for r in seen.get("references", []) if r["label"] in cat.objects][:8]
+    boxes = [to_pixels(r["box"], size) for r in refs]
+    masks: dict[str, sam.Segment] = {}
+    if refs and water is not None and water.any():
+        prompt = sam.box_prompt(size, boxes)
+        if prompt.strip():
+            for seg in sam.parse(client.sam(prompt=prompt, image=image), size):
+                masks[seg.object_id] = seg
+
+    objects: list[ObjectFinding] = []
+    readings: list[Reading] = []
+    for i, (ref, box) in enumerate(zip(refs, boxes, strict=True)):
+        spec = cat.objects[ref["label"]]
+        seg = masks.get(str(i + 1))
+        tag = f"{ref['label']}#{i + 1}"
+        contact = None
+        if seg is not None and water is not None:
+            contact = waterline_contact(seg.mask, water)
+        found = ObjectFinding(
+            index=i,
+            label=ref["label"],
+            orientation=ref["orientation"],
+            landmark=ref["waterline_landmark"],
+            box_px=box,
+            standing_in_water=ref["standing_in_water"],
+            sam_confidence=seg.confidence if seg else None,
+            contact=contact,
+        )
+        if ref["standing_in_water"]:
+            candidates: list[Reading | None] = []
+            if "scale" in estimators and contact and ref["fully_visible_above_water"]:
+                candidates.append(scale_reading(tag, spec, ref["orientation"], contact))
+            if "landmark" in estimators:
+                candidates.append(landmark_reading(tag, spec, ref["waterline_landmark"]))
+            if "fraction" in estimators:
+                candidates.append(fraction_reading(tag, spec, ref["submerged_fraction"]))
+            found.readings = [r for r in candidates if r is not None]
+            readings.extend(found.readings)
+        objects.append(found)
+
+    if "holistic" in estimators and seen.get("water_visible"):
+        h = seen["holistic_depth_m"]
+        if 0 <= h["low"] <= h["high"] <= 5:
+            readings.append(Reading("spark:holistic", h["low"], h["high"], "Spark's own range"))
+
+    estimate = combine(readings)
+    if flowing is None:
+        flowing = seen.get("water_flow") in ("slow", "fast")
+    verdicts = assess(estimate, cat.vehicles, flowing=flowing) if estimate else []
+    if seen.get("quality_flags"):
+        warnings.extend(f"photo: {f.replace('_', ' ')}" for f in seen["quality_flags"])
+
+    drawn = overlay(
+        img,
+        water,
+        [
+            {
+                "index": o.index,
+                "label": o.label,
+                "mask": masks[str(o.index + 1)].mask,
+                "waterline_y": o.contact.waterline_y if o.contact else None,
+            }
+            for o in objects
+            if str(o.index + 1) in masks
+        ],
+    )
+    return PhotoAnalysis(
+        size=size,
+        perception=seen,
+        objects=objects,
+        estimate=estimate,
+        verdicts=verdicts,
+        overlay_jpeg=drawn,
+        image_jpeg=image.data,
+        water_fraction=float(water.mean()) if water is not None else 0.0,
+        seconds=time.monotonic() - started,
+        warnings=warnings,
+    )

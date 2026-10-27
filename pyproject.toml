@@ -1,0 +1,44 @@
+[project]
+name = "floodline"
+version = "0.1.0"
+description = "Street-level flood depth and passability from the photos residents already send, built on Meta Muse Spark and SAM 3.1."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.12"
+dependencies = [
+    "openai>=1.60",
+    "meta-sam-parser>=0.1.0",
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.32",
+    "python-multipart>=0.0.12",
+    "pydantic>=2.9",
+    "pydantic-settings>=2.6",
+    "numpy>=2.1",
+    "pillow>=11.0",
+    "pyyaml>=6.0",
+    "httpx>=0.27",
+]
+
+[project.optional-dependencies]
+routing = ["osmnx>=2.0", "networkx>=3.4"]
+
+[project.scripts]
+floodline = "floodline.cli:main"
+
+[dependency-groups]
+dev = ["pytest>=8.3", "pytest-asyncio>=0.24", "ruff>=0.8"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM", "RUF"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"

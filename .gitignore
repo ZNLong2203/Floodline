@@ -1,0 +1,24 @@
+__pycache__/
+*.py[cod]
+.venv/
+.env
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+dist/
+build/
+.DS_Store
+.coverage
+
+# Private working notes — strategy, submission material, scripts. Never committed.
+private/
+
+# Eval datasets (downloaded, licensed separately) and run output
+data/datasets/
+data/cache/
+evals/runs/
+var/
+
+# Web
+web/node_modules/
+web/dist/
