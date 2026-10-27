@@ -89,6 +89,7 @@ class ClipAnalysis:
     overlay_mp4: bytes
     key_frame_jpeg: bytes
     seconds: float
+    key_overlay_jpeg: bytes = b""
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -171,12 +172,12 @@ def prepare(data: bytes, workdir: Path) -> tuple[Path, int, int, int]:
 
 
 def frames(path: Path, w: int, h: int):
-    """Yield RGB frames as numpy arrays, in order."""
+    """Yield RGB frames as numpy arrays, in order. Stopping early is fine."""
     proc = subprocess.Popen(
         [
             "ffmpeg",
             "-loglevel",
-            "error",
+            "quiet",
             "-i",
             str(path),
             "-f",
@@ -186,14 +187,19 @@ def frames(path: Path, w: int, h: int):
             "-",
         ],
         stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
     )
     size = w * h * 3
     assert proc.stdout is not None
-    while chunk := proc.stdout.read(size):
-        if len(chunk) < size:
-            break
-        yield np.frombuffer(chunk, dtype=np.uint8).reshape(h, w, 3)
-    proc.wait()
+    try:
+        while chunk := proc.stdout.read(size):
+            if len(chunk) < size:
+                break
+            yield np.frombuffer(chunk, dtype=np.uint8).reshape(h, w, 3)
+    finally:
+        proc.stdout.close()
+        proc.kill()
+        proc.wait()
 
 
 def _decode_frame(args: tuple[int, str, str, int, int]) -> tuple[int, bytes, dict[str, bytes]]:
@@ -303,10 +309,11 @@ def analyse_clip(client: ModelClient, data: bytes, *, render: bool = True) -> Cl
                 ],
                 stdin=subprocess.PIPE,
             )
+        key_overlay = b""
         jobs = [(f, water_lines.get(f, ""), object_lines.get(f, ""), w, h) for f in range(n)]
         with ProcessPoolExecutor() as pool:
             decoded = pool.map(_decode_frame, jobs, chunksize=4)
-            for (_, water_bits, obj_bits), frame in zip(decoded, frames(path, w, h), strict=False):
+            for (f, water_bits, obj_bits), frame in zip(decoded, frames(path, w, h), strict=False):
                 water = _unpack(water_bits, w, h)
                 segs = {k: _unpack(v, w, h) for k, v in obj_bits.items()}
                 drawn = []
@@ -324,8 +331,12 @@ def analyse_clip(client: ModelClient, data: bytes, *, render: bool = True) -> Cl
                             depth = r.mean
                             obj.depths.append(depth)
                     drawn.append((obj, mask, contact, depth))
-                if writer is not None:
-                    writer.stdin.write(_draw(frame, water, drawn).tobytes())
+                if writer is not None or f == key:
+                    annotated = _draw(frame, water, drawn)
+                    if writer is not None:
+                        writer.stdin.write(annotated.tobytes())
+                    if f == key:
+                        key_overlay = encode_jpeg(Image.fromarray(annotated), 88)
         if writer is not None:
             writer.stdin.close()
             writer.wait()
@@ -375,6 +386,7 @@ def analyse_clip(client: ModelClient, data: bytes, *, render: bool = True) -> Cl
         verdicts=verdicts,
         overlay_mp4=overlay_mp4,
         key_frame_jpeg=key_media.data,
+        key_overlay_jpeg=key_overlay,
         seconds=time.monotonic() - started,
     )
 

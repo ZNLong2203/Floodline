@@ -12,7 +12,6 @@ from __future__ import annotations
 from typing import Any
 
 from floodline.meta.client import ModelClient
-from floodline.pipeline import PhotoAnalysis
 
 SCHEMA: dict[str, Any] = {
     "type": "object",
@@ -91,7 +90,7 @@ def score(facts: dict[str, Any], depth_m: float | None) -> tuple[int, list[str]]
 
 def triage(
     client: ModelClient,
-    analysis: PhotoAnalysis,
+    analysis,  # PhotoAnalysis or ClipAnalysis: anything with .perception and .estimate
     note: str,
     transcript: str | None,
 ) -> dict[str, Any] | None:

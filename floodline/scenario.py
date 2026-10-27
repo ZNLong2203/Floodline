@@ -40,8 +40,19 @@ def seed(
     now = now or time.time()
     created = []
     for item in sorted(scenario["reports"], key=lambda r: -r["minutes_ago"]):
-        photo = (DATA / "demo" / item["photo"]).read_bytes()
-        result = analyse(client, photo)
+        clip = None
+        if "clip" in item:
+            from floodline.video import analyse_clip
+
+            result = analyse_clip(client, (DATA / "demo" / item["clip"]).read_bytes())
+            image, overlay, clip = (
+                result.key_frame_jpeg,
+                result.key_overlay_jpeg,
+                result.overlay_mp4,
+            )
+        else:
+            result = analyse(client, (DATA / "demo" / item["photo"]).read_bytes())
+            image, overlay = result.image_jpeg, result.overlay_jpeg
         tri = triage(client, result, item.get("note", ""), item.get("transcript"))
         report = StoredReport(
             id=store.new_id(),
@@ -53,9 +64,9 @@ def seed(
             triage=tri,
             transcript=item.get("transcript"),
             source=item.get("source", "web"),
-            extra={"scenario": scenario["name"], "photo_credit": item["photo"]},
+            extra={"scenario": scenario["name"], "photo_credit": item.get("photo") or item["clip"]},
         )
-        store.save(report, image=result.image_jpeg, overlay=result.overlay_jpeg)
+        store.save(report, image=image, overlay=overlay, clip=clip)
         created.append(report)
         if on_report:
             on_report(report)

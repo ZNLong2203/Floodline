@@ -4,83 +4,129 @@
   "reports": [
     {
       "photo": "photos/quangngai-2013-girl-wading-01.jpg",
-      "lat": 16.4571, "lon": 107.5809, "minutes_ago": 65,
+      "lat": 16.4571,
+      "lon": 107.5809,
+      "minutes_ago": 65,
       "note": "Phan Đình Phùng nước tới mắt cá, xe máy vẫn đi chậm được"
     },
     {
       "photo": "photos/hcmc-2013-man-standing-petrol-station-01.jpg",
-      "lat": 16.4613, "lon": 107.5973, "minutes_ago": 70,
+      "lat": 16.4613,
+      "lon": 107.5973,
+      "minutes_ago": 70,
       "note": "Cây xăng Hùng Vương ngập, xe máy chết máy nhiều"
     },
     {
       "photo": "photos/hue-2020-boat-relief-01.jpg",
-      "lat": 16.4830, "lon": 107.5902, "minutes_ago": 60,
+      "lat": 16.483,
+      "lon": 107.5902,
+      "minutes_ago": 60,
       "note": "Kiệt Chi Lăng ngập sâu quá đầu người, cả xóm phải đi thuyền. Nhà số 12 có 2 cụ già và 1 người bệnh tim chưa ra được"
     },
     {
       "photo": "photos/hanoi-2022-mai-dich-cars-01.jpg",
-      "lat": 16.4600, "lon": 107.5997, "minutes_ago": 55,
+      "lat": 16.46,
+      "lon": 107.5997,
+      "minutes_ago": 55,
       "note": "Bà Triệu đoạn gần Hùng Vương ô tô con không qua được"
     },
     {
       "photo": "photos/quangngai-2013-scooters-pushed-school-01.jpg",
-      "lat": 16.4606, "lon": 107.5852, "minutes_ago": 50,
+      "lat": 16.4606,
+      "lon": 107.5852,
+      "minutes_ago": 50,
       "note": "Trước trường Quốc Học, nước ngang bánh xe, mọi người dắt xe"
     },
     {
       "photo": "photos/thainguyen-2024-street-flood-01.jpg",
-      "lat": 16.4695, "lon": 107.5853, "minutes_ago": 45,
+      "lat": 16.4695,
+      "lon": 107.5853,
+      "minutes_ago": 45,
       "note": "Trần Hưng Đạo đoạn gần cầu Phú Xuân nước chảy mạnh, không ai dám đi"
     },
     {
       "photo": "photos/quangngai-2013-scooter-areca-load-01.jpg",
-      "lat": 16.4679, "lon": 107.5724, "minutes_ago": 45,
+      "lat": 16.4679,
+      "lon": 107.5724,
+      "minutes_ago": 45,
       "note": "Nguyễn Trãi nước lên nhanh trong 30 phút qua"
     },
     {
       "photo": "photos/hanoi-2008-man-bicycle-wading-01.jpg",
-      "lat": 16.4672, "lon": 107.5656, "minutes_ago": 40,
+      "lat": 16.4672,
+      "lon": 107.5656,
+      "minutes_ago": 40,
       "note": "Lê Duẩn chỉ ngập nhẹ, đi bộ được"
     },
     {
       "photo": "photos/quangngai-2013-people-wading-gate-01.jpg",
-      "lat": 16.4697, "lon": 107.5842, "minutes_ago": 35,
+      "lat": 16.4697,
+      "lon": 107.5842,
+      "minutes_ago": 35,
       "note": "Đinh Tiên Hoàng trong Thành nội, nước tới đầu gối"
     },
     {
       "photo": "photos/hanoi-2008-people-thigh-deep-doorway-01.jpg",
-      "lat": 16.4712, "lon": 107.5866, "minutes_ago": 30,
+      "lat": 16.4712,
+      "lon": 107.5866,
+      "minutes_ago": 30,
       "transcript": "Alo, nhà tôi ở Trần Hưng Đạo gần chợ Đông Ba, nước vào nhà tới đùi rồi. Trong nhà có mẹ tôi 82 tuổi đi lại khó khăn và cháu nhỏ 3 tuổi. Nước vẫn đang lên. Mong đội cứu hộ tới sớm."
     },
     {
       "photo": "photos/quangngai-2013-scooter-two-riders-shallow-01.jpg",
-      "lat": 16.4589, "lon": 107.5986, "minutes_ago": 30,
+      "lat": 16.4589,
+      "lon": 107.5986,
+      "minutes_ago": 30,
       "note": "Nguyễn Huệ ngập nông, xe máy qua được nhưng phải chậm"
     },
     {
       "photo": "photos/hanoi-2008-car-scooters-wading-01.jpg",
-      "lat": 16.4780, "lon": 107.5844, "minutes_ago": 25,
+      "lat": 16.478,
+      "lon": 107.5844,
+      "minutes_ago": 25,
       "note": "Mai Thúc Loan ô tô bị kẹt giữa đường"
     },
     {
       "photo": "photos/hanoi-2008-taxi-pushed-01.jpg",
-      "lat": 16.4736, "lon": 107.5884, "minutes_ago": 20,
+      "lat": 16.4736,
+      "lon": 107.5884,
+      "minutes_ago": 20,
       "note": "Huỳnh Thúc Kháng đầu cầu Gia Hội, taxi chết máy phải đẩy"
     },
     {
       "photo": "photos/quangngai-2013-shopfront-doors-flooded-01.jpg",
-      "lat": 16.4602, "lon": 107.5917, "minutes_ago": 20,
+      "lat": 16.4602,
+      "lon": 107.5917,
+      "minutes_ago": 20,
       "note": "Đống Đa nước sát bậc cửa các nhà"
     },
     {
       "photo": "photos/quangtri-gio-mai-boat-rescue-01.jpg",
-      "lat": 16.4815, "lon": 107.5925, "minutes_ago": 15,
+      "lat": 16.4815,
+      "lon": 107.5925,
+      "minutes_ago": 15,
       "transcript": "Chúng tôi đang ở trên gác nhà trong kiệt 45 Chi Lăng, năm người, có hai đứa nhỏ. Nước ngập hết tầng một. Điện thoại sắp hết pin."
     },
     {
       "photo": "photos/hcmc-2013-scooter-rider-01.jpg",
-      "lat": 16.4566, "lon": 107.5921, "minutes_ago": 10,
+      "lat": 16.4566,
+      "lon": 107.5921,
+      "minutes_ago": 10,
       "note": "Lý Thường Kiệt ngập lưng bánh xe máy"
+    },
+    {
+      "clip": "videos/quangngai-2013-wading-flooded-street-02.mp4",
+      "lat": 16.4593,
+      "lon": 107.5944,
+      "minutes_ago": 12,
+      "note": "Quay clip đoạn Hùng Vương gần ngã sáu, nước nông ở mép đường"
+    },
+    {
+      "clip": "videos/quangngai-2013-wading-flooded-street-03.mp4",
+      "lat": 16.4652,
+      "lon": 107.5853,
+      "minutes_ago": 5,
+      "note": "Clip đầu cầu Phú Xuân phía Lê Lợi: xe máy chết máy phải dắt, ô tô vẫn cố qua"
     }
   ]
 }

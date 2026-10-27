@@ -64,33 +64,42 @@ def _states(now: float | None = None):
 
 @app.post("/api/reports")
 async def create_report(
-    photo: UploadFile = File(...),
     lat: float = Form(...),
     lon: float = Form(...),
+    photo: UploadFile | None = File(None),
+    video: UploadFile | None = File(None),
     note: str = Form(""),
     audio: UploadFile | None = File(None),
     at: float | None = Form(None),
     source: str = Form("web"),
 ) -> dict[str, Any]:
-    data = await photo.read()
+    """A photo or a short clip of the water, with a location and optional words."""
+    upload = video or photo
+    if upload is None:
+        raise HTTPException(400, "send a photo or a video")
+    data = await upload.read()
     if not data:
-        raise HTTPException(400, "empty photo")
-    result = await asyncio.to_thread(analyse, client, data)
+        raise HTTPException(400, "empty upload")
+    if video is not None:
+        from floodline.video import analyse_clip
+
+        result = await asyncio.to_thread(analyse_clip, client, data)
+        image, overlay, clip = result.key_frame_jpeg, result.key_overlay_jpeg, result.overlay_mp4
+    else:
+        result = await asyncio.to_thread(analyse, client, data)
+        image, overlay, clip = result.image_jpeg, result.overlay_jpeg, None
 
     transcript = None
     if audio is not None:
         from floodline.voice import transcribe_upload
 
         transcript = await asyncio.to_thread(transcribe_upload, client, await audio.read())
+    elif video is not None and result.spark_video.get("speech_vi"):
+        transcript = result.spark_video["speech_vi"]
 
-    triage = None
-    try:
-        from floodline.triage import triage as run_triage
+    from floodline.triage import triage as run_triage
 
-        triage = await asyncio.to_thread(run_triage, client, result, note, transcript)
-    except ImportError:
-        pass
-
+    triage = await asyncio.to_thread(run_triage, client, result, note, transcript)
     report = StoredReport(
         id=store.new_id(),
         lat=lat,
@@ -102,7 +111,7 @@ async def create_report(
         transcript=transcript,
         source=source,
     )
-    store.save(report, image=result.image_jpeg, overlay=result.overlay_jpeg)
+    store.save(report, image=image, overlay=overlay, clip=clip)
     _publish("report.created", report.public())
     return report.public()
 
@@ -126,12 +135,12 @@ def update_report(report_id: str, body: dict[str, Any]) -> dict[str, Any]:
 
 @app.get("/api/reports/{report_id}/{name}")
 def report_file(report_id: str, name: str) -> FileResponse:
-    if name not in ("image.jpg", "overlay.jpg"):
+    if name not in ("image.jpg", "overlay.jpg", "overlay.mp4"):
         raise HTTPException(404)
     path = store.file(report_id, name)
     if path is None:
         raise HTTPException(404)
-    return FileResponse(path, media_type="image/jpeg")
+    return FileResponse(path, media_type="video/mp4" if name.endswith(".mp4") else "image/jpeg")
 
 
 # -- map ----------------------------------------------------------------------------
