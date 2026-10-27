@@ -171,6 +171,38 @@ def route(
     return {"vehicle": vehicle, "route": found, "naive": naive, "naive_blocked": crossed}
 
 
+# -- demo ---------------------------------------------------------------------------
+
+_seeding = asyncio.Lock()
+
+
+@app.post("/api/demo/seed")
+async def demo_seed(reset: bool = True) -> dict[str, Any]:
+    """Replay the Huế scenario: reports arrive one by one over SSE, as on a real night."""
+    from floodline import scenario
+
+    if _seeding.locked():
+        raise HTTPException(409, "already seeding")
+    async with _seeding:
+        if reset:
+            store.clear()
+            _publish("reports.reset", {})
+        loop = asyncio.get_running_loop()
+
+        def publish(report: StoredReport) -> None:
+            loop.call_soon_threadsafe(_publish, "report.created", report.public())
+
+        created = await asyncio.to_thread(scenario.seed, store, client, on_report=publish)
+    return {"created": len(created)}
+
+
+@app.post("/api/demo/reset")
+def demo_reset() -> dict[str, Any]:
+    store.clear()
+    _publish("reports.reset", {})
+    return {"ok": True}
+
+
 @app.get("/api/catalog")
 def catalog() -> dict[str, Any]:
     cat = catalog_mod.default()
