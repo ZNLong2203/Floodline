@@ -120,3 +120,10 @@ def test_low_resolution_mask_is_scaled_to_its_box():
     place(full, local, (0, 400, 1600, 1200))
     assert full[400:, :].all()
     assert not full[:400].any()
+
+
+def test_object_cut_off_by_the_frame_gives_no_scale_reading():
+    obj, water = scene(285, (0, 150, 380, 365))  # starts at the left edge
+    c = waterline_contact(obj, water)
+    assert c is not None and c.touches_edge
+    assert scale_reading("scooter#1", SCOOTER, "side", c) is None

@@ -23,7 +23,7 @@ def scale_reading(tag: str, spec: ObjectSpec, orientation: str, contact: Contact
         size = spec.width_m
     else:
         return None
-    if size is None or contact.width_px < 8:
+    if size is None or contact.width_px < 8 or contact.touches_edge:
         return None
 
     depths = []
