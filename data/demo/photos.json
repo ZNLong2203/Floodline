@@ -1,0 +1,1005 @@
+{
+ "retrieved": "2026-10-27",
+ "source": "Wikimedia Commons (https://commons.wikimedia.org)",
+ "note": "License and author as shown on each Commons page at retrieval time. Photos are downscaled to width <= 1600 px (Commons thumbnail); videos are the unmodified Commons files.",
+ "photos": [
+  {
+   "file": "photos/hanoi-2008-bicycle-pedestrians-cars-01.jpg",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Hanoi_2008_flood,_06.jpg",
+   "commons_title": "File:Hanoi 2008 flood, 06.jpg",
+   "original_file_url": "https://upload.wikimedia.org/wikipedia/commons/e/e2/Hanoi_2008_flood%2C_06.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "author": "haithanh",
+   "author_url": "https://www.flickr.com/photos/52621576@N00",
+   "license": "CC BY 2.0",
+   "license_url": "https://creativecommons.org/licenses/by/2.0",
+   "date": "2008-10-31 01:58:16",
+   "date_note": null,
+   "location": "Hanoi",
+   "lat": null,
+   "lon": null,
+   "visible": "A boy on a bicycle and pedestrians wade among stopped cars on a flooded road; water is around the bicycle hub (shin height) with cars standing in it.",
+   "original_size": [
+    800,
+    533
+   ],
+   "size": [
+    800,
+    533
+   ],
+   "bytes": 109331,
+   "sha256": "92de5e4ebd12e4522d3fde5467792db9a06d2054f3c9ac6f6b2e50e055d16f53",
+   "source_credit": "originally posted to Flickr as [1]",
+   "license_review": "flickr-import-bot-unreviewed",
+   "personality_rights_warning": true,
+   "commons_categories": [
+    "2008 Hanoi floods",
+    "CC-BY-2.0",
+    "Flickr images uploaded by Flickr upload bot",
+    "Personality rights warning"
+   ],
+   "processing": "unmodified Commons file/thumbnail"
+  },
+  {
+   "file": "photos/hanoi-2008-bus-bicycle-street-01.jpg",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Hanoi_Vietnam_Floods_2008d.JPG",
+   "commons_title": "File:Hanoi Vietnam Floods 2008d.JPG",
+   "original_file_url": "https://upload.wikimedia.org/wikipedia/commons/2/2a/Hanoi_Vietnam_Floods_2008d.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "author": "Ngocnb at Vietnamese Wikipedia",
+   "author_url": "https://en.wikipedia.org/wiki/vi:User:Ngocnb",
+   "license": "CC BY-SA 3.0",
+   "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+   "date": "22 November 2008 (original upload date)",
+   "date_note": "Oct-Nov 2008 flood; Commons lists 2008-11-22 as original upload date",
+   "location": "Nguyễn Lương Bằng Street, Hanoi",
+   "lat": null,
+   "lon": null,
+   "visible": "City bus and a sedan plough through a flooded street while a cyclist wades at right; water is roughly at the bus's wheel hubs and half way up the bicycle wheel.",
+   "original_size": [
+    3072,
+    2304
+   ],
+   "size": [
+    1600,
+    1200
+   ],
+   "bytes": 499715,
+   "sha256": "6d75526e78136413c79b37be5d7e889f380b00e1ad812ef6d9da8f710fd41e1d",
+   "source_credit": "Transferred from vi.wikipedia to Commons.",
+   "license_review": "uploader-asserted (own work / transferred wiki)",
+   "personality_rights_warning": false,
+   "commons_categories": [
+    "2008 Hanoi floods",
+    "Buses in Hanoi",
+    "Buses in flooded roads",
+    "CC-BY-SA-3.0",
+    "GFDL",
+    "License migration redundant",
+    "Nguyễn Lương Bằng Street, Hanoi",
+    "Self-published work"
+   ],
+   "processing": "Commons 1920 px thumbnail, downscaled locally to 1600 px wide (Lanczos, JPEG q90)"
+  },
+  {
+   "file": "photos/hanoi-2008-car-scooters-wading-01.jpg",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:2008_Hanoi_flood,_01.jpg",
+   "commons_title": "File:2008 Hanoi flood, 01.jpg",
+   "original_file_url": "https://upload.wikimedia.org/wikipedia/commons/9/93/2008_Hanoi_flood%2C_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "author": "haithanh",
+   "author_url": "https://www.flickr.com/photos/52621576@N00",
+   "license": "CC BY 2.0",
+   "license_url": "https://creativecommons.org/licenses/by/2.0",
+   "date": "2008-10-31 01:58:10",
+   "date_note": null,
+   "location": "Hanoi",
+   "lat": null,
+   "lon": null,
+   "visible": "Car and scooters push through a flooded city street making a bow wave, a woman wades beside her loaded bicycle; water is around car-bumper and scooter-wheel-hub height (about 30-40 cm).",
+   "original_size": [
+    800,
+    533
+   ],
+   "size": [
+    800,
+    533
+   ],
+   "bytes": 125673,
+   "sha256": "359e9e4f09b6a8a9b6d97b0fef138083104013fe6dcd4ee7267663cbca8fdb3d",
+   "source_credit": "originally posted to Flickr as [1]",
+   "license_review": "flickr-import-bot-unreviewed",
+   "personality_rights_warning": false,
+   "commons_categories": [
+    "2008 Hanoi floods",
+    "CC-BY-2.0",
+    "Flickr images uploaded by Flickr upload bot"
+   ],
+   "processing": "unmodified Commons file/thumbnail"
+  },
+  {
+   "file": "photos/hanoi-2008-man-bicycle-wading-01.jpg",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Hanoi_2008_flood,_04.jpg",
+   "commons_title": "File:Hanoi 2008 flood, 04.jpg",
+   "original_file_url": "https://upload.wikimedia.org/wikipedia/commons/5/5a/Hanoi_2008_flood%2C_04.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "author": "haithanh",
+   "author_url": "https://www.flickr.com/photos/52621576@N00",
+   "license": "CC BY 2.0",
+   "license_url": "https://creativecommons.org/licenses/by/2.0",
+   "date": "2008-10-31 02:48:20",
+   "date_note": null,
+   "location": "Hanoi",
+   "lat": null,
+   "lon": null,
+   "visible": "Man in rubber boots wheels a bicycle with a basket through a flooded street; water is about shin-to-knee on him and covers the lower third of the bicycle wheels.",
+   "original_size": [
+    800,
+    533
+   ],
+   "size": [
+    800,
+    533
+   ],
+   "bytes": 148098,
+   "sha256": "69b31e04108069622005021ad5ebce5044f876d55d73f6be4ca2b39e0a65a925",
+   "source_credit": "originally posted to Flickr as [1]",
+   "license_review": "flickr-import-bot-unreviewed",
+   "personality_rights_warning": false,
+   "commons_categories": [
+    "2008 Hanoi floods",
+    "CC-BY-2.0",
+    "Flickr images uploaded by Flickr upload bot",
+    "People with bicycles"
+   ],
+   "processing": "unmodified Commons file/thumbnail"
+  },
+  {
+   "file": "photos/hanoi-2008-people-thigh-deep-doorway-01.jpg",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:DanhcangaysannhaCauDien.JPG",
+   "commons_title": "File:DanhcangaysannhaCauDien.JPG",
+   "original_file_url": "https://upload.wikimedia.org/wikipedia/commons/3/30/DanhcangaysannhaCauDien.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "author": "Newone",
+   "author_url": "https://commons.wikimedia.org/wiki/User:Newone",
+   "license": "Public domain",
+   "license_url": "https://commons.wikimedia.org/wiki/Template:PD-self",
+   "date": "2008-11-03",
+   "date_note": null,
+   "location": "Hanoi (Cầu Diễn area, per file name)",
+   "lat": null,
+   "lon": null,
+   "visible": "Men stand in a flooded house frontage (one in a conical hat); water is roughly mid-thigh to waist height on them and above the door threshold of the house behind.",
+   "original_size": [
+    2064,
+    1336
+   ],
+   "size": [
+    1600,
+    1036
+   ],
+   "bytes": 500427,
+   "sha256": "8693772e9bb69aa11ae2de4b2234bec51532eb83b10b096eb91fd589d464c9aa",
+   "source_credit": "Own work",
+   "license_review": "uploader-asserted (own work / transferred wiki)",
+   "personality_rights_warning": false,
+   "commons_categories": [
+    "2008 Hanoi floods",
+    "Fishermen from Vietnam",
+    "PD-self",
+    "Scanned with Fujifilm SP-2000",
+    "Self-published work"
+   ],
+   "processing": "Commons 1920 px thumbnail, downscaled locally to 1600 px wide (Lanczos, JPEG q90)"
+  },
+  {
+   "file": "photos/hanoi-2008-signs-bicycle-scooter-01.jpg",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Hanoi_2008_flood.jpg",
+   "commons_title": "File:Hanoi 2008 flood.jpg",
+   "original_file_url": "https://upload.wikimedia.org/wikipedia/commons/e/e1/Hanoi_2008_flood.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "author": "haithanh",
+   "author_url": "https://www.flickr.com/photos/52621576@N00",
+   "license": "CC BY 2.0",
+   "license_url": "https://creativecommons.org/licenses/by/2.0",
+   "date": "2008-10-31 02:47:57",
+   "date_note": null,
+   "location": "Hanoi",
+   "lat": null,
+   "lon": null,
+   "visible": "Street with signposts, a cyclist and a scooter rider wading; water is around the scooter and bicycle wheel hubs (shin height) and the base of the sign poles.",
+   "original_size": [
+    800,
+    533
+   ],
+   "size": [
+    800,
+    533
+   ],
+   "bytes": 179241,
+   "sha256": "396be4a8d97546846ef4e07ed49413194089b06a9d34b59a98b1fa1a9f604b6b",
+   "source_credit": "originally posted to Flickr as [1]",
+   "license_review": "flickr-import-bot-unreviewed",
+   "personality_rights_warning": false,
+   "commons_categories": [
+    "2008 Hanoi floods",
+    "CC-BY-2.0",
+    "Flickr images uploaded by Flickr upload bot"
+   ],
+   "processing": "unmodified Commons file/thumbnail"
+  },
+  {
+   "file": "photos/hanoi-2008-suv-scooter-street-01.jpg",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Hanoi_Vietnam_Floods_2008c.JPG",
+   "commons_title": "File:Hanoi Vietnam Floods 2008c.JPG",
+   "original_file_url": "https://upload.wikimedia.org/wikipedia/commons/d/da/Hanoi_Vietnam_Floods_2008c.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "author": "Ngocnb at Vietnamese Wikipedia",
+   "author_url": "https://en.wikipedia.org/wiki/vi:User:Ngocnb",
+   "license": "CC BY-SA 3.0",
+   "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+   "date": "22 November 2008 (original upload date)",
+   "date_note": "Oct-Nov 2008 flood; Commons lists 2008-11-22 as original upload date",
+   "location": "Nguyễn Lương Bằng Street, Hanoi",
+   "lat": null,
+   "lon": null,
+   "visible": "SUV drives through a flooded street throwing a bow wave while a scooter rider and a pedestrian stand in the water; water is about wheel-hub height on the scooter and SUV.",
+   "original_size": [
+    3072,
+    2304
+   ],
+   "size": [
+    1600,
+    1200
+   ],
+   "bytes": 511824,
+   "sha256": "0e35e524137d890707d706a06fc267e48ba2ad67a06db5f2e23b7670a73ef235",
+   "source_credit": "Transferred from vi.wikipedia to Commons.",
+   "license_review": "uploader-asserted (own work / transferred wiki)",
+   "personality_rights_warning": false,
+   "commons_categories": [
+    "2008 Hanoi floods",
+    "CC-BY-SA-3.0",
+    "GFDL",
+    "License migration redundant",
+    "Nguyễn Lương Bằng Street, Hanoi",
+    "Self-published work"
+   ],
+   "processing": "Commons 1920 px thumbnail, downscaled locally to 1600 px wide (Lanczos, JPEG q90)"
+  },
+  {
+   "file": "photos/hanoi-2008-taxi-pushed-01.jpg",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Lu_lut_Hanoi_2008_01.jpg",
+   "commons_title": "File:Lu lut Hanoi 2008 01.jpg",
+   "original_file_url": "https://upload.wikimedia.org/wikipedia/commons/a/a1/Lu_lut_Hanoi_2008_01.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "author": "Ngocnb",
+   "author_url": "https://commons.wikimedia.org/w/index.php?title=User:Ngocnb&amp;action=edit&amp;redlink=1",
+   "license": "CC BY-SA 3.0",
+   "license_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+   "date": "2/11/2008",
+   "date_note": null,
+   "location": "Hanoi",
+   "lat": null,
+   "lon": null,
+   "visible": "Two men push a stalled white taxi behind a roadside railing in a flooded street; water reaches the taxi's wheels and lower doors (roughly 30-50 cm).",
+   "original_size": [
+    640,
+    480
+   ],
+   "size": [
+    640,
+    480
+   ],
+   "bytes": 122137,
+   "sha256": "d67b9047ccdd0f9af142f4a53c6400fb7cc24b9c32920eba4083b4ae57a1e2be",
+   "source_credit": "Own work",
+   "license_review": "uploader-asserted (own work / transferred wiki)",
+   "personality_rights_warning": false,
+   "commons_categories": [
+    "2008 Hanoi floods",
+    "CC-BY-SA-3.0-migrated",
+    "FAL",
+    "GFDL",
+    "License migration redundant",
+    "Self-published work"
+   ],
+   "processing": "unmodified Commons file/thumbnail"
+  },
+  {
+   "file": "photos/hanoi-2008-woman-umbrella-wading-01.jpg",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Hanoi_2008_flood,_02.jpg",
+   "commons_title": "File:Hanoi 2008 flood, 02.jpg",
+   "original_file_url": "https://upload.wikimedia.org/wikipedia/commons/f/f3/Hanoi_2008_flood%2C_02.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "author": "haithanh",
+   "author_url": "https://www.flickr.com/photos/52621576@N00",
+   "license": "CC BY 2.0",
+   "license_url": "https://creativecommons.org/licenses/by/2.0",
+   "date": "2008-10-31 02:47:49",
+   "date_note": null,
+   "location": "Hanoi",
+   "lat": null,
+   "lon": null,
+   "visible": "Woman with a red umbrella wades past a wall painted with adverts; water is roughly knee height on her.",
+   "original_size": [
+    800,
+    533
+   ],
+   "size": [
+    800,
+    533
+   ],
+   "bytes": 142313,
+   "sha256": "25cff74f9e440b6c14e50f4f8202aad7b12dcd928cce6dac39288fc5e9546a11",
+   "source_credit": "originally posted to Flickr as [1]",
+   "license_review": "flickr-import-bot-unreviewed",
+   "personality_rights_warning": false,
+   "commons_categories": [
+    "2008 Hanoi floods",
+    "CC-BY-2.0",
+    "Flickr images uploaded by Flickr upload bot"
+   ],
+   "processing": "unmodified Commons file/thumbnail"
+  },
+  {
+   "file": "photos/hanoi-2016-bus-flooded-street-01.jpg",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Vietnamese_bus_on_a_flooded_street.jpg",
+   "commons_title": "File:Vietnamese bus on a flooded street.jpg",
+   "original_file_url": "https://upload.wikimedia.org/wikipedia/commons/c/c4/Vietnamese_bus_on_a_flooded_street.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "author": "Blablaaaa123",
+   "author_url": "https://commons.wikimedia.org/w/index.php?title=User:Blablaaaa123&amp;action=edit&amp;redlink=1",
+   "license": "CC BY-SA 4.0",
+   "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+   "date": "2016-05-19",
+   "date_note": null,
+   "location": "Hanoi (bus route 10 Long Biên - Từ Sơn, under a bridge)",
+   "lat": null,
+   "lon": null,
+   "visible": "City bus stands in water under an overpass with a scooter beside it; water reaches the bus's lower bumper and about mid-wheel (roughly 30-50 cm), scooter wheels submerged.",
+   "original_size": [
+    960,
+    640
+   ],
+   "size": [
+    960,
+    640
+   ],
+   "bytes": 79620,
+   "sha256": "8bd2b4acb07c6d28741df37cf0f37ecf666ca8f81e4c6510e65b243e82518596",
+   "source_credit": "Own work",
+   "license_review": "uploader-asserted (own work / transferred wiki)",
+   "personality_rights_warning": false,
+   "commons_categories": [
+    "Buses in Vietnam",
+    "Buses in flooded roads",
+    "CC-BY-SA-4.0",
+    "Floods in Vietnam",
+    "Hyundai buses",
+    "Self-published work"
+   ],
+   "processing": "unmodified Commons file/thumbnail"
+  },
+  {
+   "file": "photos/hanoi-2022-mai-dich-cars-01.jpg",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Mai_Dịch_Overpass,_Cầu_Giấy_District,_Hanoi_flooded_-_May_2022.jpg",
+   "commons_title": "File:Mai Dịch Overpass, Cầu Giấy District, Hanoi flooded - May 2022.jpg",
+   "original_file_url": "https://upload.wikimedia.org/wikipedia/commons/d/d8/Mai_D%E1%BB%8Bch_Overpass%2C_C%E1%BA%A7u_Gi%E1%BA%A5y_District%2C_Hanoi_flooded_-_May_2022.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "author": "Nguyen QuocTrung",
+   "author_url": "https://commons.wikimedia.org/wiki/User:Nguyen_QuocTrung",
+   "license": "CC BY-SA 4.0",
+   "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+   "date": "2022-05-29 17:03:23",
+   "date_note": null,
+   "location": "Mai Dịch overpass, Cầu Giấy District, Hanoi",
+   "lat": null,
+   "lon": null,
+   "visible": "Cars stopped in a flooded intersection with pedestrians standing in the water; a red sedan sits in water to about its wheel arches, pedestrians in water roughly calf height.",
+   "original_size": [
+    4121,
+    2088
+   ],
+   "size": [
+    1600,
+    811
+   ],
+   "bytes": 542592,
+   "sha256": "09b498c4c5bb7cb5f2d904192f7d009358730f8d467197b6236ae4142a0f5b06",
+   "source_credit": "Own work",
+   "license_review": "uploader-asserted (own work / transferred wiki)",
+   "personality_rights_warning": false,
+   "commons_categories": [
+    "CC-BY-SA-4.0",
+    "Flooded roads in Asia",
+    "Hanoi in the 2020s",
+    "Nature of Yên Hòa",
+    "Phạm Hùng Street, Hanoi",
+    "Self-published work"
+   ],
+   "processing": "Commons 1920 px thumbnail, downscaled locally to 1600 px wide (Lanczos, JPEG q90)"
+  },
+  {
+   "file": "photos/hcmc-2013-man-standing-petrol-station-01.jpg",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Street_flood_in_Saigon_(10728739135).jpg",
+   "commons_title": "File:Street flood in Saigon (10728739135).jpg",
+   "original_file_url": "https://upload.wikimedia.org/wikipedia/commons/f/f5/Street_flood_in_Saigon_%2810728739135%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "author": "Bem photography:",
+   "author_url": null,
+   "license": "CC BY 2.0",
+   "license_url": "https://creativecommons.org/licenses/by/2.0",
+   "date": "2013-11-07 13:33:17",
+   "date_note": null,
+   "location": "Kinh Dương Vương Road, Bình Tân District, Ho Chi Minh City",
+   "lat": null,
+   "lon": null,
+   "visible": "Man in a blue shirt stands far off in a flooded street beside a petrol station with roll-down shutters; water is roughly knee height on him (hard to judge at that distance).",
+   "original_size": [
+    3880,
+    2524
+   ],
+   "size": [
+    1600,
+    1041
+   ],
+   "bytes": 553168,
+   "sha256": "e3ea5b50ae54ce20cb99f9924e83743ac612eb8cb15ce3cd9a0564bfc2eabbfc",
+   "source_credit": "https://www.flickr.com/photos/bem_chip/10728739135/",
+   "license_review": "FlickreviewR",
+   "personality_rights_warning": false,
+   "commons_categories": [
+    "CC-BY-2.0",
+    "Files uploaded by Đại Việt quốc/Flickr/Saigon",
+    "Flickr images reviewed by FlickreviewR 2",
+    "Kinh Duong Vuong Road, Ho Chi Minh City"
+   ],
+   "processing": "Commons 1920 px thumbnail, downscaled locally to 1600 px wide (Lanczos, JPEG q90)"
+  },
+  {
+   "file": "photos/hcmc-2013-pushing-truck-01.jpg",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Street_flood_in_Saigon_(10728572006).jpg",
+   "commons_title": "File:Street flood in Saigon (10728572006).jpg",
+   "original_file_url": "https://upload.wikimedia.org/wikipedia/commons/3/33/Street_flood_in_Saigon_%2810728572006%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "author": "Bem photography:",
+   "author_url": null,
+   "license": "CC BY 2.0",
+   "license_url": "https://creativecommons.org/licenses/by/2.0",
+   "date": "2013-11-07 13:27:57",
+   "date_note": null,
+   "location": "Kinh Dương Vương Road, Bình Tân District, Ho Chi Minh City",
+   "lat": null,
+   "lon": null,
+   "visible": "Four men push a small blue truck through a flooded street; water is roughly calf-to-knee height on the men.",
+   "original_size": [
+    4288,
+    2848
+   ],
+   "size": [
+    1600,
+    1062
+   ],
+   "bytes": 532702,
+   "sha256": "d57141e853d0f629ccf85eaec7fdead9719cdb746b4cb8a1d20b3e2ca81d4d5c",
+   "source_credit": "https://www.flickr.com/photos/bem_chip/10728572006/",
+   "license_review": "FlickreviewR",
+   "personality_rights_warning": false,
+   "commons_categories": [
+    "CC-BY-2.0",
+    "Files uploaded by Đại Việt quốc/Flickr/Saigon",
+    "Flickr images reviewed by FlickreviewR 2",
+    "Kinh Duong Vuong Road, Ho Chi Minh City"
+   ],
+   "processing": "Commons 1920 px thumbnail, downscaled locally to 1600 px wide (Lanczos, JPEG q90)"
+  },
+  {
+   "file": "photos/hcmc-2013-scooter-rider-01.jpg",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Street_flood_in_Saigon_(10728890034).jpg",
+   "commons_title": "File:Street flood in Saigon (10728890034).jpg",
+   "original_file_url": "https://upload.wikimedia.org/wikipedia/commons/3/39/Street_flood_in_Saigon_%2810728890034%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "author": "Bem photography:",
+   "author_url": null,
+   "license": "CC BY 2.0",
+   "license_url": "https://creativecommons.org/licenses/by/2.0",
+   "date": "2013-11-07 13:25:39",
+   "date_note": null,
+   "location": "Kinh Dương Vương Road, Bình Tân District, Ho Chi Minh City",
+   "lat": null,
+   "lon": null,
+   "visible": "Rider on a red scooter wades through grey floodwater; water is about wheel-hub to footboard height (roughly 20-30 cm) and wets the rider's feet.",
+   "original_size": [
+    3964,
+    2596
+   ],
+   "size": [
+    1600,
+    1048
+   ],
+   "bytes": 451511,
+   "sha256": "cea5ecacc51b8273e7f5a8fdc6724370dbb04fdcc31a7ae809dbb89057bbdfca",
+   "source_credit": "https://www.flickr.com/photos/bem_chip/10728890034/",
+   "license_review": "FlickreviewR",
+   "personality_rights_warning": false,
+   "commons_categories": [
+    "CC-BY-2.0",
+    "Files uploaded by Đại Việt quốc/Flickr/Saigon",
+    "Flickr images reviewed by FlickreviewR 2",
+    "Kinh Duong Vuong Road, Ho Chi Minh City"
+   ],
+   "processing": "Commons 1920 px thumbnail, downscaled locally to 1600 px wide (Lanczos, JPEG q90)"
+  },
+  {
+   "file": "photos/hcmc-2013-taxi-minibus-scooters-01.jpg",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Street_flood_in_Saigon_(10729260963).jpg",
+   "commons_title": "File:Street flood in Saigon (10729260963).jpg",
+   "original_file_url": "https://upload.wikimedia.org/wikipedia/commons/0/01/Street_flood_in_Saigon_%2810729260963%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "author": "Bem photography:",
+   "author_url": null,
+   "license": "CC BY 2.0",
+   "license_url": "https://creativecommons.org/licenses/by/2.0",
+   "date": "2013-11-07 12:47:25",
+   "date_note": null,
+   "location": "Kinh Dương Vương Road, Bình Tân District, Ho Chi Minh City",
+   "lat": null,
+   "lon": null,
+   "visible": "Taxi, minibus and two scooters drive through a splashing flooded street; water reaches about the wheel hubs of the scooters and car wheels (roughly 15-30 cm).",
+   "original_size": [
+    4288,
+    2848
+   ],
+   "size": [
+    1600,
+    1062
+   ],
+   "bytes": 640001,
+   "sha256": "85ab95d4c2b2583d14560ec5e375f6ad69bb9bfc381c29d5e013ec6cef2d4688",
+   "source_credit": "https://www.flickr.com/photos/bem_chip/10729260963/",
+   "license_review": "FlickreviewR",
+   "personality_rights_warning": false,
+   "commons_categories": [
+    "CC-BY-2.0",
+    "Files uploaded by Đại Việt quốc/Flickr/Saigon",
+    "Flickr images reviewed by FlickreviewR 2",
+    "Kinh Duong Vuong Road, Ho Chi Minh City"
+   ],
+   "processing": "Commons 1920 px thumbnail, downscaled locally to 1600 px wide (Lanczos, JPEG q90)"
+  },
+  {
+   "file": "photos/hue-2020-boat-relief-01.jpg",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Boat_transport_of_relief_supplies_to_flood-affected_areas_in_Huế_during_a_period_of_severe_flooding.jpg",
+   "commons_title": "File:Boat transport of relief supplies to flood-affected areas in Huế during a period of severe flooding.jpg",
+   "original_file_url": "https://upload.wikimedia.org/wikipedia/commons/5/5c/Boat_transport_of_relief_supplies_to_flood-affected_areas_in_Hu%E1%BA%BF_during_a_period_of_severe_flooding.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "author": "Nguyenngocthanhtoan",
+   "author_url": "https://commons.wikimedia.org/w/index.php?title=User:Nguyenngocthanhtoan&amp;action=edit&amp;redlink=1",
+   "license": "CC BY-SA 4.0",
+   "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+   "date": "2020-11-15 19:33:36",
+   "date_note": null,
+   "location": "Huế, Thừa Thiên Huế Province (central Vietnam)",
+   "lat": null,
+   "lon": null,
+   "visible": "Volunteers in orange life jackets in a small boat loaded with relief bags on open floodwater among trees; boat-only conditions, the road is not visible.",
+   "original_size": [
+    2208,
+    1242
+   ],
+   "size": [
+    1600,
+    900
+   ],
+   "bytes": 407852,
+   "sha256": "ca32716e78ebe5d7611e6c2e3e8b2e417b579c2c73c44360ba0653fafd6f1a59",
+   "source_credit": "Own work",
+   "license_review": "uploader-asserted (own work / transferred wiki)",
+   "personality_rights_warning": false,
+   "commons_categories": [
+    "CC-BY-SA-4.0",
+    "Files with PermissionTicket template but without P6305 SDC statement",
+    "Interior of Chùa Phổ Lại",
+    "Items with VRTS permission confirmed",
+    "Self-published work",
+    "Thích Trung Hiếu"
+   ],
+   "processing": "Commons 1920 px thumbnail, downscaled locally to 1600 px wide (Lanczos, JPEG q90)"
+  },
+  {
+   "file": "photos/quangngai-2013-girl-wading-01.jpg",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Junulino_vadas_tra_inundita_strato_en_Quang_Ngai.jpg",
+   "commons_title": "File:Junulino vadas tra inundita strato en Quang Ngai.jpg",
+   "original_file_url": "https://upload.wikimedia.org/wikipedia/commons/8/82/Junulino_vadas_tra_inundita_strato_en_Quang_Ngai.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "author": "RG72",
+   "author_url": "https://commons.wikimedia.org/wiki/User:RG72",
+   "license": "CC BY-SA 3.0",
+   "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+   "date": "2013-11-16 14:02:43",
+   "date_note": null,
+   "location": "Quảng Ngãi, Quảng Ngãi Province (central Vietnam)",
+   "lat": 15.09088611,
+   "lon": 108.8227,
+   "visible": "Young woman in jeans wading barefoot down a brown flooded street; water is roughly knee height on her legs.",
+   "original_size": [
+    2448,
+    3264
+   ],
+   "size": [
+    1600,
+    2133
+   ],
+   "bytes": 853372,
+   "sha256": "a4ec64b36140cc613d389186d9b43538c78f76924d17c4347df012b15bc2f105",
+   "source_credit": "Own work",
+   "license_review": "uploader-asserted (own work / transferred wiki)",
+   "personality_rights_warning": false,
+   "commons_categories": [
+    "1 girl",
+    "2013 floods in Vietnam",
+    "Adolescent girls of Vietnam",
+    "Adolescent girls walking on roads",
+    "Aftermath of Typhoon Haiyan in Quang Ngai",
+    "CC-BY-SA-3.0",
+    "Female human arms",
+    "Female people leaning forward",
+    "Female shirts",
+    "Females with bags",
+    "Files with coordinates missing SDC location of creation",
+    "Girls of Vietnam in 2013",
+    "Girls walking in water",
+    "Girls wearing blue jeans",
+    "Human knee bends",
+    "Quang Ngai City",
+    "Self-published work",
+    "Taken with iPhone 5",
+    "Three-quarter views of females",
+    "Vietnam photographs taken on 2013-11-16",
+    "Women wearing blue jeans"
+   ],
+   "processing": "Commons 1920 px thumbnail, downscaled locally to 1600 px wide (Lanczos, JPEG q90)"
+  },
+  {
+   "file": "photos/quangngai-2013-people-wading-gate-01.jpg",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Quang_Ngai_2013-11-16_37.jpg",
+   "commons_title": "File:Quang Ngai 2013-11-16 37.jpg",
+   "original_file_url": "https://upload.wikimedia.org/wikipedia/commons/2/2b/Quang_Ngai_2013-11-16_37.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "author": "RG72",
+   "author_url": "https://commons.wikimedia.org/wiki/User:RG72",
+   "license": "CC BY-SA 4.0",
+   "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+   "date": "2013-11-16 14:03:20",
+   "date_note": null,
+   "location": "Quảng Ngãi, Quảng Ngãi Province (central Vietnam)",
+   "lat": 15.090783,
+   "lon": 108.822839,
+   "visible": "Adults and a child wade through brown water in front of a university gate; a man carries a bucket; water is about knee height on the adults and covers the gate threshold.",
+   "original_size": [
+    3264,
+    2448
+   ],
+   "size": [
+    1600,
+    1200
+   ],
+   "bytes": 564090,
+   "sha256": "bd505420fc5dc3507f184f0ad8900f38878ab5ebe8a935d505b0bc17b7ea27e2",
+   "source_credit": "Own work",
+   "license_review": "uploader-asserted (own work / transferred wiki)",
+   "personality_rights_warning": false,
+   "commons_categories": [
+    "Aftermath of Typhoon Haiyan in Quang Ngai",
+    "CC-BY-SA-4.0",
+    "Files with coordinates missing SDC location of creation",
+    "Self-published work"
+   ],
+   "processing": "Commons 1920 px thumbnail, downscaled locally to 1600 px wide (Lanczos, JPEG q90)"
+  },
+  {
+   "file": "photos/quangngai-2013-scooter-areca-load-01.jpg",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Quang_Ngai_2013-11-16_35.jpg",
+   "commons_title": "File:Quang Ngai 2013-11-16 35.jpg",
+   "original_file_url": "https://upload.wikimedia.org/wikipedia/commons/3/35/Quang_Ngai_2013-11-16_35.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "author": "RG72",
+   "author_url": "https://commons.wikimedia.org/wiki/User:RG72",
+   "license": "CC BY-SA 4.0",
+   "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+   "date": "2013-11-16 14:02:02",
+   "date_note": null,
+   "location": "Quảng Ngãi, Quảng Ngãi Province (central Vietnam)",
+   "lat": 15.091139,
+   "lon": 108.822517,
+   "visible": "Man on a red scooter carrying a bundle of areca nuts through a brown flooded street; water covers the lower half of the scooter wheels (about wheel-hub height); a cyclist wades at right with the bicycle wheel partly under; shopfront shutters behind.",
+   "original_size": [
+    3264,
+    2448
+   ],
+   "size": [
+    1600,
+    1200
+   ],
+   "bytes": 567943,
+   "sha256": "343a51f8747a91018a46db63fe31f5fad0b1c339d4c769247fe644f207cfa369",
+   "source_credit": "Own work",
+   "license_review": "uploader-asserted (own work / transferred wiki)",
+   "personality_rights_warning": false,
+   "commons_categories": [
+    "Aftermath of Typhoon Haiyan in Quang Ngai",
+    "CC-BY-SA-4.0",
+    "Files with coordinates missing SDC location of creation",
+    "Self-published work"
+   ],
+   "processing": "Commons 1920 px thumbnail, downscaled locally to 1600 px wide (Lanczos, JPEG q90)"
+  },
+  {
+   "file": "photos/quangngai-2013-scooter-two-riders-shallow-01.jpg",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Quang_Ngai_2013-11-16_28.jpg",
+   "commons_title": "File:Quang Ngai 2013-11-16 28.jpg",
+   "original_file_url": "https://upload.wikimedia.org/wikipedia/commons/6/6e/Quang_Ngai_2013-11-16_28.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "author": "RG72",
+   "author_url": "https://commons.wikimedia.org/wiki/User:RG72",
+   "license": "CC BY-SA 4.0",
+   "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+   "date": "2013-11-16 13:44:47",
+   "date_note": null,
+   "location": "Quảng Ngãi, Quảng Ngãi Province (central Vietnam)",
+   "lat": 15.094778,
+   "lon": 108.819825,
+   "visible": "Two people on a scooter ride through shallow floodwater at a road junction; water only reaches about the lower rim of the wheels (roughly ankle level), road surface partly visible.",
+   "original_size": [
+    3264,
+    2448
+   ],
+   "size": [
+    1600,
+    1200
+   ],
+   "bytes": 616286,
+   "sha256": "400b12f29b7dc916fd9633c144f8ae7bcc5d11f5458cc6fdcbe06e85978a6ecd",
+   "source_credit": "Own work",
+   "license_review": "uploader-asserted (own work / transferred wiki)",
+   "personality_rights_warning": false,
+   "commons_categories": [
+    "Aftermath of Typhoon Haiyan in Quang Ngai",
+    "CC-BY-SA-4.0",
+    "Files with coordinates missing SDC location of creation",
+    "Self-published work"
+   ],
+   "processing": "Commons 1920 px thumbnail, downscaled locally to 1600 px wide (Lanczos, JPEG q90)"
+  },
+  {
+   "file": "photos/quangngai-2013-scooters-pushed-school-01.jpg",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Quang_Ngai_2013-11-16_33.jpg",
+   "commons_title": "File:Quang Ngai 2013-11-16 33.jpg",
+   "original_file_url": "https://upload.wikimedia.org/wikipedia/commons/6/6d/Quang_Ngai_2013-11-16_33.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "author": "RG72",
+   "author_url": "https://commons.wikimedia.org/wiki/User:RG72",
+   "license": "CC BY-SA 4.0",
+   "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+   "date": "2013-11-16 13:56:57",
+   "date_note": null,
+   "location": "Quảng Ngãi, Quảng Ngãi Province (central Vietnam)",
+   "lat": 15.092117,
+   "lon": 108.821969,
+   "visible": "Pedestrians wade and two scooters are pushed along a flooded avenue beside a school wall; water is roughly shin-to-knee on the pedestrians and covers the lower wheels of the scooters.",
+   "original_size": [
+    3264,
+    2448
+   ],
+   "size": [
+    1600,
+    1200
+   ],
+   "bytes": 533291,
+   "sha256": "2790287c29803d6211aeb1cae6326651d653ee0678b0a8bf632a476cfcaaeda4",
+   "source_credit": "Own work",
+   "license_review": "uploader-asserted (own work / transferred wiki)",
+   "personality_rights_warning": false,
+   "commons_categories": [
+    "Aftermath of Typhoon Haiyan in Quang Ngai",
+    "CC-BY-SA-4.0",
+    "Files with coordinates missing SDC location of creation",
+    "Self-published work"
+   ],
+   "processing": "Commons 1920 px thumbnail, downscaled locally to 1600 px wide (Lanczos, JPEG q90)"
+  },
+  {
+   "file": "photos/quangngai-2013-shopfront-doors-flooded-01.jpg",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Quang_Ngai_2013-11-16_38.jpg",
+   "commons_title": "File:Quang Ngai 2013-11-16 38.jpg",
+   "original_file_url": "https://upload.wikimedia.org/wikipedia/commons/6/60/Quang_Ngai_2013-11-16_38.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "author": "RG72",
+   "author_url": "https://commons.wikimedia.org/wiki/User:RG72",
+   "license": "CC BY-SA 4.0",
+   "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+   "date": "2013-11-16 14:03:48",
+   "date_note": null,
+   "location": "Quảng Ngãi, Quảng Ngãi Province (central Vietnam)",
+   "lat": 15.090633,
+   "lon": 108.822906,
+   "visible": "Row of shopfronts with roll-down shutters standing in brown floodwater; the water is above the doorsteps and reaches the base of the shutters (door-sill reference); a few small figures stand near the shopfronts.",
+   "original_size": [
+    2448,
+    3264
+   ],
+   "size": [
+    1600,
+    2133
+   ],
+   "bytes": 801881,
+   "sha256": "7ac12aaba93562564b57d0d2803ea55943c3af13433c0dea1e606c3da244d6de",
+   "source_credit": "Own work",
+   "license_review": "uploader-asserted (own work / transferred wiki)",
+   "personality_rights_warning": false,
+   "commons_categories": [
+    "Aftermath of Typhoon Haiyan in Quang Ngai",
+    "CC-BY-SA-4.0",
+    "Files with coordinates missing SDC location of creation",
+    "Self-published work"
+   ],
+   "processing": "Commons 1920 px thumbnail, downscaled locally to 1600 px wide (Lanczos, JPEG q90)"
+  },
+  {
+   "file": "photos/quangtri-gio-mai-boat-rescue-01.jpg",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Đội_phòng_chóng_lụt_bão_xã_Gio_Mai_đi_cứu_trợ_nhà_dân.JPG",
+   "commons_title": "File:Đội phòng chóng lụt bão xã Gio Mai đi cứu trợ nhà dân.JPG",
+   "original_file_url": "https://upload.wikimedia.org/wikipedia/commons/e/eb/%C4%90%E1%BB%99i_ph%C3%B2ng_ch%C3%B3ng_l%E1%BB%A5t_b%C3%A3o_x%C3%A3_Gio_Mai_%C4%91i_c%E1%BB%A9u_tr%E1%BB%A3_nh%C3%A0_d%C3%A2n.JPG?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "author": "Original uploader was Bút Chiến at vi.wikipedia",
+   "author_url": "https://vi.wikipedia.org/wiki/User:B%C3%BAt_Chi%E1%BA%BFn",
+   "license": "CC BY-SA 3.0",
+   "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+   "date": "18 March 2010 (original upload date)",
+   "date_note": "unknown flood date; Commons records original upload 2010-03-18 on vi.wikipedia",
+   "location": "Gio Mai commune, Quảng Trị Province (central Vietnam), per file title",
+   "lat": null,
+   "lon": null,
+   "visible": "Rescue team in a wooden boat on deep brown floodwater between trees and rooftops; water is far above person height on land, boat-only.",
+   "original_size": [
+    882,
+    644
+   ],
+   "size": [
+    882,
+    644
+   ],
+   "bytes": 418452,
+   "sha256": "caacb58a5848d0a26f2579d1ce36069a0cadffc92f07cec45c4d603daaf23fd9",
+   "source_credit": "Transferred from vi.wikipedia; transfer was stated to be made by User:Trần Nguyễn Minh Huy.",
+   "license_review": "uploader-asserted (own work / transferred wiki)",
+   "personality_rights_warning": false,
+   "commons_categories": [
+    "CC-BY-SA-3.0,2.5,2.0,1.0",
+    "Floods in Vietnam",
+    "GFDL",
+    "License migration redundant",
+    "Quang Tri",
+    "Rivers of Vietnam",
+    "Self-published work",
+    "Social work in Vietnam",
+    "Taken with Panasonic Lumix DMC-FS4",
+    "The Good Samaritan in social work"
+   ],
+   "processing": "unmodified Commons file/thumbnail"
+  },
+  {
+   "file": "photos/thainguyen-2024-street-flood-01.jpg",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Floods_in_Thai_Nguyen_2024.jpg",
+   "commons_title": "File:Floods in Thai Nguyen 2024.jpg",
+   "original_file_url": "https://upload.wikimedia.org/wikipedia/commons/c/c1/Floods_in_Thai_Nguyen_2024.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "author": "Hoàng Lương",
+   "author_url": "https://commons.wikimedia.org/w/index.php?title=User:Ho%C3%A0ng_L%C6%B0%C6%A1ng&amp;action=edit&amp;redlink=1",
+   "license": "CC0",
+   "license_url": "https://creativecommons.org/publicdomain/zero/1.0",
+   "date": "2024-09-09 14:55:07",
+   "date_note": null,
+   "location": "Quan Triều, Thái Nguyên Province (northern Vietnam); Typhoon Yagi floods",
+   "lat": 21.617886,
+   "lon": 105.795822,
+   "visible": "Brown floodwater fills the whole street up to the base of a road-sign pole and the shopfronts, no people or vehicles for scale; depth clearly beyond walking (well above knee) but not measurable.",
+   "original_size": [
+    2075,
+    2293
+   ],
+   "size": [
+    1600,
+    1768
+   ],
+   "bytes": 701978,
+   "sha256": "561b2c0993f3967da517157401a8e41bc866430ff669025e0391ba6a4478f2bb",
+   "source_credit": "Own work",
+   "license_review": "uploader-asserted (own work / transferred wiki)",
+   "personality_rights_warning": false,
+   "commons_categories": [
+    "2024 floods in Vietnam",
+    "CC-Zero",
+    "Files with coordinates missing SDC location of creation",
+    "Floods in Vietnam",
+    "Self-published work"
+   ],
+   "processing": "Commons 1920 px thumbnail, downscaled locally to 1600 px wide (Lanczos, JPEG q90)"
+  }
+ ],
+ "videos": [
+  {
+   "file": "videos/quangngai-2013-wading-flooded-street-02.mp4",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Vadado_laŭ_inundita_strato_en_Quang_Ngai_2.webm",
+   "commons_title": "File:Vadado laŭ inundita strato en Quang Ngai 2.webm",
+   "original_file_url": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Vadado_la%C5%AD_inundita_strato_en_Quang_Ngai_2.webm?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "author": "RG72",
+   "license": "CC BY-SA 4.0",
+   "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+   "date": "2013-11-16",
+   "location": "Quảng Ngãi, Quảng Ngãi Province (central Vietnam)",
+   "lat": null,
+   "lon": null,
+   "visible": "Handheld walk along a flooded road in Quang Ngai: several scooters ride and are pushed through water about wheel-hub deep, pedestrians wade carrying bags (ankle-to-shin deep), a truck stands further away; roadside shops stay mostly dry above the sill.",
+   "duration_s": 27.73,
+   "size_bytes": 9180485,
+   "dimensions": [
+    1920,
+    1080
+   ],
+   "sha256": "536ce082fd3e569789e9906c46dea4124d031b7b9bea1887cf18f6a4e3a4117d",
+   "ffprobe": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+     {
+      "codec_name": "vp8",
+      "width": 1920,
+      "height": 1080,
+      "r_frame_rate": "30000/1001"
+     },
+     {
+      "codec_name": "vorbis",
+      "r_frame_rate": "0/0"
+     }
+    ],
+    "format": {
+     "duration": "27.730000",
+     "size": "9180485"
+    }
+   },
+   "commons_categories": [
+    "2013-11-16",
+    "CC-BY-SA-4.0",
+    "Self-published work",
+    "Videos of aftermath of Typhoon Haiyan in Quang Ngai",
+    "Videos of floods in Vietnam"
+   ]
+  },
+  {
+   "file": "videos/quangngai-2013-wading-flooded-street-03.mp4",
+   "commons_page": "https://commons.wikimedia.org/wiki/File:Vadado_laŭ_inundita_strato_en_Quang_Ngai_3.webm",
+   "commons_title": "File:Vadado laŭ inundita strato en Quang Ngai 3.webm",
+   "original_file_url": "https://upload.wikimedia.org/wikipedia/commons/c/cc/Vadado_la%C5%AD_inundita_strato_en_Quang_Ngai_3.webm?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=original",
+   "author": "RG72",
+   "license": "CC BY-SA 4.0",
+   "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+   "date": "2013-11-16",
+   "location": "Quảng Ngãi, Quảng Ngãi Province (central Vietnam)",
+   "lat": null,
+   "lon": null,
+   "visible": "Handheld walk along a flooded road in front of a school: people push scooters through brown water (about wheel-hub deep), pedestrians wade (shin-to-knee), an SUV and a van drive through, a green jeep is parked at the water edge.",
+   "duration_s": 27.964000000000002,
+   "size_bytes": 12823546,
+   "dimensions": [
+    1920,
+    1080
+   ],
+   "sha256": "8680d398821289c570d6e314b2c75076e4919dc701a7f0484228c790ea7fe214",
+   "ffprobe": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+     {
+      "codec_name": "vp8",
+      "width": 1920,
+      "height": 1080,
+      "r_frame_rate": "30000/1001"
+     },
+     {
+      "codec_name": "vorbis",
+      "r_frame_rate": "0/0"
+     }
+    ],
+    "format": {
+     "duration": "27.964000",
+     "size": "12823546"
+    }
+   },
+   "commons_categories": [
+    "2013-11-16",
+    "CC-BY-SA-4.0",
+    "Self-published work",
+    "Videos of aftermath of Typhoon Haiyan in Quang Ngai",
+    "Videos of floods in Vietnam"
+   ]
+  }
+ ]
+}
