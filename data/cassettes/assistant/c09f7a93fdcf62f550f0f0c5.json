@@ -1,0 +1,441 @@
+{
+ "city": "valencia",
+ "question": "Which streets in Catarroja are cut for cars?",
+ "answer": {
+  "answer": "In Catarroja for **car**:\n\n**CUT - do not send car, send boat:**\n\n* **Carrer de les Germanies** - 4/4 segments impassable for car, suv, truck, all vehicles. Depth about 0.0-1.5 m.\n  8 people waiting, incl. 5-year-old child, in building garage, waist-deep rising water, no light.\n  > \"We are in the garage of my building, calle de les Germanies. The water is up to our waist and keeps rising. I have my five-year-old daughter in my arms and there is no light. Please come get us out.\"\n  No safe road exists for car / suv / truck - needs boat.\n\n* **Carrer de Joaquim Olmos** - 7/7 segments impassable for car. Depth about 0.0-1.2 m. Truck also: 5 impassable, 2 risky - no safe road.\n  4 people in courtyard, car stuck, fast water to car wheels.\n  > \"Water is gushing in through the garage ramp, no time to get the car out. Calle Joaquim Olmos, Catarroja\"\n  No safe road for car - send boat or high-clearance truck with caution.\n\n**PARTIALLY CUT - avoid car:**\n\n* **Carrer de Sant Antoni** - for car: 4 passable, 11 risky, 2 impassable. Depth about 0.0-0.9 m. For suv/truck: 12 passable, 5 risky.\n  14 people incl. children/elderly on street/balconies.\n  > \"Calle Sant Antoni, the water reaches the ankles. Neighbors are walking in the middle of the street and the cars are full of mud\"\n  Do not send car - send suv/truck if must.\n\n**PASSABLE for car:**\n\n* **Plaça Major** - 7/7 segments passable for car. Depth about 0.0-0.2 m.\n  2 vulnerable waiting 2nd floor, garage flooded.\n",
+  "steps": [
+   {
+    "tool": "list_reports",
+    "args": {
+     "limit": 20
+    },
+    "result": {
+     "count": 14,
+     "reports": [
+      {
+       "id": "valencia-12",
+       "street": "Plaça Major",
+       "lat": 39.40271,
+       "lon": -0.40414,
+       "minutes_ago": 29,
+       "depth_m": [
+        0.0,
+        0.13
+       ],
+       "priority": 80,
+       "people": 2,
+       "vulnerable": [
+        "elderly",
+        "disabled",
+        "sick"
+       ],
+       "summary": "86-year-old father alone on 2nd floor in Catarroja near Plaza Mayor, cannot walk without walker and needs medication, trapped as garage flooded and water rises up stairs.",
+       "message_en": "Hello, I am a neighbor from Catarroja, near Plaza Mayor. The garage has filled and the water is already coming up the entrance stairs. My father is eighty-six years old, he is alone on the second floor, he cannot walk without a walker and needs his medication. We cannot get out. Please, someone come.",
+       "status": "new"
+      },
+      {
+       "id": "valencia-13",
+       "street": "Carrer de les Germanies",
+       "lat": 39.40454,
+       "lon": -0.39776,
+       "minutes_ago": 18,
+       "depth_m": [
+        0.0,
+        1.346
+       ],
+       "priority": 45,
+       "people": 8,
+       "vulnerable": [
+        "child"
+       ],
+       "summary": "People trapped in building garage on calle de les Germanies, waist-deep rising water, no light, with 5-year-old child; photo shows 8 people in 0.0-1.35m water.",
+       "message_en": "We are in the garage of my building, calle de les Germanies. The water is up to our waist and keeps rising. I have my five-year-old daughter in my arms and there is no light. Please come get us out.",
+       "status": "new"
+      },
+      {
+       "id": "valencia-11",
+       "street": "Avinguda dels Reis Catòlics",
+       "lat": 39.41911,
+       "lon": -0.3918,
+       "minutes_ago": 38,
+       "depth_m": [
+        0.0,
+        3.4
+       ],
+       "priority": 35,
+       "people": 2,
+       "vulnerable": [],
+       "summary": "Observer on balcony in Alfafar reports 2 people trapped in car below, water at windows, doors blocked, woman screaming.",
+       "message_en": "Please, we need help. I am on a balcony in Alfafar and below, in the street, there is a car trapped with two people inside. The water is already up to the windows and they cannot open the doors. A woman is screaming. Notify emergency services, quickly.",
+       "status": "new"
+      },
+      {
+       "id": "valencia-10",
+       "street": "Carrer de Sant Antoni",
+       "lat": 39.40406,
+       "lon": -0.40313,
+       "minutes_ago": 48,
+       "depth_m": [
+        0.0,
+        0.226
+       ],
+       "priority": 25,
+       "people": 14,
+       "vulnerable": [
+        "elderly",
+        "child"
+       ],
+       "summary": "14 people including children/elderly on street and balconies at Calle Sant Antoni, ankle-deep water 0.0-0.23m, mud-covered cars, no distress signal.",
+       "message_en": "Calle Sant Antoni, the water reaches the ankles. Neighbors are walking in the middle of the street and the cars are full of mud",
+       "status": "new"
+      },
+      {
+       "id": "valencia-01",
+       "street": "Carrer de Vicent Lladró Sena",
+       "lat": 39.46803,
+       "lon": -0.42486,
+       "minutes_ago": 122,
+       "depth_m": [
+        0.0,
+        0.335
+       ],
+       "priority": 20,
+       "people": 20,
+       "vulnerable": [
+        "child"
+       ],
+       "summary": "20 people incl. children wading in ankle-deep water 0.0-0.33m covering roadway at Rotonda de la carretera de Torrent en Xirivella; cars still passable slowly, not trapped.",
+       "message_en": "Roundabout on the Torrent road in Xirivella: the water already covers the whole roadway, it reaches the kids' ankles. Cars pass slowly raising waves",
+       "status": "new"
+      },
+      {
+       "id": "valencia-03",
+       "street": "Carrer de Vicent Lladró Sena",
+       "lat": 39.46809,
+       "lon": -0.42498,
+       "minutes_ago": 101,
+       "depth_m": [
+        0.0,
+        0.213
+       ],
+       "priority": 15,
+       "people": 5,
+       "vulnerable": [],
+       "summary": "Street flooding ankle-deep 0.0-0.21 m at curb entering garages, 5 people walking, no urgent rescue needed.",
+       "message_en": "On my street the water already reaches the curb and is starting to seep in through the garage doors. Some neighbors have moved their cars up onto the sidewalk",
+       "status": "new"
+      },
+      {
+       "id": "valencia-07",
+       "street": "Carrer de Joaquim Olmos",
+       "lat": 39.40301,
+       "lon": -0.40227,
+       "minutes_ago": 71,
+       "depth_m": [
+        0.0,
+        0.901
+       ],
+       "priority": 10,
+       "people": 4,
+       "vulnerable": [],
+       "summary": "Water gushing into garage on Calle Joaquim Olmos, Catarroja, car stuck; 4 people in courtyard with fast-flowing water 0.0-0.9m up to car wheels.",
+       "message_en": "Water is gushing in through the garage ramp, no time to get the car out. Calle Joaquim Olmos, Catarroja",
+       "status": "new"
+      },
+      {
+       "id": "valencia-04",
+       "street": "Carrer Major",
+       "lat": 39.4581,
+       "lon": -0.4578,
+       "minutes_ago": 93,
+       "depth_m": [
+        0.0,
+        0.133
+       ],
+       "priority": 5,
+       "people": 5,
+       "vulnerable": [],
+       "summary": "In Alaquàs, ankle-deep muddy water (0.0-0.13 m), passable on foot, 5 people visible, no one trapped, no urgent rescue needed.",
+       "message_en": "Alaquàs: street with mud and ankle-deep water. Passable on foot, but parked cars are flooded up to the wheels",
+       "status": "new"
+      },
+      {
+       "id": "valencia-02",
+       "street": "Carrer de Vicent Lladró Sena",
+       "lat": 39.46814,
+       "lon": -0.42489,
+       "minutes_ago": 110,
+       "depth_m": [
+        0.0,
+        0.479
+       ],
+       "priority": 5,
+       "people": 24,
+       "vulnerable": [],
+       "summary": "Flooded roundabout with 0.0-0.48m water, small car barely escaped, 24 bystanders on sidewalk, no emergency.",
+       "message_en": "Flooded roundabout, a small car managed to get out miraculously. If it's not an off-road vehicle I wouldn't go through",
+       "status": "new"
+      },
+      {
+       "id": "valencia-14",
+       "street": "Carrer de l'Alqueria de Raga",
+       "lat": 39.43738,
+       "lon": -0.42941,
+       "minutes_ago": 10,
+       "depth_m": [
+        0.0,
+        0.175
+       ],
+       "priority": 0,
+       "people": 3,
+       "vulnerable": [],
+       "summary": "3 people wading through ankle-deep muddy water at Polígono de Raga, water receding, no rescue needed.",
+       "message_en": "Polígono de Raga, next to calle Alqueria de Raga: there is little water left, people cross with mud up to the ankles and a van passes slowly",
+       "status": "new"
+      },
+      {
+       "id": "valencia-09",
+       "street": "Carrer Colombicultura",
+       "lat": 39.42661,
+       "lon": -0.41491,
+       "minutes_ago": 56,
+       "depth_m": [
+        0.0,
+        0.44
+       ],
+       "priority": 0,
+       "people": 0,
+       "vulnerable": [],
+       "summary": "Water receded in Paiporta, calle Colombicultura, only puddles and mud left, walkable with boots, no rescue needed.",
+       "message_en": "Paiporta, calle Colombicultura: the water has already gone down, only puddles and a lot of mud remain. With boots you can walk.",
+       "status": "new"
+      },
+      {
+       "id": "valencia-08",
+       "street": "Avinguda del Camí Nou",
+       "lat": 39.42566,
+       "lon": -0.39451,
+       "minutes_ago": 64,
+       "depth_m": [
+        0.085,
+        0.429
+       ],
+       "priority": 0,
+       "people": 0,
+       "vulnerable": [],
+       "summary": "Observer in Benetússer, avenida del Camí Nou reports strong current stalling cars; photo shows 0.09-0.43 m fast muddy water with parked cars submerged, no people visible.",
+       "message_en": "Video from my balcony in Benetússer, avenida del Camí Nou: the current is coming down strongly and cars are getting stuck. Nobody should cross by car",
+       "status": "new"
+      },
+      {
+       "id": "valencia-06",
+       "street": "Avinguda de la Generalitat Valenciana",
+       "lat": 39.4331,
+       "lon": -0.43146,
+       "minutes_ago": 78,
+       "depth_m": [
+        0.0,
+        0.169
+       ],
+       "priority": 0,
+       "people": 2,
+       "vulnerable": [],
+       "summary": "Shallow brown water at Avinguda de la Generalitat, Picanya, people crossing on foot, car blocking middle; 2 people visible, no distress.",
+       "message_en": "Avinguda de la Generalitat, Picanya: shallow brown water, people are crossing on foot. There is a car stuck across the middle",
+       "status": "new"
+      },
+      {
+       "id": "valencia-05",
+       "street": "Carrer Rafael Alberti",
+       "lat": 39.45944,
+       "lon": -0.44944,
+       "minutes_ago": 85,
+       "depth_m": [
+        0.0,
+        0.218
+       ],
+       "priority": 0,
+       "people": 0,
+       "vulnerable": [],
+       "summary": "Water receding with mud to half wheel, two cars piled by sidewalk, no people trapped.",
+       "message_en": "The current has piled two cars together by the sidewalk and the water is already going down, but there is mud up to half a wheel. Watch out for the undercarriage",
+       "status": "new"
+      }
+     ]
+    }
+   },
+   {
+    "tool": "street_status",
+    "args": {
+     "street": "Plaça Major"
+    },
+    "result": {
+     "street": [
+      "Plaça Major"
+     ],
+     "segments_with_reports": 7,
+     "depth_m_range": [
+      0.0,
+      0.18
+     ],
+     "segments_by_status_per_vehicle": {
+      "pedestrian": {
+       "passable": 7
+      },
+      "scooter": {
+       "passable": 7
+      },
+      "car": {
+       "passable": 7
+      },
+      "suv": {
+       "passable": 7
+      },
+      "truck": {
+       "passable": 7
+      }
+     },
+     "reports": [
+      "valencia-12"
+     ]
+    }
+   },
+   {
+    "tool": "street_status",
+    "args": {
+     "street": "Carrer de les Germanies"
+    },
+    "result": {
+     "street": [
+      "Carrer de les Germanies"
+     ],
+     "segments_with_reports": 4,
+     "depth_m_range": [
+      0.0,
+      1.49
+     ],
+     "segments_by_status_per_vehicle": {
+      "pedestrian": {
+       "impassable": 4
+      },
+      "scooter": {
+       "impassable": 4
+      },
+      "car": {
+       "impassable": 4
+      },
+      "suv": {
+       "impassable": 4
+      },
+      "truck": {
+       "impassable": 4
+      }
+     },
+     "reports": [
+      "valencia-13"
+     ]
+    }
+   },
+   {
+    "tool": "street_status",
+    "args": {
+     "street": "Carrer de Sant Antoni"
+    },
+    "result": {
+     "street": [
+      "Carrer de Sant Antoni",
+      "Carrer de Sant Antoni Abat"
+     ],
+     "segments_with_reports": 17,
+     "depth_m_range": [
+      0.0,
+      0.91
+     ],
+     "segments_by_status_per_vehicle": {
+      "pedestrian": {
+       "passable": 12,
+       "risky": 5
+      },
+      "scooter": {
+       "risky": 12,
+       "impassable": 5
+      },
+      "car": {
+       "passable": 4,
+       "risky": 11,
+       "impassable": 2
+      },
+      "suv": {
+       "passable": 12,
+       "risky": 5
+      },
+      "truck": {
+       "passable": 12,
+       "risky": 5
+      }
+     },
+     "reports": [
+      "valencia-06",
+      "valencia-10"
+     ]
+    }
+   },
+   {
+    "tool": "street_status",
+    "args": {
+     "street": "Carrer de Joaquim Olmos"
+    },
+    "result": {
+     "street": [
+      "Carrer de Joaquim Olmos"
+     ],
+     "segments_with_reports": 7,
+     "depth_m_range": [
+      0.0,
+      1.18
+     ],
+     "segments_by_status_per_vehicle": {
+      "pedestrian": {
+       "impassable": 7
+      },
+      "scooter": {
+       "impassable": 7
+      },
+      "car": {
+       "impassable": 7
+      },
+      "suv": {
+       "impassable": 7
+      },
+      "truck": {
+       "risky": 2,
+       "impassable": 5
+      }
+     },
+     "reports": [
+      "valencia-07",
+      "valencia-10",
+      "valencia-12"
+     ]
+    }
+   }
+  ],
+  "route": null,
+  "reports": [
+   "valencia-12",
+   "valencia-13",
+   "valencia-11",
+   "valencia-10",
+   "valencia-01",
+   "valencia-03",
+   "valencia-07",
+   "valencia-04",
+   "valencia-02",
+   "valencia-14",
+   "valencia-09",
+   "valencia-08",
+   "valencia-06",
+   "valencia-05"
+  ]
+ }
+}

@@ -1,4 +1,6 @@
+import { vehicleName } from "../lib/catalog";
 import { STATUS } from "../lib/format";
+import { useI18n } from "../lib/i18n";
 import type { Estimate, Verdict } from "../lib/types";
 
 const H = 250;
@@ -24,6 +26,7 @@ export function DepthGauge({
   width?: number;
 }) {
   const W = width;
+  const { t, lang } = useI18n();
   const max = Math.max(2, Math.ceil(((estimate?.high_m ?? 0) + 0.05) * 2) / 2);
   const pxPerM = (BOTTOM - TOP) / max;
   const y = (m: number) => BOTTOM - Math.min(m, max) * pxPerM;
@@ -55,8 +58,8 @@ export function DepthGauge({
       role="img"
       aria-label={
         estimate
-          ? `Depth ${estimate.low_m.toFixed(2)} to ${estimate.high_m.toFixed(2)} metres, mean ${estimate.mean_m.toFixed(2)}`
-          : "No depth reading"
+          ? t("gauge.aria", { a: estimate.low_m.toFixed(2), b: estimate.high_m.toFixed(2), m: estimate.mean_m.toFixed(2) })
+          : t("gauge.none")
       }
     >
       <defs>
@@ -111,7 +114,7 @@ export function DepthGauge({
         <g className="gauge__callout">
           <line x1={LINE_END - 6} x2={LABEL_X + 2} y1={y(estimate.mean_m)} y2={y(estimate.mean_m)} />
           <text x={LABEL_X + 6} y={y(estimate.mean_m) + 4}>
-            water surface <tspan className="num">{estimate.mean_m.toFixed(2)} m</tspan>
+            {t("gauge.surface", { m: estimate.mean_m.toFixed(2) })}
           </text>
         </g>
       )}
@@ -129,7 +132,7 @@ export function DepthGauge({
             <path d={`M${LINE_END} ${l.ly} L${LABEL_X - 2} ${l.y}`} className="gauge__leader" />
             <GlyphMini status={worst} x={LABEL_X + 5} y={l.y} />
             <text x={LABEL_X + 14} y={l.y + 4} className="gauge__label">
-              {l.vs.map((v) => v.name_vi).join(" · ")}
+              {l.vs.map((v) => vehicleName(v, lang)).join(" · ")}
               <tspan className="gauge__labelnum"> {l.limit.toFixed(2)} m</tspan>
             </text>
           </g>
@@ -138,7 +141,7 @@ export function DepthGauge({
 
       {!estimate && (
         <text x={BAR_X + BAR_W / 2} y={(TOP + BOTTOM) / 2} className="gauge__none" textAnchor="middle" transform={`rotate(-90 ${BAR_X + BAR_W / 2} ${(TOP + BOTTOM) / 2})`}>
-          no reading
+          {t("gauge.none")}
         </text>
       )}
     </svg>

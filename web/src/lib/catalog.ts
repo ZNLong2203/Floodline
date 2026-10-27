@@ -48,3 +48,21 @@ export function residentVehicles(ids: string[]): string[] {
   const picked = [scooter, car].filter((x): x is string => Boolean(x));
   return picked.length ? picked : ids.slice(0, 2);
 }
+
+const ES_VEHICLES: Record<string, string> = {
+  pedestrian: "A pie",
+  scooter: "Moto",
+  car: "Coche",
+  suv: "SUV / pickup",
+  pickup: "SUV / pickup",
+  truck: "Camión de rescate",
+};
+
+/** A vehicle's name in the UI language: the catalog has English and Vietnamese. */
+export function vehicleName(v: { id?: string; vehicle?: string; name_en: string; name_vi: string } | undefined, lang: string): string {
+  if (!v) return "";
+  const id = v.id ?? v.vehicle ?? "";
+  if (lang === "vi") return v.name_vi || v.name_en;
+  if (lang === "es") return ES_VEHICLES[id] ?? ES_VEHICLES[vehicleKind(id)] ?? v.name_en;
+  return v.name_en || v.name_vi;
+}

@@ -6,6 +6,7 @@ import "./styles/report.css";
 
 import { lazy, StrictMode, Suspense } from "react";
 import { createRoot } from "react-dom/client";
+import { I18nProvider } from "./lib/i18n";
 
 const Console = lazy(() => import("./console/Console"));
 const ReportPage = lazy(() => import("./report/ReportPage"));
@@ -15,12 +16,13 @@ const AttributionPage = lazy(() => import("./AttributionPage"));
 const path = window.location.pathname.replace(/\/+$/, "") || "/";
 const Page = path === "/report" ? ReportPage : path === "/attribution" ? AttributionPage : Console;
 document.documentElement.classList.add(path === "/report" ? "page-report" : "page-console");
-document.documentElement.lang = path === "/report" ? "vi" : "en";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <Suspense fallback={<div className="boot" aria-busy="true" />}>
-      <Page />
-    </Suspense>
+    <I18nProvider surface={path === "/report" ? "report" : "console"}>
+      <Suspense fallback={<div className="boot" aria-busy="true" />}>
+        <Page />
+      </Suspense>
+    </I18nProvider>
   </StrictMode>,
 );

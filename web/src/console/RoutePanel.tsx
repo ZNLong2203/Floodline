@@ -1,5 +1,7 @@
 import { Icon, VehicleIcon } from "../components/Icon";
+import { vehicleName } from "../lib/catalog";
 import { distance } from "../lib/format";
+import { rich, useI18n } from "../lib/i18n";
 import type { RouteResponse, SegmentCollection, Vehicle } from "../lib/types";
 
 export type LatLon = [number, number];
@@ -9,26 +11,13 @@ export interface Place {
   at: LatLon;
 }
 
-export const PRESETS: { id: string; from: Place; to: Place }[] = [
-  {
-    // Seeded scenario: the truck's shortest road crosses 4 impassable segments (2.3 km vs 2.1 km).
-    id: "bv-thanhnoi",
-    from: { name: "Bệnh viện Trung ương Huế", at: [16.4628, 107.5888] },
-    to: { name: "Thành nội (Bắc)", at: [16.476, 107.579] },
-  },
-  {
-    // Seeded scenario: no road route for any vehicle.
-    id: "bv-dongba",
-    from: { name: "Bệnh viện Trung ương Huế", at: [16.4627, 107.5873] },
-    to: { name: "Chợ Đông Ba", at: [16.4729, 107.588] },
-  },
-  {
-    // The truck goes straight; a car has to detour.
-    id: "ga-ngomon",
-    from: { name: "Ga Huế", at: [16.4566, 107.5781] },
-    to: { name: "Đại Nội (Ngọ Môn)", at: [16.4697, 107.581] },
-  },
-];
+/** A route preset of the current city (from /api/cities). */
+export interface Preset {
+  id: string;
+  label: string;
+  from: Place;
+  to: Place;
+}
 
 export interface RouteState {
   open: boolean;
@@ -45,57 +34,61 @@ interface Props {
   state: RouteState;
   vehicle: Vehicle | undefined;
   segments: SegmentCollection | null;
+  presets: Preset[];
   onOpen(): void;
   onClose(): void;
   onPreset(id: string): void;
   onReset(): void;
 }
 
-function floodedCount(ids: string[], segments: SegmentCollection | null, vehicle: string): Set<string> {
-  const flooded = new Set<string>();
+function flooded(ids: string[], segments: SegmentCollection | null, vehicle: string): Set<string> {
+  const out = new Set<string>();
   const byId = new Map((segments?.features ?? []).map((f) => [String(f.properties.id), f]));
   for (const id of ids) {
     const s = byId.get(id)?.properties[`status_${vehicle}`];
-    if (s === "impassable" || s === "risky") flooded.add(id);
+    if (s === "impassable" || s === "risky") out.add(id);
   }
-  return flooded;
+  return out;
 }
 
-export function RoutePanel({ state, vehicle, segments, onOpen, onClose, onPreset, onReset }: Props) {
+export function RoutePanel({ state, vehicle, segments, presets, onOpen, onClose, onPreset, onReset }: Props) {
+  const { t, tn, lang } = useI18n();
   if (!state.open) {
     return (
       <button type="button" className="routebtn" onClick={onOpen}>
         <Icon name="route" />
-        <span>Plan route</span>
+        <span>{t("route.plan")}</span>
       </button>
     );
   }
   const vid = vehicle?.id ?? "";
+  const vname = vehicleName(vehicle, lang);
   const res = state.result;
   const safe = res?.route ?? null;
   const naive = res?.naive ?? null;
-  const naiveFlooded = floodedCount(naive?.segments ?? [], segments, vid);
+  const naiveFlooded = flooded(naive?.segments ?? [], segments, vid);
   const safeSet = new Set(safe?.segments ?? []);
   const avoided = [...naiveFlooded].filter((id) => !safeSet.has(id)).length;
   const blocked = res?.naive_blocked?.length ?? 0;
+  const avoidN = Math.max(avoided, blocked);
   const delta = safe && naive ? safe.length_m - naive.length_m : 0;
   const deltaPct = safe && naive && naive.length_m > 0 ? Math.round((delta / naive.length_m) * 100) : 0;
   const risky = safe?.risky_segments?.length ?? 0;
   const step = !state.a ? "a" : !state.b ? "b" : null;
 
   return (
-    <section className="routecard" aria-label="Route planner">
+    <section className="routecard" aria-label={t("route.title")}>
       <header className="routecard__head">
         <div className="routecard__title">
           <Icon name="route" />
-          <span>Safe route</span>
+          <span>{t("route.title")}</span>
           {vehicle && (
             <span className="routecard__veh">
-              <VehicleIcon id={vehicle.id} size={15} /> {vehicle.name_vi}
+              <VehicleIcon id={vehicle.id} size={15} /> {vname}
             </span>
           )}
         </div>
-        <button type="button" className="iconbtn" onClick={onClose} aria-label="Close route planner">
+        <button type="button" className="iconbtn" onClick={onClose} aria-label={t("route.close")}>
           <Icon name="close" size={16} />
         </button>
       </header>
@@ -103,20 +96,20 @@ export function RoutePanel({ state, vehicle, segments, onOpen, onClose, onPreset
       <ol className="routecard__ends">
         <li className={step === "a" ? "is-active" : ""}>
           <span className="endpoint-dot endpoint-dot--a">A</span>
-          <span className="routecard__place">{state.a?.name ?? (step === "a" ? "Click the start on the map" : "–")}</span>
+          <span className="routecard__place">{state.a?.name ?? (step === "a" ? t("route.clickStart") : "–")}</span>
         </li>
         <li className={step === "b" ? "is-active" : ""}>
           <span className="endpoint-dot endpoint-dot--b">B</span>
           <span className="routecard__place">
-            {state.b?.name ?? (step === "b" ? "Click the destination" : step === "a" ? "then the destination" : "–")}
+            {state.b?.name ?? (step === "b" ? t("route.clickDest") : step === "a" ? t("route.thenDest") : "–")}
           </span>
         </li>
       </ol>
 
-      {step && (
+      {step && presets.length > 0 && (
         <div className="routecard__presets">
-          <div className="eyebrow">Or try a preset</div>
-          {PRESETS.map((p) => (
+          <div className="eyebrow">{t("route.presets")}</div>
+          {presets.map((p) => (
             <button key={p.id} type="button" className="preset" onClick={() => onPreset(p.id)}>
               <span>{p.from.name}</span>
               <Icon name="chevron" size={14} />
@@ -128,7 +121,7 @@ export function RoutePanel({ state, vehicle, segments, onOpen, onClose, onPreset
 
       {state.loading && (
         <div className="routecard__loading">
-          <span className="spinner" aria-hidden="true" /> Finding a way around the water…
+          <span className="spinner" aria-hidden="true" /> {t("route.loading")}
         </div>
       )}
 
@@ -143,66 +136,67 @@ export function RoutePanel({ state, vehicle, segments, onOpen, onClose, onPreset
           {safe ? (
             <>
               <div className="routecard__headline">
-                {avoided > 0 || blocked > 0 ? (
-                  <>
-                    Avoids <b>{Math.max(avoided, blocked)}</b> flooded segment{Math.max(avoided, blocked) === 1 ? "" : "s"}
-                  </>
-                ) : (
-                  <>No flooding on the direct route</>
-                )}
+                {avoidN > 0
+                  ? rich(tn("route.avoids", avoidN, { n: "{n}" }), { n: <b>{avoidN}</b> })
+                  : t("route.noFlood")}
               </div>
               <div className="routecard__stats">
                 <div>
                   <span className="legend-line legend-line--safe" aria-hidden="true" />
-                  <span>Safe for {vehicle?.name_vi}</span>
+                  <span>{t("route.safeFor", { vehicle: vname })}</span>
                   <b className="num">{distance(safe.length_m)}</b>
                 </div>
                 {naive && (
                   <div>
                     <span className="legend-line legend-line--naive" aria-hidden="true" />
-                    <span>Shortest</span>
+                    <span>{t("route.shortest")}</span>
                     <b className="num">{distance(naive.length_m)}</b>
                   </div>
                 )}
               </div>
               {naive && delta > 5 && (
                 <div className="routecard__delta">
-                  +{distance(delta)} ({deltaPct}%) longer than the shortest route
-                  {blocked > 0 && <>, which crosses {blocked} impassable segment{blocked === 1 ? "" : "s"}</>}.
+                  {t("route.longer", { d: distance(delta), p: deltaPct })}
+                  {blocked > 0 && tn("route.crosses", blocked)}.
                 </div>
               )}
               {risky > 0 && (
                 <div className="routecard__warn">
-                  <Icon name="alert" size={15} /> Still crosses {risky} risky segment{risky === 1 ? "" : "s"}: drive slowly, check on arrival.
+                  <Icon name="alert" size={15} /> {tn("route.risky", risky)}
                 </div>
               )}
             </>
           ) : (
-            <div className="noroute" role="alert">
-              <span className="noroute__icon" aria-hidden="true">
-                <VehicleIcon id="boat" size={26} />
-              </span>
-              <div>
-                <b lang="vi">Không còn đường bộ an toàn tới đây — cần thuyền</b>
-                <span>
-                  No safe road route{vehicle ? ` for ${vehicle.name_vi}` : ""} — send a boat.
-                </span>
-                {naive ? (
-                  <span className="noroute__naive">
-                    <span className="legend-line legend-line--blocked" aria-hidden="true" /> Shortest road, {distance(naive.length_m)},
-                    runs through flooded streets.
-                  </span>
-                ) : (
-                  <span className="noroute__naive">The destination itself is cut off by water.</span>
-                )}
-              </div>
-            </div>
+            <NoRoute vehicle={vname} naiveLength={naive?.length_m ?? null} />
           )}
           <button type="button" className="btn btn--ghost btn--sm" onClick={onReset}>
-            <Icon name="refresh" size={14} /> New route
+            <Icon name="refresh" size={14} /> {t("route.new")}
           </button>
         </div>
       )}
     </section>
+  );
+}
+
+/** The strong "send a boat" state, also used by the assistant. */
+export function NoRoute({ vehicle, naiveLength }: { vehicle: string; naiveLength: number | null }) {
+  const { t } = useI18n();
+  return (
+    <div className="noroute" role="alert">
+      <span className="noroute__icon" aria-hidden="true">
+        <VehicleIcon id="boat" size={26} />
+      </span>
+      <div>
+        <b>{t("noroute.title")}</b>
+        {vehicle && <span>{t("noroute.for", { vehicle })}</span>}
+        {naiveLength != null ? (
+          <span className="noroute__naive">
+            <span className="legend-line legend-line--blocked" aria-hidden="true" /> {t("noroute.naive", { d: distance(naiveLength) })}
+          </span>
+        ) : (
+          <span className="noroute__naive">{t("noroute.cutoff")}</span>
+        )}
+      </div>
+    </div>
   );
 }

@@ -213,8 +213,23 @@ export function build(spec: Spec, now: number): Report {
   };
   const [priority, reasons] = score(spec.facts, estimate?.mean_m ?? null);
   const at = now - spec.minutesAgo * 60;
+  const en = ENGLISH[spec.key];
+  const facts: TriageFacts | null = spec.facts
+    ? {
+        ...spec.facts,
+        language: "vi",
+        message_en: en?.message,
+        summary_en: en?.summary,
+        summary_local: spec.facts.summary_vi,
+        dispatch_en: en?.dispatch,
+        dispatch_local: spec.facts.dispatch_vi,
+        summary_vi: undefined,
+        dispatch_vi: undefined,
+      }
+    : null;
   return {
     id: reportId(at),
+    city: "hue",
     lat: spec.lat,
     lon: spec.lon,
     at,
@@ -222,7 +237,7 @@ export function build(spec: Spec, now: number): Report {
     source: spec.source,
     status: spec.status,
     transcript: spec.transcript ?? null,
-    triage: { priority, reasons, facts: spec.facts },
+    triage: { priority, reasons, facts },
     analysis,
     image_url: scene.image,
     overlay_url: scene.overlay,
@@ -519,5 +534,61 @@ export const LATE_SPEC: Spec = {
     summary_vi: "Người bị liệt nằm một chỗ, nước gần tới giường và đang lên nhanh.",
     dispatch_vi:
       "Đinh Tiên Hoàng (Thành nội): 1 người bị liệt cần cáng, nước 0,8–1,0 m và đang lên nhanh. Cần xuồng và 2 người khiêng.",
+  },
+};
+
+/** English for the mock reports, as Muse Spark's triage would return it. */
+const ENGLISH: Record<string, { message?: string; summary: string; dispatch: string }> = {
+  "tran-hung-dao": {
+    message: "There are two elderly people at home, the water is already inside and they can't get out.",
+    summary: "2 elderly people trapped at home; water at scooter-seat height and rising.",
+    dispatch:
+      "Send a boat to the lane off Trần Hưng Đạo (near Thượng Tứ gate): 2 elderly people trapped, water 0.7–0.8 m and rising. Trucks cannot get in.",
+  },
+  "kim-long": {
+    message:
+      "Hello, my house is in lane 20 Kim Long, the water is up to our chests, my mother fell and her leg is bleeding, we have two small children, we need a boat urgently.",
+    summary: "Elderly woman with a bleeding leg and 2 small children; water chest-deep and rising; boat needed urgently.",
+    dispatch:
+      "URGENT: Lane 20 Kim Long — 4 people (an elderly woman with a bleeding leg, 2 small children) trapped, water 1.1–1.4 m and flowing. Send a boat and first aid.",
+  },
+  "bach-dang": {
+    message: "A family of five on the upper floor, with a 6-month-old baby and grandmother. We have run out of drinking water.",
+    summary: "5 people on an upper floor, including a 6-month-old and an elderly woman; out of drinking water.",
+    dispatch:
+      "Bạch Đằng (Gia Hội): 5 people on an upper floor incl. a 6-month-old and an elderly woman, water 0.9–1.1 m. Bring drinking water, milk and food; a boat is needed.",
+  },
+  "le-duan": {
+    message: "Lê Duẩn by Ngăn gate is flooded above the wheels, many scooters have stalled, and the water is still rising.",
+    summary: "Lê Duẩn at Ngăn gate flooded about 0.4 m; scooters stalling; water rising.",
+    dispatch: "Lê Duẩn (Ngăn gate) flooded 0.35–0.5 m and rising. Scooters and cars cannot pass; rescue trucks can.",
+  },
+  "ba-trieu": {
+    message: "Water up to the wheel hubs; scooters can still pass slowly.",
+    summary: "Bà Triệu flooded about 0.2 m; scooters can still pass slowly.",
+    dispatch: "Bà Triệu flooded 0.1–0.3 m, not rising. Rescue trucks can pass.",
+  },
+  "phan-dinh-phung": {
+    message:
+      "My wife is nine months pregnant and has started having contractions. Our house is in lane 63 Phan Đình Phùng, the water is thigh-deep and the scooter can't get through. Please help take her to the hospital.",
+    summary: "Woman 9 months pregnant in labour; needs transport to hospital; water thigh-deep.",
+    dispatch:
+      "URGENT: Lane 63 Phan Đình Phùng — woman 9 months pregnant in labour, needs transport to Huế Central Hospital. Water 0.55–0.7 m: send a rescue truck or a boat.",
+  },
+  "nguyen-hue": {
+    message: "Nguyễn Huệ near the Lý Thường Kiệt junction has shallow water; scooters can still get through.",
+    summary: "Nguyễn Huệ ankle-deep; scooters still passing.",
+    dispatch: "Nguyễn Huệ (Lý Thường Kiệt junction) flooded 0.05–0.2 m, passable.",
+  },
+  "kiet-ba-trieu-night": {
+    message: "Someone is calling for help in lane 116 Bà Triệu; it is too dark to see anything; there are 2 people in the house next door.",
+    summary: "Calls for help in lane 116 Bà Triệu; the photo is too dark to measure the water.",
+    dispatch: "Lane 116 Bà Triệu: 2 people calling for help, water depth unknown (photo too dark). Needs checking.",
+  },
+  "dinh-tien-hoang": {
+    message: "My husband is paralysed and bedridden; the water in the house is almost up to the bed and rising fast.",
+    summary: "Paralysed, bedridden man; water almost at the bed and rising fast.",
+    dispatch:
+      "Đinh Tiên Hoàng (Citadel): 1 paralysed person needs a stretcher, water 0.8–1.0 m and rising fast. Send a boat and 2 carriers.",
   },
 };

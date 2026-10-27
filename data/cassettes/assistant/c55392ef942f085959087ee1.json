@@ -2,7 +2,7 @@
  "city": "hue",
  "question": "Đường Trần Hưng Đạo xe máy còn đi được không?",
  "answer": {
-  "answer": "KHÔNG - xe máy không đi được đường Trần Hưng Đạo.\n\n* Toàn tuyến: 34/34 đoạn **impassable cho scooter và car**. Độ sâu khoảng 0,0-1,55 m.\n* Xe tải: 19 đoạn risky, 15 đoạn impassable. SUV: 10 đoạn risky, 24 đoạn impassable. Đi bộ cũng risky/impassable.\n* Không có đường an toàn cho xe máy. Điều thuyền hoặc xe tải gầm cao.\n\nNgười đang chờ:\n* **Trần Hưng Đạo gần chợ Đông Ba:** 4 người, có cụ 82 tuổi đi lại khó khăn và cháu 3 tuổi. \"nước vào nhà tới đùi, vẫn đang lên, mong đội cứu hộ đến sớm\". Độ sâu ảnh khoảng 0,06-0,72 m - ưu tiên sơ tán.\n* **Trần Hưng Đạo đoạn gần cầu Phú Xuân:** 3 người đang lội nước ở xa. \"nước chảy mạnh, không ai dám đi\". Độ sâu khoảng 0,0-1,06 m.\n* **Huỳnh Thúc Kháng đầu cầu Gia Hội:** taxi chết máy phải đẩy, 6 người trong nước đường khoảng 0,11-0,74 m.\n\nĐiều động: gửi thuyền / truck đến Trần Hưng Đạo gần chợ Đông Ba trước, không điều scooter/car.",
+  "answer": "Không - Trần Hưng Đạo xe máy (scooter) không đi được.\n\n* Toàn tuyến: 34/34 đoạn impassable cho scooter và car.\n* Đi bộ (pedestrian): 19 đoạn risky, 15 đoạn impassable. Truck: 19 risky, 15 impassable. SUV: 10 risky, 24 impassable.\n* Ngập khoảng 0,0-1,5 m toàn tuyến.\n\nNgười đang chờ:\n* Trần Hưng Đạo gần chợ Đông Ba: 3 người trong nhà ngập tới đùi, nước đang lên, gồm cụ 82 tuổi đi lại khó khăn và cháu 3 tuổi, cần sơ tán. Ngập khoảng 0,1-0,7 m. Dân báo: \"Hello, my house is on Trần Hưng Đạo near Đông Ba market, water has entered the house up to thigh level...\"\n* Trần Hưng Đạo đoạn gần cầu Phú Xuân: nước chảy mạnh, không ai dám qua, 3 người đang lội. Ngập khoảng 0,0-1,1 m. Dân báo: \"On Tran Hung Dao near Phu Xuan bridge the water is flowing strongly, no one dares to go\"\n* Huỳnh Thúc Kháng đầu cầu Gia Hội: taxi chết máy, 6 người đang đẩy xe. Ngập khoảng 0,1-0,7 m. Dân báo: \"Huỳnh Thúc Kháng at Gia Hội bridgehead, taxi stalled and has to be pushed\"\n\nĐiều phối: Không gửi scooter / car vào Trần Hưng Đạo. Gửi thuyền hoặc truck gầm cao cho điểm chợ Đông Ba để sơ tán cụ già + cháu nhỏ.",
   "steps": [
    {
     "tool": "street_status",
@@ -16,7 +16,7 @@
      "segments_with_reports": 34,
      "depth_m_range": [
       0.0,
-      1.55
+      1.54
      ],
      "segments_by_status_per_vehicle": {
       "pedestrian": {
@@ -39,23 +39,23 @@
       }
      },
      "reports": [
-      "20261028-010228-93e7",
-      "20261028-010322-90ed",
-      "20261028-010346-56a1"
+      "hue-06",
+      "hue-10",
+      "hue-13"
      ]
     }
    },
    {
     "tool": "report_detail",
     "args": {
-     "report_id": "20261028-010228-93e7"
+     "report_id": "hue-06"
     },
     "result": {
-     "id": "20261028-010228-93e7",
+     "id": "hue-06",
      "street": "Trần Huy Liệu",
      "lat": 16.4695,
      "lon": 107.5853,
-     "minutes_ago": 51,
+     "minutes_ago": 50,
      "depth_m": [
       0.0,
       1.059
@@ -63,8 +63,8 @@
      "priority": 0,
      "people": 3,
      "vulnerable": [],
-     "summary": "Strong current reported on Tran Hung Dao near Phu Xuan Bridge; photo shows knee-to-thigh deep water (0.0-1.06m) with 3 people wading in distance and shops closed.",
-     "message_en": "On Tran Hung Dao near Phu Xuan Bridge the water is flowing strongly, no one dares to go.",
+     "summary": "Strong current reported on Trần Hưng Đạo near Phú Xuân bridge; photo shows 0.0-1.06 m flooding with 3 people wading, no distress signal.",
+     "message_en": "On Tran Hung Dao near Phu Xuan bridge the water is flowing strongly, no one dares to go",
      "status": "new",
      "verdicts": {
       "pedestrian": "risky",
@@ -82,15 +82,15 @@
      "readings_used": 11,
      "facts": {
       "address_hint": "Trần Hưng Đạo đoạn gần cầu Phú Xuân",
-      "dispatch_en": "Check Tran Hung Dao near Phu Xuan Bridge: strong current reported, no one dares to cross. Depth 0.0-1.06m, 3 people seen wading in distance.",
-      "dispatch_local": "Kiểm tra Trần Hưng Đạo đoạn gần cầu Phú Xuân: báo nước chảy mạnh, không ai dám đi. Độ sâu 0,0-1,06 m, thấy 3 người đang lội nước ở xa.",
+      "dispatch_en": "Hazard at Trần Hưng Đạo near Phú Xuân bridge: strong current, no one dares to cross. Photo depth 0.0-1.06 m, 3 people wading in distance, shops closed, no distress signal.",
+      "dispatch_local": "Nguy hiểm tại Trần Hưng Đạo đoạn gần cầu Phú Xuân: nước chảy mạnh, không ai dám đi. Ảnh cho thấy ngập 0.0-1.06 m, 3 người lội nước ở xa, cửa hàng đóng cửa, không có tín hiệu cầu cứu.",
       "injury_or_medical": false,
       "language": "vi",
-      "message_en": "On Tran Hung Dao near Phu Xuan Bridge the water is flowing strongly, no one dares to go.",
+      "message_en": "On Tran Hung Dao near Phu Xuan bridge the water is flowing strongly, no one dares to go",
       "needs": [],
       "people_count": 3,
-      "summary_en": "Strong current reported on Tran Hung Dao near Phu Xuan Bridge; photo shows knee-to-thigh deep water (0.0-1.06m) with 3 people wading in distance and shops closed.",
-      "summary_local": "Báo nước chảy mạnh tại Trần Hưng Đạo đoạn gần cầu Phú Xuân, không ai dám đi; ảnh cho thấy phố ngập đến đầu gối-đùi (0,0-1,06 m), có 3 người lội nước ở xa, cửa hàng đóng cửa.",
+      "summary_en": "Strong current reported on Trần Hưng Đạo near Phú Xuân bridge; photo shows 0.0-1.06 m flooding with 3 people wading, no distress signal.",
+      "summary_local": "Báo nước chảy mạnh tại Trần Hưng Đạo đoạn gần cầu Phú Xuân, không ai dám đi; ảnh cho thấy ngập 0.0-1.06 m, 3 người lội nước, không có tín hiệu cầu cứu.",
       "trapped": false,
       "vulnerable": [],
       "water_rising": "unknown"
@@ -101,27 +101,26 @@
    {
     "tool": "report_detail",
     "args": {
-     "report_id": "20261028-010322-90ed"
+     "report_id": "hue-10"
     },
     "result": {
-     "id": "20261028-010322-90ed",
+     "id": "hue-10",
      "street": "Trần Huy Liệu",
      "lat": 16.4712,
      "lon": 107.5866,
-     "minutes_ago": 37,
+     "minutes_ago": 35,
      "depth_m": [
       0.062,
       0.718
      ],
-     "priority": 35,
-     "people": 4,
+     "priority": 45,
+     "people": 3,
      "vulnerable": [
       "elderly",
-      "child",
-      "disabled"
+      "child"
      ],
-     "summary": "House on Tran Hung Dao near Dong Ba market flooded to thigh level and still rising, with 82yo with mobility difficulty and 3yo child; photo shows knee-to-thigh yard flooding with 4 people wading, no urgent distress signal.",
-     "message_en": "Hello, my house is on Tran Hung Dao near Dong Ba market, water has entered the house up to thigh level. In the house there is my 82-year-old mother who has difficulty walking and a 3-year-old child. The water is still rising. Hope the rescue team comes soon.",
+     "summary": "Thigh-deep rising water in house on Trần Hưng Đạo near Đông Ba market, 3 people including 82yo with mobility difficulty and 3yo child requesting early rescue.",
+     "message_en": "Hello, my house is on Trần Hưng Đạo near Đông Ba market, water has entered the house up to thigh level. In the house are my 82-year-old mother who has difficulty walking and a small 3-year-old child. The water is still rising. Hope the rescue team comes soon.",
      "status": "new",
      "verdicts": {
       "pedestrian": "risky",
@@ -140,27 +139,27 @@
      "readings_used": 17,
      "facts": {
       "address_hint": "Trần Hưng Đạo gần chợ Đông Ba",
-      "dispatch_en": "Rescue needed at Tran Hung Dao near Dong Ba market: water thigh-deep in house, still rising, 82yo with mobility difficulty and 3yo child, 4 people seen wading. Photo depth 0.06-0.72m. Priority evacuation.",
-      "dispatch_local": "Cần cứu hộ tại Trần Hưng Đạo gần chợ Đông Ba: nước vào nhà tới đùi, vẫn đang lên, có cụ 82 tuổi đi lại khó khăn và cháu nhỏ 3 tuổi, thấy 4 người đang lội nước. Độ sâu ảnh 0,06-0,72m. Ưu tiên sơ tán.",
+      "dispatch_en": "Rescue needed at Trần Hưng Đạo gần chợ Đông Ba: thigh-deep water rising, 0.06-0.72 m, 82yo with mobility difficulty and 3yo child, 3 people total.",
+      "dispatch_local": "Cần cứu hộ tại Trần Hưng Đạo gần chợ Đông Ba: nước trong nhà tới đùi đang lên, 0,06-0,72 m, có cụ 82 tuổi đi lại khó khăn và cháu 3 tuổi, tổng 3 người.",
       "injury_or_medical": false,
       "language": "vi",
-      "message_en": "Hello, my house is on Tran Hung Dao near Dong Ba market, water has entered the house up to thigh level. In the house there is my 82-year-old mother who has difficulty walking and a 3-year-old child. The water is still rising. Hope the rescue team comes soon.",
+      "message_en": "Hello, my house is on Trần Hưng Đạo near Đông Ba market, water has entered the house up to thigh level. In the house are my 82-year-old mother who has difficulty walking and a small 3-year-old child. The water is still rising. Hope the rescue team comes soon.",
       "needs": [
        "evacuation"
       ],
-      "people_count": 4,
-      "summary_en": "House on Tran Hung Dao near Dong Ba market flooded to thigh level and still rising, with 82yo with mobility difficulty and 3yo child; photo shows knee-to-thigh yard flooding with 4 people wading, no urgent distress signal.",
-      "summary_local": "Nhà ở Trần Hưng Đạo gần chợ Đông Ba ngập tới đùi, nước vẫn đang lên, có cụ 82 tuổi đi lại khó khăn và cháu nhỏ 3 tuổi; ảnh cho thấy sân ngập tới gối-đùi có 4 người lội nước, không có dấu hiệu kêu cứu khẩn cấp.",
-      "trapped": false,
+      "people_count": 3,
+      "summary_en": "Thigh-deep rising water in house on Trần Hưng Đạo near Đông Ba market, 3 people including 82yo with mobility difficulty and 3yo child requesting early rescue.",
+      "summary_local": "Nước tới đùi đang lên trong nhà ở Trần Hưng Đạo gần chợ Đông Ba, có 3 người gồm cụ 82 tuổi đi lại khó khăn và cháu nhỏ 3 tuổi, mong cứu hộ tới sớm.",
+      "trapped": true,
       "vulnerable": [
        "elderly",
-       "child",
-       "disabled"
+       "child"
       ],
       "water_rising": "yes"
      },
      "priority_reasons": [
-      "vulnerable: elderly, child, disabled",
+      "vulnerable: elderly, child",
+      "trapped",
       "water rising"
      ]
     }
@@ -168,14 +167,14 @@
    {
     "tool": "report_detail",
     "args": {
-     "report_id": "20261028-010346-56a1"
+     "report_id": "hue-13"
     },
     "result": {
-     "id": "20261028-010346-56a1",
+     "id": "hue-13",
      "street": "Trần Hưng Đạo",
      "lat": 16.4736,
      "lon": 107.5884,
-     "minutes_ago": 27,
+     "minutes_ago": 25,
      "depth_m": [
       0.112,
       0.737
@@ -183,8 +182,8 @@
      "priority": 5,
      "people": 6,
      "vulnerable": [],
-     "summary": "Stalled taxi being pushed at Huynh Thuc Khang, Gia Hoi bridge head; 6 people in street flood 0.11-0.74m, not trapped.",
-     "message_en": "At Huynh Thuc Khang, Gia Hoi bridge head, taxi stalled and has to be pushed",
+     "summary": "Stalled taxi at Huỳnh Thúc Kháng đầu cầu Gia Hội with 6 people in street flood 0.11-0.74m pushing the vehicle.",
+     "message_en": "Huỳnh Thúc Kháng at Gia Hội bridgehead, taxi stalled and has to be pushed",
      "status": "new",
      "verdicts": {
       "pedestrian": "risky",
@@ -201,15 +200,15 @@
      "readings_used": 13,
      "facts": {
       "address_hint": "Huỳnh Thúc Kháng đầu cầu Gia Hội",
-      "dispatch_en": "Go to Huỳnh Thúc Kháng đầu cầu Gia Hội: stalled taxi being pushed, 6 people in street water 0.11-0.74m, not trapped.",
-      "dispatch_local": "Đến Huỳnh Thúc Kháng đầu cầu Gia Hội: taxi chết máy đang phải đẩy, 6 người trong nước đường 0.11-0.74m, không mắc kẹt.",
+      "dispatch_en": "Assist stalled taxi at Huỳnh Thúc Kháng đầu cầu Gia Hội, water depth 0.11-0.74m, 6 people in street pushing vehicle, not trapped.",
+      "dispatch_local": "Hỗ trợ taxi chết máy tại Huỳnh Thúc Kháng đầu cầu Gia Hội, mực nước 0.11-0.74m, 6 người đang lội nước đẩy xe, không bị mắc kẹt.",
       "injury_or_medical": false,
       "language": "vi",
-      "message_en": "At Huynh Thuc Khang, Gia Hoi bridge head, taxi stalled and has to be pushed",
+      "message_en": "Huỳnh Thúc Kháng at Gia Hội bridgehead, taxi stalled and has to be pushed",
       "needs": [],
       "people_count": 6,
-      "summary_en": "Stalled taxi being pushed at Huynh Thuc Khang, Gia Hoi bridge head; 6 people in street flood 0.11-0.74m, not trapped.",
-      "summary_local": "Taxi chết máy phải đẩy ở Huỳnh Thúc Kháng đầu cầu Gia Hội; 6 người trong nước đường 0.11-0.74m, không mắc kẹt.",
+      "summary_en": "Stalled taxi at Huỳnh Thúc Kháng đầu cầu Gia Hội with 6 people in street flood 0.11-0.74m pushing the vehicle.",
+      "summary_local": "Taxi chết máy tại Huỳnh Thúc Kháng đầu cầu Gia Hội, 6 người đang lội nước 0.11-0.74m đẩy xe.",
       "trapped": false,
       "vulnerable": [],
       "water_rising": "unknown"
@@ -222,9 +221,9 @@
   ],
   "route": null,
   "reports": [
-   "20261028-010228-93e7",
-   "20261028-010322-90ed",
-   "20261028-010346-56a1"
+   "hue-06",
+   "hue-10",
+   "hue-13"
   ]
  }
 }

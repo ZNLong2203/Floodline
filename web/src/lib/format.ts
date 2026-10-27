@@ -1,3 +1,4 @@
+import { type Key, langCode, type Vars } from "./i18n";
 import type { Passability, Report, ReportStatus, SegmentStatus } from "./types";
 
 export function m(v: number | null | undefined, digits = 2): string {
@@ -31,6 +32,54 @@ export function age(at: number, now = Date.now() / 1000): string {
   const rem = min % 60;
   if (h < 24) return rem ? `${h} h ${rem} min ago` : `${h} h ago`;
   return `${Math.floor(h / 24)} d ago`;
+}
+
+/** Relative age in the UI language. */
+export function ageT(at: number, now: number, t: (k: Key, v?: Vars) => string): string {
+  const s = Math.max(0, now - at);
+  if (s < 45) return t("age.now");
+  const min = Math.round(s / 60);
+  if (min < 60) return t("age.min", { n: min });
+  const h = Math.floor(min / 60);
+  const rem = min % 60;
+  if (h < 24) return rem ? t("age.hmin", { h, m: rem }) : t("age.h", { h });
+  return t("age.d", { n: Math.floor(h / 24) });
+}
+
+/** Translate a triage reason such as "vulnerable: elderly, sick" or "depth 1.3 m". */
+export function reasonT(reason: string, t: (k: Key, v?: Vars) => string): string {
+  const r = reason.trim();
+  if (r === "injury or medical need") return t("reason.injury");
+  if (r === "trapped") return t("reason.trapped");
+  if (r === "water rising") return t("reason.rising");
+  let m = /^vulnerable:\s*(.+)$/.exec(r);
+  if (m) return t("reason.vulnerable", { list: m[1].split(/,\s*/).map((v) => vulT(v, t)).join(", ") });
+  m = /^depth\s+([\d.]+)\s*m$/.exec(r);
+  if (m) return t("reason.depth", { m: m[1] });
+  m = /^(\d+)\s+people$/.exec(r);
+  if (m) return t("reason.people", { n: m[1] });
+  return r;
+}
+
+export function vulT(v: string, t: (k: Key, vars?: Vars) => string): string {
+  const k = `vul.${v}` as Key;
+  const s = t(k);
+  return s === k ? v : s;
+}
+
+export function needT(v: string, t: (k: Key, vars?: Vars) => string): string {
+  const k = `need.${v}` as Key;
+  const s = t(k);
+  return s === k ? v : s;
+}
+
+/** A photo-quality warning ("photo: motion blur", "no water found in the photo") in the UI language. */
+export function flagT(w: string, t: (k: Key, vars?: Vars) => string): string {
+  if (/no water found/i.test(w)) return t("flag.no_water");
+  const name = w.replace(/^photo:\s*/, "").trim().replace(/\s+/g, "_");
+  const k = `flag.${name}` as Key;
+  const s = t(k);
+  return s === k ? capitalise(w.replace(/^photo:\s*/, "").replace(/_/g, " ")) : s;
 }
 
 export function clock(at: number): string {
@@ -78,13 +127,32 @@ export function isClip(r: Report): boolean {
   return r.analysis?.kind === "clip" || Boolean(r.video_url);
 }
 
-export function summaryOf(r: Report): string {
-  return (
-    r.triage?.facts?.summary_vi ||
-    r.analysis?.perception?.summary_vi ||
-    r.note ||
-    "Chưa có mô tả."
-  );
+/** The resident's language as a short code ("vi"), from the triage facts. */
+export function reportLang(r: Report): string {
+  const f = r.triage?.facts;
+  if (f?.language) return langCode(f.language);
+  if (f?.summary_vi || f?.dispatch_vi) return "vi";
+  return "";
+}
+
+/** The summary in the reader's language: local text when they share the resident's language, else English. */
+export function summaryOf(r: Report, lang: string = "en"): string {
+  const f = r.triage?.facts;
+  const local = f?.summary_local || f?.summary_vi || r.analysis?.perception?.summary_vi;
+  const english = f?.summary_en;
+  const same = lang === reportLang(r) || (!reportLang(r) && lang !== "en");
+  return (same ? local || english : english || local) || r.note || "–";
+}
+
+/** Dispatch drafts, English first unless the reader shares the resident's language. */
+export function dispatchDrafts(r: Report, lang: string = "en"): { lang: string; text: string }[] {
+  const f = r.triage?.facts;
+  if (!f) return [];
+  const local = f.dispatch_local || f.dispatch_vi;
+  const out: { lang: string; text: string }[] = [];
+  if (f.dispatch_en) out.push({ lang: "en", text: f.dispatch_en });
+  if (local && local !== f.dispatch_en) out.push({ lang: reportLang(r) || "vi", text: local });
+  return lang !== "en" && lang === reportLang(r) ? out.reverse() : out;
 }
 
 export function verdictFor(r: Report, vehicle: string): Passability | null {

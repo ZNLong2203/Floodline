@@ -327,8 +327,17 @@ def demo_reset(city: str | None = None) -> dict[str, Any]:
 
 @app.get("/api/attribution")
 def attribution() -> Any:
-    """Author, licence and source of every demo photo and clip."""
-    return json.loads((DATA / "demo" / "photos.json").read_text())
+    """Author, licence and source of every demo photo and clip, tagged by city."""
+    credits = json.loads((DATA / "demo" / "photos.json").read_text())
+    for item in credits.get("photos", []) + credits.get("videos", []):
+        item.setdefault("city", "hue")
+    extra = DATA / "demo" / "valencia" / "photos.json"
+    if extra.exists():
+        for item in json.loads(extra.read_text()):
+            item["city"] = "valencia"
+            key = "videos" if item.get("kind") == "clip" else "photos"
+            credits.setdefault(key, []).append(item)
+    return credits
 
 
 @app.get("/api/catalog")

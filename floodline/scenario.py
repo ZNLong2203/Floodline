@@ -41,7 +41,8 @@ def seed(
     cat = cities.catalog(city.id)
     now = now or time.time()
     created = []
-    for item in sorted(scenario["reports"], key=lambda r: -r["minutes_ago"]):
+    ordered = sorted(scenario["reports"], key=lambda r: -r["minutes_ago"])
+    for n, item in enumerate(ordered, start=1):
         clip = None
         if "clip" in item:
             from floodline.video import analyse_clip
@@ -65,7 +66,7 @@ def seed(
             transcript = result.spark_video["speech"]
         tri = triage(client, result, item.get("note", ""), transcript, local_language=city.language)
         report = StoredReport(
-            id=store.new_id(),
+            id=f"{city.id}-{n:02d}",  # stable, so recorded assistant answers still point here
             lat=item["lat"],
             lon=item["lon"],
             at=now - 60 * item["minutes_ago"],

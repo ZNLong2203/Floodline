@@ -1,23 +1,15 @@
-import { band, BAND_LABEL, pct, REPORT_STATUS, STATUS } from "../lib/format";
+import { band, pct, STATUS } from "../lib/format";
+import { type Key, useI18n } from "../lib/i18n";
 import type { ReportStatus, SegmentStatus } from "../lib/types";
 
 /** Passability with an icon and colour, so it reads without colour vision too. */
-export function StatusPill({
-  status,
-  label,
-  lang = "en",
-  size = "md",
-}: {
-  status: SegmentStatus;
-  label?: string;
-  lang?: "en" | "vi";
-  size?: "sm" | "md";
-}) {
+export function StatusPill({ status, label, size = "md" }: { status: SegmentStatus; label?: string; size?: "sm" | "md" }) {
+  const { t } = useI18n();
   const s = STATUS[status];
   return (
     <span className={`pill pill--${s.tone} pill--${size}`}>
       <StatusGlyph status={status} />
-      <span>{label ?? (lang === "vi" ? s.vi : s.en)}</span>
+      <span>{label ?? t(`status.${status}` as Key)}</span>
     </span>
   );
 }
@@ -55,13 +47,11 @@ export function StatusGlyph({ status, size = 14 }: { status: SegmentStatus; size
 }
 
 export function PriorityBadge({ priority, size = "md" }: { priority: number | null | undefined; size?: "sm" | "md" | "lg" }) {
+  const { t } = useI18n();
   const b = band(priority);
+  const title = t("prio.title", { p: priority ?? "–", band: t(`band.${b}` as Key) });
   return (
-    <span
-      className={`prio prio--${b} prio--${size}`}
-      title={`Priority ${priority ?? "–"} of 100 · ${BAND_LABEL[b]}`}
-      aria-label={`Priority ${priority ?? "unknown"} of 100, ${BAND_LABEL[b]}`}
-    >
+    <span className={`prio prio--${b} prio--${size}`} title={title} aria-label={title}>
       <span className="prio__p">P</span>
       {priority ?? "–"}
     </span>
@@ -69,12 +59,13 @@ export function PriorityBadge({ priority, size = "md" }: { priority: number | nu
 }
 
 export function ReportStatusTag({ status }: { status: ReportStatus }) {
-  return <span className={`rstatus rstatus--${status}`}>{REPORT_STATUS[status].en}</span>;
+  const { t } = useI18n();
+  return <span className={`rstatus rstatus--${status}`}>{t(`rstatus.${status}` as Key)}</span>;
 }
 
 export function Probability({ p }: { p: number }) {
   return (
-    <span className="prob" title={`P(depth > limit) = ${(p * 100).toFixed(1)}%`}>
+    <span className="prob" title={`P = ${(p * 100).toFixed(1)}%`}>
       <span className="prob__bar">
         <span className="prob__fill" style={{ width: `${Math.max(2, p * 100)}%` }} />
       </span>

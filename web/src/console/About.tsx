@@ -1,34 +1,11 @@
 import { useEffect, useRef } from "react";
 import { Icon, VehicleIcon } from "../components/Icon";
-import type { Catalog, Health, SourceRef } from "../lib/types";
+import { vehicleName } from "../lib/catalog";
+import { cityLabel } from "../lib/cities";
+import { type Key, useI18n } from "../lib/i18n";
+import type { Catalog, City, Health, SourceRef } from "../lib/types";
 
-const STEPS = [
-  {
-    name: "Muse Spark",
-    tag: "perceive",
-    text: "Finds reference objects of known size standing in the water (scooters, cars, people, doors), how each faces the camera, which part the water reaches, and what makes the photo untrustworthy.",
-  },
-  {
-    name: "SAM 3.1",
-    tag: "segment",
-    text: "Segments the flood water, and a mask for every object Spark boxed. Every pixel is drawn on the overlay, so a coordinator can check it by eye.",
-  },
-  {
-    name: "Geometry",
-    tag: "measure",
-    text: "Deterministic code reads the masks: where each object disappears into the water, its visible height and width in pixels. No model does the arithmetic.",
-  },
-  {
-    name: "Consensus",
-    tag: "estimate",
-    text: "Each method gives an interval in metres. Outliers are dropped by median absolute deviation, the rest combined by inverse variance, and disagreement widens the result.",
-  },
-  {
-    name: "Passability",
-    tag: "decide",
-    text: "Per vehicle, the probability the depth exceeds its limit. Under 10% is passable, over 60% impassable, in between risky. A wide, uncertain estimate is never reported as safe.",
-  },
-];
+const STEPS = ["Muse Spark", "SAM 3.1", "Geometry", "Consensus", "Passability"];
 
 function sourceLabel(key: string, s: SourceRef | string): { title: string; url?: string; note?: string } {
   if (typeof s === "string") return { title: key, url: s.startsWith("http") ? s : undefined, note: s.startsWith("http") ? undefined : s };
@@ -39,7 +16,8 @@ function sourceLabel(key: string, s: SourceRef | string): { title: string; url?:
   };
 }
 
-export function About({ catalog, health, onClose }: { catalog: Catalog; health: Health | null; onClose(): void }) {
+export function About({ catalog, health, city, onClose }: { catalog: Catalog; health: Health | null; city: City; onClose(): void }) {
+  const { t, lang } = useI18n();
   const dialog = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const prev = document.activeElement as HTMLElement | null;
@@ -58,57 +36,62 @@ export function About({ catalog, health, onClose }: { catalog: Catalog; health: 
       <div className="modal__card about" role="dialog" aria-modal="true" aria-labelledby="about-title" tabIndex={-1} ref={dialog}>
         <header className="about__head">
           <div>
-            <div className="eyebrow">How it works</div>
-            <h2 id="about-title">From a resident's photo to a route a rescue truck can take</h2>
+            <div className="eyebrow">{t("about.eyebrow")}</div>
+            <h2 id="about-title">{t("about.title")}</h2>
           </div>
-          <button type="button" className="iconbtn" onClick={onClose} aria-label="Close">
+          <button type="button" className="iconbtn" onClick={onClose} aria-label={t("common.close")}>
             <Icon name="close" />
           </button>
         </header>
 
+        {city.story && (
+          <div className="about__story">
+            <Icon name="pin" size={16} />
+            <div>
+              <b>{t("about.story", { city: cityLabel(city) })}</b>
+              <p>{city.story}</p>
+            </div>
+          </div>
+        )}
+
         <ol className="pipeline">
-          {STEPS.map((s, i) => (
-            <li key={s.name} className="pipeline__step">
+          {STEPS.map((name, i) => (
+            <li key={name} className="pipeline__step">
               <div className="pipeline__num">{i + 1}</div>
-              <div className="pipeline__name">{s.name}</div>
-              <div className="pipeline__tag">{s.tag}</div>
-              <p>{s.text}</p>
+              <div className="pipeline__name">{name}</div>
+              <div className="pipeline__tag">{t(`about.s${i + 1}.tag` as Key)}</div>
+              <p>{t(`about.s${i + 1}` as Key)}</p>
             </li>
           ))}
         </ol>
 
         <div className="about__cols">
           <section>
-            <h3>Streets, not just pins</h3>
-            <p>
-              Each photo updates the street it was taken on and, more weakly, the streets within 120 m. Its interval widens by
-              0.3 m per 100 m of distance and doubles every 3 hours, so a fresh photo outweighs an old one two blocks away. Routes
-              avoid impassable segments and avoid risky ones when they can.
-            </p>
-            <h3>Triage you can audit</h3>
-            <p>
-              Muse Spark extracts facts from the resident's words and voice note (people, injuries, who is vulnerable, whether the
-              water is rising). The priority is a fixed, published formula over those facts and the measured depth, so two
-              coordinators always see the same order and why.
-            </p>
+            <h3>{t("about.languages")}</h3>
+            <p>{t("about.languagesText")}</p>
+            <h3>{t("about.streets")}</h3>
+            <p>{t("about.streetsText")}</p>
+            <h3>{t("about.triage")}</h3>
+            <p>{t("about.triageText")}</p>
           </section>
           <section>
-            <h3>Vehicle limits</h3>
+            <h3>{t("about.vehicles")}</h3>
             <ul className="about__vehicles">
               {catalog.vehicles.map((v) => (
                 <li key={v.id}>
                   <VehicleIcon id={v.id} size={16} />
-                  <span lang="vi">{v.name_vi}</span>
-                  <span className="muted">{v.name_en}</span>
+                  <span>{vehicleName(v, lang)}</span>
+                  <span className="muted">{lang === "en" ? v.name_vi : v.name_en}</span>
                   <span className="num">
-                    {v.max_depth_m.toFixed(2)} m{v.max_depth_flowing_m ? ` · ${v.max_depth_flowing_m.toFixed(2)} m flowing` : ""}
-                    {v.sources?.length ? <span className="muted"> · {v.sources.length} sources</span> : null}
+                    {v.max_depth_m.toFixed(2)} m{v.max_depth_flowing_m ? ` · ${t("about.flowing", { m: v.max_depth_flowing_m.toFixed(2) })}` : ""}
+                    {v.sources?.length ? <span className="muted"> · {t("about.sourcesN", { n: v.sources.length })}</span> : null}
                   </span>
                 </li>
               ))}
             </ul>
             <h3>
-              Sources{sources.length ? <span className="muted"> · {sources.length}</span> : null}
+              {t("about.sources")}
+              {sources.length ? <span className="muted"> · {sources.length}</span> : null}
             </h3>
             {sources.length ? (
               <ul className="about__sources">
@@ -129,16 +112,14 @@ export function About({ catalog, health, onClose }: { catalog: Catalog; health: 
                 })}
               </ul>
             ) : (
-              <p className="muted">Reference sizes and vehicle limits are provisional; sourced values are being added to the catalog.</p>
+              <p className="muted">{t("about.provisional")}</p>
             )}
           </section>
         </div>
 
         <footer className="about__foot">
-          <span>
-            Map data © OpenStreetMap contributors · Basemap: OpenFreeMap, © OpenMapTiles · Models: Meta Muse Spark, SAM 3.1
-          </span>
-          {health?.mode && <span className="mocktag mocktag--soft">model mode: {health.mode}</span>}
+          <span>{t("about.foot")}</span>
+          {health?.mode && <span className="mocktag mocktag--soft">{t("about.mode", { m: health.mode })}</span>}
         </footer>
       </div>
     </div>

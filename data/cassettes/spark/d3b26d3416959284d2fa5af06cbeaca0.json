@@ -1,0 +1,120 @@
+{
+ "request": {
+  "messages": [
+   {
+    "content": "You extract facts from flood help requests for rescue coordinators, who may not speak the resident's language. Report only what the resident said or the photo facts show; never invent people or needs. Keep street names and house numbers exactly as written.",
+    "role": "system"
+   },
+   {
+    "content": [
+     {
+      "text": "Resident's message (may be empty):\nHola, soy vecina de Catarroja, cerca de la plaza Mayor. Se ha llenado el garaje y el agua ya sube por la escalera del portal. Mi padre tiene ochenta y seis años, está solo en el segundo piso, no puede caminar sin andador y necesita su medicación. No podemos salir. Por favor, que alguien venga.\n\nWhat the photo showed: {'people_in_photo': {'children_or_elderly': False, 'count': 3, 'on_roof_or_upper_floor': False, 'signalling_for_help': False}, 'depth_m': [0.0, 0.13], 'photo_summary': 'Nước lũ đục ngập tới mắt cá chân trong khu vực nhà xe, hai người đang dựng rào chắn tạm bằng thùng carton để ngăn nước, chưa cần cứu hộ khẩn cấp.'}\n\nExtract the facts. language: the ISO 639-1 code of the resident's message, e.g. vi, es, en (the code for Spanish if there is none). message_en: the message translated to English, faithfully, empty if there is none. summary_en / summary_local: one line for the coordinator, in English and in Spanish. dispatch_en / dispatch_local: a short message a coordinator could send to a rescue team, including the depth range, in English and in Spanish.",
+      "type": "text"
+     }
+    ],
+    "role": "user"
+   }
+  ],
+  "model": "muse-spark-1.3",
+  "reasoning_effort": "low",
+  "response_format": {
+   "json_schema": {
+    "name": "flood_triage",
+    "schema": {
+     "additionalProperties": false,
+     "properties": {
+      "address_hint": {
+       "type": "string"
+      },
+      "dispatch_en": {
+       "type": "string"
+      },
+      "dispatch_local": {
+       "type": "string"
+      },
+      "injury_or_medical": {
+       "type": "boolean"
+      },
+      "language": {
+       "type": "string"
+      },
+      "message_en": {
+       "type": "string"
+      },
+      "needs": {
+       "items": {
+        "enum": [
+         "evacuation",
+         "boat",
+         "medical",
+         "food",
+         "water",
+         "power",
+         "info"
+        ],
+        "type": "string"
+       },
+       "type": "array"
+      },
+      "people_count": {
+       "type": "integer"
+      },
+      "summary_en": {
+       "type": "string"
+      },
+      "summary_local": {
+       "type": "string"
+      },
+      "trapped": {
+       "type": "boolean"
+      },
+      "vulnerable": {
+       "items": {
+        "enum": [
+         "elderly",
+         "child",
+         "infant",
+         "pregnant",
+         "disabled",
+         "sick"
+        ],
+        "type": "string"
+       },
+       "type": "array"
+      },
+      "water_rising": {
+       "enum": [
+        "yes",
+        "no",
+        "unknown"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "people_count",
+      "vulnerable",
+      "injury_or_medical",
+      "water_rising",
+      "trapped",
+      "needs",
+      "address_hint",
+      "language",
+      "message_en",
+      "summary_en",
+      "summary_local",
+      "dispatch_en",
+      "dispatch_local"
+     ],
+     "type": "object"
+    },
+    "strict": true
+   },
+   "type": "json_schema"
+  }
+ },
+ "response": {
+  "content": "{\"address_hint\": \"Catarroja, cerca de la plaza Mayor\", \"dispatch_en\": \"Rescue needed in Catarroja near Plaza Mayor: 86-year-old alone on 2nd floor, cannot walk without walker, needs medication, trapped as water rises up stairwell (photo depth 0.0-0.13 m in garage).\", \"dispatch_local\": \"Rescate necesario en Catarroja, cerca de la plaza Mayor: persona de 86 a\\u00f1os sola en el segundo piso, no puede caminar sin andador, necesita medicaci\\u00f3n, atrapados con el agua subiendo por la escalera (profundidad en foto 0,0-0,13 m en el garaje).\", \"injury_or_medical\": true, \"language\": \"es\", \"message_en\": \"Hello, I am a neighbor from Catarroja, near Plaza Mayor. The garage has filled and the water is already coming up the entrance stairs. My father is eighty-six years old, he is alone on the second floor, he cannot walk without a walker and needs his medication. We cannot get out. Please, someone come.\", \"needs\": [\"evacuation\", \"medical\"], \"people_count\": 2, \"summary_en\": \"86-year-old father alone on 2nd floor in Catarroja near Plaza Mayor, cannot walk without walker and needs medication, trapped as garage flooded and water rises up stairs.\", \"summary_local\": \"Padre de 86 a\\u00f1os solo en el segundo piso en Catarroja, cerca de la plaza Mayor, no puede caminar sin andador y necesita medicaci\\u00f3n, atrapados con el garaje inundado y el agua subiendo por la escalera.\", \"trapped\": true, \"vulnerable\": [\"elderly\", \"disabled\", \"sick\"], \"water_rising\": \"yes\"}",
+  "model": "muse-spark-1.3"
+ }
+}

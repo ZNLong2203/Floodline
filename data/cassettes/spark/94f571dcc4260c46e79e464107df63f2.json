@@ -1,0 +1,120 @@
+{
+ "request": {
+  "messages": [
+   {
+    "content": "You extract facts from flood help requests for rescue coordinators, who may not speak the resident's language. Report only what the resident said or the photo facts show; never invent people or needs. Keep street names and house numbers exactly as written.",
+    "role": "system"
+   },
+   {
+    "content": [
+     {
+      "text": "Resident's message (may be empty):\nAlaquàs: calle con barro y agua por los tobillos. A pie se puede pasar, pero los coches aparcados están encharcados hasta las ruedas\n\nWhat the photo showed: {'people_in_photo': {'children_or_elderly': False, 'count': 5, 'on_roof_or_upper_floor': False, 'signalling_for_help': False}, 'depth_m': [0.0, 0.13], 'photo_summary': 'Phố ngập bùn nông khoảng mắt cá chân, người dân vẫn đi lại được, chưa cần cứu hộ khẩn cấp.'}\n\nExtract the facts. language: the ISO 639-1 code of the resident's message, e.g. vi, es, en (the code for Spanish if there is none). message_en: the message translated to English, faithfully, empty if there is none. summary_en / summary_local: one line for the coordinator, in English and in Spanish. dispatch_en / dispatch_local: a short message a coordinator could send to a rescue team, including the depth range, in English and in Spanish.",
+      "type": "text"
+     }
+    ],
+    "role": "user"
+   }
+  ],
+  "model": "muse-spark-1.3",
+  "reasoning_effort": "low",
+  "response_format": {
+   "json_schema": {
+    "name": "flood_triage",
+    "schema": {
+     "additionalProperties": false,
+     "properties": {
+      "address_hint": {
+       "type": "string"
+      },
+      "dispatch_en": {
+       "type": "string"
+      },
+      "dispatch_local": {
+       "type": "string"
+      },
+      "injury_or_medical": {
+       "type": "boolean"
+      },
+      "language": {
+       "type": "string"
+      },
+      "message_en": {
+       "type": "string"
+      },
+      "needs": {
+       "items": {
+        "enum": [
+         "evacuation",
+         "boat",
+         "medical",
+         "food",
+         "water",
+         "power",
+         "info"
+        ],
+        "type": "string"
+       },
+       "type": "array"
+      },
+      "people_count": {
+       "type": "integer"
+      },
+      "summary_en": {
+       "type": "string"
+      },
+      "summary_local": {
+       "type": "string"
+      },
+      "trapped": {
+       "type": "boolean"
+      },
+      "vulnerable": {
+       "items": {
+        "enum": [
+         "elderly",
+         "child",
+         "infant",
+         "pregnant",
+         "disabled",
+         "sick"
+        ],
+        "type": "string"
+       },
+       "type": "array"
+      },
+      "water_rising": {
+       "enum": [
+        "yes",
+        "no",
+        "unknown"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "people_count",
+      "vulnerable",
+      "injury_or_medical",
+      "water_rising",
+      "trapped",
+      "needs",
+      "address_hint",
+      "language",
+      "message_en",
+      "summary_en",
+      "summary_local",
+      "dispatch_en",
+      "dispatch_local"
+     ],
+     "type": "object"
+    },
+    "strict": true
+   },
+   "type": "json_schema"
+  }
+ },
+ "response": {
+  "content": "{\"address_hint\": \"Alaquàs\", \"dispatch_en\": \"Alaquàs: shallow flooding 0.0-0.13 m, passable on foot, parked cars flooded to wheels, 5 people visible, no rescue required, monitor.\", \"dispatch_local\": \"Alaquàs: inundación superficial de 0,0-0,13 m, transitable a pie, coches aparcados encharcados hasta las ruedas, 5 personas visibles, sin necesidad de rescate, vigilar.\", \"injury_or_medical\": false, \"language\": \"es\", \"message_en\": \"Alaquàs: street with mud and ankle-deep water. Passable on foot, but parked cars are flooded up to the wheels\", \"needs\": [], \"people_count\": 5, \"summary_en\": \"In Alaquàs, ankle-deep muddy water (0.0-0.13 m), passable on foot, 5 people visible, no one trapped, no urgent rescue needed.\", \"summary_local\": \"En Alaquàs, calle con barro y agua hasta los tobillos (0,0-0,13 m), transitable a pie, 5 personas visibles, nadie atrapado, sin necesidad de rescate urgente.\", \"trapped\": false, \"vulnerable\": [], \"water_rising\": \"unknown\"}",
+  "model": "muse-spark-1.3"
+ }
+}

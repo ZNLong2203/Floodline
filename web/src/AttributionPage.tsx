@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Icon, Logo } from "./components/Icon";
 import { api, href } from "./lib/api";
+import { LangToggle, useI18n } from "./lib/i18n";
 import type { AttributionData, MediaCredit, Report } from "./lib/types";
 
 /** Commons serves a scaled thumbnail of any file (also a poster frame for videos). */
@@ -40,6 +41,7 @@ function Thumb({ m, local }: { m: MediaCredit; local?: string }) {
 }
 
 function CreditRow({ m, uses, local }: { m: MediaCredit; uses: number; local?: string }) {
+  const { t } = useI18n();
   const unreviewed = m.license_review?.includes("unreviewed");
   return (
     <tr>
@@ -51,22 +53,22 @@ function CreditRow({ m, uses, local }: { m: MediaCredit; uses: number; local?: s
         <div className="attr__file">
           <code>{m.file}</code>
           {uses > 0 && (
-            <span className="attr__inuse" title="Reports in the current scenario that use this photo">
-              in scenario ×{uses}
+            <span className="attr__inuse" title={t("attr.inScenario", { n: uses })}>
+              {t("attr.inScenario", { n: uses })}
             </span>
           )}
         </div>
       </td>
-      <td data-label="Author">
+      <td data-label={t("attr.author")}>
         {m.author_url ? (
           <a href={decode(m.author_url)} target="_blank" rel="noreferrer">
-            {m.author || "unknown"}
+            {m.author || t("attr.unknown")}
           </a>
         ) : (
-          m.author || "unknown"
+          m.author || t("attr.unknown")
         )}
       </td>
-      <td data-label="Licence">
+      <td data-label={t("attr.licence")}>
         {m.license_url ? (
           <a href={m.license_url} target="_blank" rel="noreferrer">
             {m.license}
@@ -74,10 +76,10 @@ function CreditRow({ m, uses, local }: { m: MediaCredit; uses: number; local?: s
         ) : (
           m.license || "–"
         )}
-        {unreviewed && <div className="attr__flag">licence copied from Flickr by a bot, not reviewed</div>}
-        {m.personality_rights_warning && <div className="attr__flag">personality rights apply</div>}
+        {unreviewed && <div className="attr__flag">{t("attr.unreviewed")}</div>}
+        {m.personality_rights_warning && <div className="attr__flag">{t("attr.personality")}</div>}
       </td>
-      <td data-label="Source">
+      <td data-label={t("attr.source")}>
         {m.commons_page ? (
           <a href={m.commons_page} target="_blank" rel="noreferrer" className="attr__commons">
             Commons <Icon name="external" size={12} />
@@ -86,7 +88,7 @@ function CreditRow({ m, uses, local }: { m: MediaCredit; uses: number; local?: s
           "–"
         )}
       </td>
-      <td data-label="Place" lang="vi">
+      <td data-label={t("attr.place")}>
         {m.location || "–"}
         {m.lat != null && m.lon != null && (
           <div className="attr__coords num">
@@ -94,7 +96,7 @@ function CreditRow({ m, uses, local }: { m: MediaCredit; uses: number; local?: s
           </div>
         )}
       </td>
-      <td data-label="Date" className="num" title={m.date_note ?? m.date ?? undefined}>
+      <td data-label={t("attr.date")} className="num" title={m.date_note ?? m.date ?? undefined}>
         {shortDate(m)}
       </td>
     </tr>
@@ -102,20 +104,21 @@ function CreditRow({ m, uses, local }: { m: MediaCredit; uses: number; local?: s
 }
 
 function CreditTable({ items, uses, local }: { items: MediaCredit[]; uses: Map<string, number>; local: Map<string, string> }) {
+  const { t } = useI18n();
   return (
     <div className="attr__tablewrap">
       <table className="attr__table">
         <thead>
           <tr>
             <th scope="col">
-              <span className="sr-only">Thumbnail</span>
+              <span className="sr-only">{t("attr.thumb")}</span>
             </th>
-            <th scope="col">What it shows</th>
-            <th scope="col">Author</th>
-            <th scope="col">Licence</th>
-            <th scope="col">Source</th>
-            <th scope="col">Place</th>
-            <th scope="col">Date</th>
+            <th scope="col">{t("attr.what")}</th>
+            <th scope="col">{t("attr.author")}</th>
+            <th scope="col">{t("attr.licence")}</th>
+            <th scope="col">{t("attr.source")}</th>
+            <th scope="col">{t("attr.place")}</th>
+            <th scope="col">{t("attr.date")}</th>
           </tr>
         </thead>
         <tbody>
@@ -130,17 +133,19 @@ function CreditTable({ items, uses, local }: { items: MediaCredit[]; uses: Map<s
 
 /** /attribution: credits for the real photos used by the demo scenario. */
 export default function AttributionPage() {
+  const { t } = useI18n();
   const [data, setData] = useState<AttributionData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [reports, setReports] = useState<Report[]>([]);
 
   useEffect(() => {
-    document.title = "Photo credits · Floodline";
+    document.title = `${t("attr.pageTitle")} · Floodline`;
     api
       .attribution()
       .then(setData)
-      .catch((e: Error) => setError(e.message || "Credits unavailable"));
+      .catch((e: Error) => setError(e.message || t("attr.unavailable")));
     api.reports().then(setReports).catch(() => setReports([]));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Prefer the server's own copy of a photo for the thumbnail when a scenario report uses it.
@@ -165,22 +170,15 @@ export default function AttributionPage() {
           <Logo size={28} />
           <span className="wordmark">Floodline</span>
         </a>
-        <span className="rp__city">Photo credits</span>
+        <span className="rp__city">{t("attr.pageTitle")}</span>
+        <LangToggle className="langtoggle--dark" />
       </header>
       <main className="attr__main">
-        <h1>Demo scenario and photo credits</h1>
-        <p lang="vi">
-          <b>Kịch bản mô phỏng.</b> Các báo cáo có nhãn này dùng ảnh lũ thật ở Việt Nam từ Wikimedia Commons, được đặt lên
-          các tuyến phố hay ngập ở Huế để trình diễn. Phần lớn ảnh không được chụp ở Huế; thời gian và lời nhắn là kịch bản.
-        </p>
-        <p>
-          Reports marked as a simulated scenario use real photographs of floods in Vietnam, placed on Huế streets that flood
-          often. Most were taken elsewhere; times and messages are scripted. Depth, overlay and every verdict are computed live by
-          the pipeline from these photos. Overlays drawn on CC BY-SA photos are shared under the same licence.
-        </p>
+        <h1>{t("attr.title")}</h1>
+        <p>{t("attr.p1")}</p>
         {data?.retrieved && (
           <p className="muted attr__meta">
-            Retrieved from {data.source ?? "Wikimedia Commons"} on {data.retrieved}. {data.note}
+            {t("attr.retrieved", { source: data.source ?? "Wikimedia Commons", date: data.retrieved })} {data.note}
           </p>
         )}
 
@@ -188,25 +186,23 @@ export default function AttributionPage() {
           <div className="notice notice--bad" role="alert">
             <Icon name="alert" />
             <div>
-              <b>Credits unavailable.</b> {error}. The full list is in <code>data/demo/ATTRIBUTION.md</code>.
+              <b>{t("attr.unavailable")}</b> {error}. <code>data/demo/ATTRIBUTION.md</code>
             </div>
           </div>
         )}
         {!data && !error && (
           <div className="attr__loading">
-            <span className="spinner spinner--sm" /> Loading credits…
+            <span className="spinner spinner--sm" /> {t("attr.loading")}
           </div>
         )}
         {data && !photos.length && !videos.length && (
-          <p className="muted">
-            No credits to show. With the backend running, this page lists every photo in <code>data/demo/photos.json</code>.
-          </p>
+          <p className="muted">{t("attr.none")}</p>
         )}
 
         {photos.length > 0 && (
           <section>
             <h2>
-              Photos <span className="muted">· {photos.length}</span>
+              {t("attr.photos")} <span className="muted">· {photos.length}</span>
             </h2>
             <CreditTable items={photos} uses={uses} local={local} />
           </section>
@@ -214,15 +210,13 @@ export default function AttributionPage() {
         {videos.length > 0 && (
           <section>
             <h2>
-              Video clips <span className="muted">· {videos.length}</span>
+              {t("attr.videos")} <span className="muted">· {videos.length}</span>
             </h2>
             <CreditTable items={videos} uses={uses} local={local} />
           </section>
         )}
 
-        <p className="muted attr__foot">
-          Map data © OpenStreetMap contributors (ODbL) · Basemap: OpenFreeMap, © OpenMapTiles.
-        </p>
+        <p className="muted attr__foot">{t("about.foot")}</p>
       </main>
     </div>
   );

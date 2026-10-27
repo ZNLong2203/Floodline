@@ -12,9 +12,11 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { StatusGlyph } from "../components/Status";
 import { basemapStyle, localiseLabels } from "../lib/basemap";
+import { vehicleName } from "../lib/catalog";
 import { band, pct, range, STATUS, summaryOf } from "../lib/format";
+import { type Key, useI18n } from "../lib/i18n";
 import type { Theme } from "../lib/theme";
-import type { Report, RouteResult, SegmentCollection, SegmentProps, SegmentStatus, Vehicle } from "../lib/types";
+import type { City, Report, RouteResult, SegmentCollection, SegmentProps, SegmentStatus, Vehicle } from "../lib/types";
 
 export const HUE_CENTER: [number, number] = [107.585, 16.465];
 
@@ -88,6 +90,9 @@ export interface RouteView {
 
 interface Props {
   theme: Theme;
+  city: City;
+  /** Reports the assistant used: drawn with a ring. */
+  highlight: Set<string>;
   vehicle: string;
   vehicles: Vehicle[];
   reports: Report[];
@@ -109,6 +114,7 @@ interface Hover {
 }
 
 export function MapView(props: Props) {
+  const { t, lang } = useI18n();
   const box = useRef<HTMLDivElement>(null);
   const mapRef = useRef<MLMap | null>(null);
   const [ready, setReady] = useState(false);
@@ -258,8 +264,8 @@ export function MapView(props: Props) {
     const map = new MLMap({
       container: box.current!,
       style: basemapStyle(latest.current.theme),
-      center: HUE_CENTER,
-      zoom: 14,
+      center: [latest.current.city.center[1], latest.current.city.center[0]],
+      zoom: latest.current.city.zoom ?? 14,
       minZoom: 11,
       maxZoom: 19,
       attributionControl: false,
@@ -316,6 +322,15 @@ export function MapView(props: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Fly to a city when it changes.
+  const cityRef = useRef(props.city.id);
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || cityRef.current === props.city.id) return;
+    cityRef.current = props.city.id;
+    map.flyTo({ center: [props.city.center[1], props.city.center[0]], zoom: props.city.zoom ?? 14, duration: 1600, essential: true });
+  }, [props.city]);
+
   // Swap the basemap with the theme; style.load re-installs our layers.
   const themeRef = useRef(props.theme);
   useEffect(() => {
@@ -352,7 +367,7 @@ export function MapView(props: Props) {
         const el = document.createElement("div");
         el.className = `endpoint endpoint--${k}`;
         el.textContent = k.toUpperCase();
-        el.setAttribute("aria-label", k === "a" ? "Route start" : "Route destination");
+        el.setAttribute("aria-label", `${k.toUpperCase()} · ${t("route.title")}`);
         ends.current[k] = new Marker({ element: el, anchor: "bottom" }).setLngLat([p[1], p[0]]).addTo(map);
       }
     }
@@ -385,6 +400,7 @@ export function MapView(props: Props) {
         "mk--nodepth": !est,
         "is-fresh": props.fresh.has(r.id),
         "is-selected": props.selectedId === r.id,
+        "is-highlighted": props.highlight.has(r.id),
       };
       let entry = markers.current.get(r.id);
       if (!entry) {
@@ -406,9 +422,10 @@ export function MapView(props: Props) {
       el.style.setProperty("--s", `${Math.round(22 + p * 0.2)}px`);
       el.style.zIndex = String(props.selectedId === r.id ? 1000 : r.status === "closed" ? 1 : 10 + p);
       el.querySelector(".mk__dot")!.textContent = String(p);
-      const depth = est ? range(est.low_m, est.high_m) : "depth unknown";
-      el.setAttribute("aria-label", `Report, priority ${p}, ${depth}. ${summaryOf(r)}`);
-      el.title = `P${p} · ${depth}\n${summaryOf(r)}`;
+      const depth = est ? range(est.low_m, est.high_m) : t("marker.noDepth");
+      const summary = summaryOf(r, lang);
+      el.setAttribute("aria-label", t("marker.aria", { p, depth, summary }));
+      el.title = `P${p} · ${depth}\n${summary}`;
       marker.setLngLat([r.lon, r.lat]);
     }
     for (const [id, entry] of markers.current) {
@@ -417,7 +434,8 @@ export function MapView(props: Props) {
         markers.current.delete(id);
       }
     }
-  }, [props.reports, props.fresh, props.selectedId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.reports, props.fresh, props.selectedId, props.highlight, lang]);
 
   // Fly to a report when asked.
   useEffect(() => {
@@ -429,13 +447,14 @@ export function MapView(props: Props) {
   const v = props.vehicles.find((x) => x.id === props.vehicle);
   return (
     <div className="map">
-      <div ref={box} className="map__canvas" role="region" aria-label="Flood map of Huế" />
-      {hover && <SegmentTip hover={hover} vehicle={props.vehicle} vehicleName={v?.name_vi ?? props.vehicle} />}
+      <div ref={box} className="map__canvas" role="region" aria-label={t("map.region", { city: props.city.name })} />
+      {hover && <SegmentTip hover={hover} vehicle={props.vehicle} vehicleName={vehicleName(v, lang) || props.vehicle} />}
     </div>
   );
 }
 
 function SegmentTip({ hover, vehicle, vehicleName }: { hover: Hover; vehicle: string; vehicleName: string }) {
+  const { t, tn } = useI18n();
   const p = hover.props;
   const status = (p[`status_${vehicle}`] ?? "unknown") as SegmentStatus;
   const prob = p[`p_${vehicle}`] as number | undefined;
@@ -447,25 +466,23 @@ function SegmentTip({ hover, vehicle, vehicleName }: { hover: Hover; vehicle: st
       style={{ left: hover.x, top: hover.y, transform: `translate(${flip ? "calc(-100% - 14px)" : "14px"}, -50%)` }}
       role="tooltip"
     >
-      <div className="segtip__name">{p.name || "Unnamed street"}</div>
+      <div className="segtip__name">{p.name || t("tip.unnamed")}</div>
       <div className="segtip__depth">
         <span className="num">{range(p.low_m, p.high_m)}</span>
-        <span className="segtip__mean">mean {p.depth_m?.toFixed(2)} m</span>
+        <span className="segtip__mean">{t("tip.mean", { m: p.depth_m?.toFixed(2) ?? "–" })}</span>
       </div>
       <div className={`segtip__status tone--${STATUS[status].tone}`}>
         <StatusGlyph status={status} />
         <span>
-          {vehicleName}: {STATUS[status].en}
+          {vehicleName}: {t(`status.${status}` as Key)}
         </span>
       </div>
       {prob != null && (
         <div className="segtip__p">
-          P(depth &gt; limit) <b className="num">{pct(prob)}</b>
+          {t("tip.pexceed")} <b className="num">{pct(prob)}</b>
         </div>
       )}
-      <div className="segtip__foot">
-        Fused from {reports.length} report{reports.length === 1 ? "" : "s"}
-      </div>
+      <div className="segtip__foot">{tn("tip.fused", reports.length)}</div>
     </div>
   );
 }

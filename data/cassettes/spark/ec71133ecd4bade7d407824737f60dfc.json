@@ -1,0 +1,120 @@
+{
+ "request": {
+  "messages": [
+   {
+    "content": "You extract facts from flood help requests for rescue coordinators, who may not speak the resident's language. Report only what the resident said or the photo facts show; never invent people or needs. Keep street names and house numbers exactly as written.",
+    "role": "system"
+   },
+   {
+    "content": [
+     {
+      "text": "Resident's message (may be empty):\nEn mi calle el agua ya llega al bordillo y empieza a colarse por las puertas de los garajes. Algunos vecinos han subido los coches a la acera\n\nWhat the photo showed: {'people_in_photo': {'children_or_elderly': False, 'count': 5, 'on_roof_or_upper_floor': False, 'signalling_for_help': False}, 'depth_m': [0.0, 0.21], 'photo_summary': 'Phố bị ngập nước đục nâu khoảng đến mắt cá chân, người dân vẫn đi lại được, chưa cần cứu hộ khẩn cấp.'}\n\nExtract the facts. language: the ISO 639-1 code of the resident's message, e.g. vi, es, en (the code for Spanish if there is none). message_en: the message translated to English, faithfully, empty if there is none. summary_en / summary_local: one line for the coordinator, in English and in Spanish. dispatch_en / dispatch_local: a short message a coordinator could send to a rescue team, including the depth range, in English and in Spanish.",
+      "type": "text"
+     }
+    ],
+    "role": "user"
+   }
+  ],
+  "model": "muse-spark-1.3",
+  "reasoning_effort": "low",
+  "response_format": {
+   "json_schema": {
+    "name": "flood_triage",
+    "schema": {
+     "additionalProperties": false,
+     "properties": {
+      "address_hint": {
+       "type": "string"
+      },
+      "dispatch_en": {
+       "type": "string"
+      },
+      "dispatch_local": {
+       "type": "string"
+      },
+      "injury_or_medical": {
+       "type": "boolean"
+      },
+      "language": {
+       "type": "string"
+      },
+      "message_en": {
+       "type": "string"
+      },
+      "needs": {
+       "items": {
+        "enum": [
+         "evacuation",
+         "boat",
+         "medical",
+         "food",
+         "water",
+         "power",
+         "info"
+        ],
+        "type": "string"
+       },
+       "type": "array"
+      },
+      "people_count": {
+       "type": "integer"
+      },
+      "summary_en": {
+       "type": "string"
+      },
+      "summary_local": {
+       "type": "string"
+      },
+      "trapped": {
+       "type": "boolean"
+      },
+      "vulnerable": {
+       "items": {
+        "enum": [
+         "elderly",
+         "child",
+         "infant",
+         "pregnant",
+         "disabled",
+         "sick"
+        ],
+        "type": "string"
+       },
+       "type": "array"
+      },
+      "water_rising": {
+       "enum": [
+        "yes",
+        "no",
+        "unknown"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "people_count",
+      "vulnerable",
+      "injury_or_medical",
+      "water_rising",
+      "trapped",
+      "needs",
+      "address_hint",
+      "language",
+      "message_en",
+      "summary_en",
+      "summary_local",
+      "dispatch_en",
+      "dispatch_local"
+     ],
+     "type": "object"
+    },
+    "strict": true
+   },
+   "type": "json_schema"
+  }
+ },
+ "response": {
+  "content": "{\"address_hint\": \"\", \"dispatch_en\": \"Monitor street flooding 0.0-0.21 m at curb seeping into garages, 5 people walking, no evacuation needed at this time.\", \"dispatch_local\": \"Vigilar inundaci\\u00f3n en la calle de 0,0-0,21 m al bordillo filtr\\u00e1ndose en garajes, 5 personas caminando, sin necesidad de evacuaci\\u00f3n por ahora.\", \"injury_or_medical\": false, \"language\": \"es\", \"message_en\": \"On my street the water already reaches the curb and is starting to seep in through the garage doors. Some neighbors have moved their cars up onto the sidewalk\", \"needs\": [], \"people_count\": 5, \"summary_en\": \"Street flooding ankle-deep 0.0-0.21 m at curb entering garages, 5 people walking, no urgent rescue needed.\", \"summary_local\": \"Calle inundada hasta el tobillo 0,0-0,21 m al bordillo entrando en garajes, 5 personas caminando, sin necesidad de rescate urgente.\", \"trapped\": false, \"vulnerable\": [], \"water_rising\": \"yes\"}",
+  "model": "muse-spark-1.3"
+ }
+}

@@ -1,0 +1,521 @@
+{
+ "city": "valencia",
+ "question": "¿Quién está en mayor peligro ahora mismo y qué hay que enviar?",
+ "answer": {
+  "answer": "En Catarroja / Alfafar, 3 rescates urgentes:\n\n**1. Mayor peligro inmediato: Avinguda dels Reis Catòlics, Alfafar - 2 personas atrapadas en coche**\n- Qué pasa: \"agua a las ventanillas, no pueden abrir las puertas\" en Avinguda dels Reis Catòlics. Mujer gritando.\n- Profundidad: unos 0.0-3.8 m.\n- Transitable: intransitable para peatón, scooter, car, suv y truck. **No hay vía segura por carretera.**\n- Enviar: **lancha / rescate de emergencias inmediato**, no vehículo terrestre.\n\n**2. Carrer de les Germanies - 8 personas en garaje, con niña de 5 años**\n- Qué pasa: \"garaje del bloque en calle de les Germanies - 8 personas incluida niña de 5 años, agua hasta la cintura y sigue subiendo, sin luz\".\n- Profundidad: unos 0.0-1.5 m.\n- Transitable: intransitable para todos, incluido truck. **No hay vía segura por carretera.**\n- Enviar: **lancha / equipo de evacuación a pie con apoyo**, no intentar con car/suv/truck.\n\n**3. Plaça Major, Catarroja - anciano 86 años solo, necesita medicación**\n- Qué pasa: \"persona de 86 años sola en el segundo piso, no puede caminar sin andador, necesita medicación, atrapados con el agua subiendo por la escalera\".\n- Profundidad: unos 0.0-0.18 m.\n- Transitable: transitable para peatón, scooter, car, suv y truck.\n- Enviar: **car / suv con equipo médico + evacuación** a Plaça Major ahora.",
+  "steps": [
+   {
+    "tool": "list_reports",
+    "args": {
+     "limit": 10
+    },
+    "result": {
+     "count": 14,
+     "reports": [
+      {
+       "id": "valencia-12",
+       "street": "Plaça Major",
+       "lat": 39.40271,
+       "lon": -0.40414,
+       "minutes_ago": 29,
+       "depth_m": [
+        0.0,
+        0.13
+       ],
+       "priority": 80,
+       "people": 2,
+       "vulnerable": [
+        "elderly",
+        "disabled",
+        "sick"
+       ],
+       "summary": "86-year-old father alone on 2nd floor in Catarroja near Plaza Mayor, cannot walk without walker and needs medication, trapped as garage flooded and water rises up stairs.",
+       "message_en": "Hello, I am a neighbor from Catarroja, near Plaza Mayor. The garage has filled and the water is already coming up the entrance stairs. My father is eighty-six years old, he is alone on the second floor, he cannot walk without a walker and needs his medication. We cannot get out. Please, someone come.",
+       "status": "new"
+      },
+      {
+       "id": "valencia-13",
+       "street": "Carrer de les Germanies",
+       "lat": 39.40454,
+       "lon": -0.39776,
+       "minutes_ago": 18,
+       "depth_m": [
+        0.0,
+        1.346
+       ],
+       "priority": 45,
+       "people": 8,
+       "vulnerable": [
+        "child"
+       ],
+       "summary": "People trapped in building garage on calle de les Germanies, waist-deep rising water, no light, with 5-year-old child; photo shows 8 people in 0.0-1.35m water.",
+       "message_en": "We are in the garage of my building, calle de les Germanies. The water is up to our waist and keeps rising. I have my five-year-old daughter in my arms and there is no light. Please come get us out.",
+       "status": "new"
+      },
+      {
+       "id": "valencia-11",
+       "street": "Avinguda dels Reis Catòlics",
+       "lat": 39.41911,
+       "lon": -0.3918,
+       "minutes_ago": 38,
+       "depth_m": [
+        0.0,
+        3.4
+       ],
+       "priority": 35,
+       "people": 2,
+       "vulnerable": [],
+       "summary": "Observer on balcony in Alfafar reports 2 people trapped in car below, water at windows, doors blocked, woman screaming.",
+       "message_en": "Please, we need help. I am on a balcony in Alfafar and below, in the street, there is a car trapped with two people inside. The water is already up to the windows and they cannot open the doors. A woman is screaming. Notify emergency services, quickly.",
+       "status": "new"
+      },
+      {
+       "id": "valencia-10",
+       "street": "Carrer de Sant Antoni",
+       "lat": 39.40406,
+       "lon": -0.40313,
+       "minutes_ago": 48,
+       "depth_m": [
+        0.0,
+        0.226
+       ],
+       "priority": 25,
+       "people": 14,
+       "vulnerable": [
+        "elderly",
+        "child"
+       ],
+       "summary": "14 people including children/elderly on street and balconies at Calle Sant Antoni, ankle-deep water 0.0-0.23m, mud-covered cars, no distress signal.",
+       "message_en": "Calle Sant Antoni, the water reaches the ankles. Neighbors are walking in the middle of the street and the cars are full of mud",
+       "status": "new"
+      },
+      {
+       "id": "valencia-01",
+       "street": "Carrer de Vicent Lladró Sena",
+       "lat": 39.46803,
+       "lon": -0.42486,
+       "minutes_ago": 122,
+       "depth_m": [
+        0.0,
+        0.335
+       ],
+       "priority": 20,
+       "people": 20,
+       "vulnerable": [
+        "child"
+       ],
+       "summary": "20 people incl. children wading in ankle-deep water 0.0-0.33m covering roadway at Rotonda de la carretera de Torrent en Xirivella; cars still passable slowly, not trapped.",
+       "message_en": "Roundabout on the Torrent road in Xirivella: the water already covers the whole roadway, it reaches the kids' ankles. Cars pass slowly raising waves",
+       "status": "new"
+      },
+      {
+       "id": "valencia-03",
+       "street": "Carrer de Vicent Lladró Sena",
+       "lat": 39.46809,
+       "lon": -0.42498,
+       "minutes_ago": 101,
+       "depth_m": [
+        0.0,
+        0.213
+       ],
+       "priority": 15,
+       "people": 5,
+       "vulnerable": [],
+       "summary": "Street flooding ankle-deep 0.0-0.21 m at curb entering garages, 5 people walking, no urgent rescue needed.",
+       "message_en": "On my street the water already reaches the curb and is starting to seep in through the garage doors. Some neighbors have moved their cars up onto the sidewalk",
+       "status": "new"
+      },
+      {
+       "id": "valencia-07",
+       "street": "Carrer de Joaquim Olmos",
+       "lat": 39.40301,
+       "lon": -0.40227,
+       "minutes_ago": 71,
+       "depth_m": [
+        0.0,
+        0.901
+       ],
+       "priority": 10,
+       "people": 4,
+       "vulnerable": [],
+       "summary": "Water gushing into garage on Calle Joaquim Olmos, Catarroja, car stuck; 4 people in courtyard with fast-flowing water 0.0-0.9m up to car wheels.",
+       "message_en": "Water is gushing in through the garage ramp, no time to get the car out. Calle Joaquim Olmos, Catarroja",
+       "status": "new"
+      },
+      {
+       "id": "valencia-04",
+       "street": "Carrer Major",
+       "lat": 39.4581,
+       "lon": -0.4578,
+       "minutes_ago": 93,
+       "depth_m": [
+        0.0,
+        0.133
+       ],
+       "priority": 5,
+       "people": 5,
+       "vulnerable": [],
+       "summary": "In Alaquàs, ankle-deep muddy water (0.0-0.13 m), passable on foot, 5 people visible, no one trapped, no urgent rescue needed.",
+       "message_en": "Alaquàs: street with mud and ankle-deep water. Passable on foot, but parked cars are flooded up to the wheels",
+       "status": "new"
+      },
+      {
+       "id": "valencia-02",
+       "street": "Carrer de Vicent Lladró Sena",
+       "lat": 39.46814,
+       "lon": -0.42489,
+       "minutes_ago": 110,
+       "depth_m": [
+        0.0,
+        0.479
+       ],
+       "priority": 5,
+       "people": 24,
+       "vulnerable": [],
+       "summary": "Flooded roundabout with 0.0-0.48m water, small car barely escaped, 24 bystanders on sidewalk, no emergency.",
+       "message_en": "Flooded roundabout, a small car managed to get out miraculously. If it's not an off-road vehicle I wouldn't go through",
+       "status": "new"
+      },
+      {
+       "id": "valencia-14",
+       "street": "Carrer de l'Alqueria de Raga",
+       "lat": 39.43738,
+       "lon": -0.42941,
+       "minutes_ago": 10,
+       "depth_m": [
+        0.0,
+        0.175
+       ],
+       "priority": 0,
+       "people": 3,
+       "vulnerable": [],
+       "summary": "3 people wading through ankle-deep muddy water at Polígono de Raga, water receding, no rescue needed.",
+       "message_en": "Polígono de Raga, next to calle Alqueria de Raga: there is little water left, people cross with mud up to the ankles and a van passes slowly",
+       "status": "new"
+      }
+     ]
+    }
+   },
+   {
+    "tool": "report_detail",
+    "args": {
+     "report_id": "valencia-12"
+    },
+    "result": {
+     "id": "valencia-12",
+     "street": "Plaça Major",
+     "lat": 39.40271,
+     "lon": -0.40414,
+     "minutes_ago": 29,
+     "depth_m": [
+      0.0,
+      0.13
+     ],
+     "priority": 80,
+     "people": 2,
+     "vulnerable": [
+      "elderly",
+      "disabled",
+      "sick"
+     ],
+     "summary": "86-year-old father alone on 2nd floor in Catarroja near Plaza Mayor, cannot walk without walker and needs medication, trapped as garage flooded and water rises up stairs.",
+     "message_en": "Hello, I am a neighbor from Catarroja, near Plaza Mayor. The garage has filled and the water is already coming up the entrance stairs. My father is eighty-six years old, he is alone on the second floor, he cannot walk without a walker and needs his medication. We cannot get out. Please, someone come.",
+     "status": "new",
+     "verdicts": {
+      "pedestrian": "passable",
+      "scooter": "passable",
+      "car": "passable",
+      "suv": "passable",
+      "truck": "passable"
+     },
+     "objects_measured": [
+      "car",
+      "person",
+      "person",
+      "scooter",
+      "door"
+     ],
+     "readings_used": 15,
+     "facts": {
+      "address_hint": "Catarroja, cerca de la plaza Mayor",
+      "dispatch_en": "Rescue needed in Catarroja near Plaza Mayor: 86-year-old alone on 2nd floor, cannot walk without walker, needs medication, trapped as water rises up stairwell (photo depth 0.0-0.13 m in garage).",
+      "dispatch_local": "Rescate necesario en Catarroja, cerca de la plaza Mayor: persona de 86 años sola en el segundo piso, no puede caminar sin andador, necesita medicación, atrapados con el agua subiendo por la escalera (profundidad en foto 0,0-0,13 m en el garaje).",
+      "injury_or_medical": true,
+      "language": "es",
+      "message_en": "Hello, I am a neighbor from Catarroja, near Plaza Mayor. The garage has filled and the water is already coming up the entrance stairs. My father is eighty-six years old, he is alone on the second floor, he cannot walk without a walker and needs his medication. We cannot get out. Please, someone come.",
+      "needs": [
+       "evacuation",
+       "medical"
+      ],
+      "people_count": 2,
+      "summary_en": "86-year-old father alone on 2nd floor in Catarroja near Plaza Mayor, cannot walk without walker and needs medication, trapped as garage flooded and water rises up stairs.",
+      "summary_local": "Padre de 86 años solo en el segundo piso en Catarroja, cerca de la plaza Mayor, no puede caminar sin andador y necesita medicación, atrapados con el garaje inundado y el agua subiendo por la escalera.",
+      "trapped": true,
+      "vulnerable": [
+       "elderly",
+       "disabled",
+       "sick"
+      ],
+      "water_rising": "yes"
+     },
+     "priority_reasons": [
+      "injury or medical need",
+      "vulnerable: elderly, disabled, sick",
+      "trapped",
+      "water rising"
+     ]
+    }
+   },
+   {
+    "tool": "report_detail",
+    "args": {
+     "report_id": "valencia-13"
+    },
+    "result": {
+     "id": "valencia-13",
+     "street": "Carrer de les Germanies",
+     "lat": 39.40454,
+     "lon": -0.39776,
+     "minutes_ago": 18,
+     "depth_m": [
+      0.0,
+      1.346
+     ],
+     "priority": 45,
+     "people": 8,
+     "vulnerable": [
+      "child"
+     ],
+     "summary": "People trapped in building garage on calle de les Germanies, waist-deep rising water, no light, with 5-year-old child; photo shows 8 people in 0.0-1.35m water.",
+     "message_en": "We are in the garage of my building, calle de les Germanies. The water is up to our waist and keeps rising. I have my five-year-old daughter in my arms and there is no light. Please come get us out.",
+     "status": "new",
+     "verdicts": {
+      "pedestrian": "risky",
+      "scooter": "risky",
+      "car": "risky",
+      "suv": "risky",
+      "truck": "risky"
+     },
+     "objects_measured": [
+      "car",
+      "person",
+      "person",
+      "person",
+      "person",
+      "person",
+      "person"
+     ],
+     "readings_used": 27,
+     "facts": {
+      "address_hint": "garaje de mi bloque, calle de les Germanies",
+      "dispatch_en": "Rescue: building garage on calle de les Germanies - 8 people including 5-year-old child, waist-deep water still rising (depth 0.0-1.35m), no light, need evacuation.",
+      "dispatch_local": "Rescate: garaje del bloque en calle de les Germanies - 8 personas incluida niña de 5 años, agua hasta la cintura y sigue subiendo (profundidad 0.0-1.35 m), sin luz, necesitan evacuación.",
+      "injury_or_medical": false,
+      "language": "es",
+      "message_en": "We are in the garage of my building, calle de les Germanies. The water is up to our waist and keeps rising. I have my five-year-old daughter in my arms and there is no light. Please come get us out.",
+      "needs": [
+       "evacuation"
+      ],
+      "people_count": 8,
+      "summary_en": "People trapped in building garage on calle de les Germanies, waist-deep rising water, no light, with 5-year-old child; photo shows 8 people in 0.0-1.35m water.",
+      "summary_local": "Personas atrapadas en el garaje del bloque en calle de les Germanies, agua hasta la cintura y sigue subiendo, sin luz, con niña de 5 años; la foto muestra 8 personas en agua de 0.0-1.35 m.",
+      "trapped": true,
+      "vulnerable": [
+       "child"
+      ],
+      "water_rising": "yes"
+     },
+     "priority_reasons": [
+      "vulnerable: child",
+      "trapped",
+      "water rising",
+      "8 people"
+     ]
+    }
+   },
+   {
+    "tool": "report_detail",
+    "args": {
+     "report_id": "valencia-11"
+    },
+    "result": {
+     "id": "valencia-11",
+     "street": "Avinguda dels Reis Catòlics",
+     "lat": 39.41911,
+     "lon": -0.3918,
+     "minutes_ago": 38,
+     "depth_m": [
+      0.0,
+      3.4
+     ],
+     "priority": 35,
+     "people": 2,
+     "vulnerable": [],
+     "summary": "Observer on balcony in Alfafar reports 2 people trapped in car below, water at windows, doors blocked, woman screaming.",
+     "message_en": "Please, we need help. I am on a balcony in Alfafar and below, in the street, there is a car trapped with two people inside. The water is already up to the windows and they cannot open the doors. A woman is screaming. Notify emergency services, quickly.",
+     "status": "new",
+     "verdicts": {
+      "pedestrian": "impassable",
+      "scooter": "impassable",
+      "car": "impassable",
+      "suv": "impassable",
+      "truck": "impassable"
+     },
+     "objects_measured": [
+      "person",
+      "person",
+      "person",
+      "person",
+      "car",
+      "car",
+      "car",
+      "car"
+     ],
+     "readings_used": 1,
+     "facts": {
+      "address_hint": "Alfafar",
+      "dispatch_en": "URGENT: 2 people trapped in a car in the street in Alfafar, water at the windows, doors cannot be opened. Estimated depth 0.0-3.4m. Send emergency rescue immediately.",
+      "dispatch_local": "URGENTE: 2 personas atrapadas en un coche en la calle en Alfafar, agua a las ventanillas, no pueden abrir las puertas. Profundidad estimada 0,0-3,4 m. Enviar rescate de emergencias inmediatamente.",
+      "injury_or_medical": false,
+      "language": "es",
+      "message_en": "Please, we need help. I am on a balcony in Alfafar and below, in the street, there is a car trapped with two people inside. The water is already up to the windows and they cannot open the doors. A woman is screaming. Notify emergency services, quickly.",
+      "needs": [
+       "evacuation"
+      ],
+      "people_count": 2,
+      "summary_en": "Observer on balcony in Alfafar reports 2 people trapped in car below, water at windows, doors blocked, woman screaming.",
+      "summary_local": "Observador en un balcón en Alfafar informa de 2 personas atrapadas en un coche abajo, agua a las ventanillas, puertas bloqueadas, mujer gritando.",
+      "trapped": true,
+      "vulnerable": [],
+      "water_rising": "unknown"
+     },
+     "priority_reasons": [
+      "trapped",
+      "depth 1.3 m"
+     ]
+    }
+   },
+   {
+    "tool": "street_status",
+    "args": {
+     "street": "Plaça Major"
+    },
+    "result": {
+     "street": [
+      "Plaça Major"
+     ],
+     "segments_with_reports": 7,
+     "depth_m_range": [
+      0.0,
+      0.18
+     ],
+     "segments_by_status_per_vehicle": {
+      "pedestrian": {
+       "passable": 7
+      },
+      "scooter": {
+       "passable": 7
+      },
+      "car": {
+       "passable": 7
+      },
+      "suv": {
+       "passable": 7
+      },
+      "truck": {
+       "passable": 7
+      }
+     },
+     "reports": [
+      "valencia-12"
+     ]
+    }
+   },
+   {
+    "tool": "street_status",
+    "args": {
+     "street": "Carrer de les Germanies"
+    },
+    "result": {
+     "street": [
+      "Carrer de les Germanies"
+     ],
+     "segments_with_reports": 4,
+     "depth_m_range": [
+      0.0,
+      1.49
+     ],
+     "segments_by_status_per_vehicle": {
+      "pedestrian": {
+       "impassable": 4
+      },
+      "scooter": {
+       "impassable": 4
+      },
+      "car": {
+       "impassable": 4
+      },
+      "suv": {
+       "impassable": 4
+      },
+      "truck": {
+       "impassable": 4
+      }
+     },
+     "reports": [
+      "valencia-13"
+     ]
+    }
+   },
+   {
+    "tool": "street_status",
+    "args": {
+     "street": "Avinguda dels Reis Catòlics"
+    },
+    "result": {
+     "street": [
+      "Avinguda dels Reis Catòlics"
+     ],
+     "segments_with_reports": 31,
+     "depth_m_range": [
+      0.0,
+      3.84
+     ],
+     "segments_by_status_per_vehicle": {
+      "pedestrian": {
+       "impassable": 31
+      },
+      "scooter": {
+       "impassable": 31
+      },
+      "car": {
+       "impassable": 31
+      },
+      "suv": {
+       "impassable": 31
+      },
+      "truck": {
+       "impassable": 31
+      }
+     },
+     "reports": [
+      "valencia-11"
+     ]
+    }
+   }
+  ],
+  "route": null,
+  "reports": [
+   "valencia-12",
+   "valencia-13",
+   "valencia-11",
+   "valencia-10",
+   "valencia-01",
+   "valencia-03",
+   "valencia-07",
+   "valencia-04",
+   "valencia-02",
+   "valencia-14"
+  ]
+ }
+}

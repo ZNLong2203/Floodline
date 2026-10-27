@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Icon } from "../components/Icon";
+import { useI18n } from "../lib/i18n";
 
 const MAX_S = 60;
 const HOLD_MS = 450;
@@ -20,6 +21,7 @@ type Phase = "idle" | "starting" | "recording" | "done" | "error";
 
 /** Tap to start and tap to stop, or hold to talk and release to stop. */
 export function VoiceRecorder({ value, onChange }: { value: Blob | null; onChange(b: Blob | null): void }) {
+  const { t } = useI18n();
   const [phase, setPhase] = useState<Phase>(value ? "done" : "idle");
   const [error, setError] = useState<string | null>(null);
   const [elapsed, setElapsed] = useState(0);
@@ -78,7 +80,7 @@ export function VoiceRecorder({ value, onChange }: { value: Blob | null; onChang
         const secs = (performance.now() - started.current) / 1000;
         if (secs < 0.6) {
           setPhase("idle");
-          setError("Bản ghi quá ngắn. Giữ nút lâu hơn hoặc chạm một lần để bắt đầu.");
+          setError(t("voice.short"));
           return;
         }
         const blob = new Blob(chunks.current, { type: r.mimeType || mime || "audio/webm" });
@@ -99,7 +101,7 @@ export function VoiceRecorder({ value, onChange }: { value: Blob | null; onChang
       if (stopWhenReady.current) stop();
     } catch {
       setPhase("error");
-      setError("Không dùng được micro. Hãy cho phép truy cập micro, hoặc gõ ghi chú bên dưới.");
+      setError(t("voice.noMic"));
     }
   };
 
@@ -143,19 +145,19 @@ export function VoiceRecorder({ value, onChange }: { value: Blob | null; onChang
   };
 
   if (!supported)
-    return <div className="voice voice--off">Trình duyệt này không hỗ trợ ghi âm. Hãy gõ ghi chú bên dưới.</div>;
+    return <div className="voice voice--off">{t("voice.unsupported")}</div>;
 
   if (phase === "done" && url)
     return (
       <div className="voice voice--done">
-        <button type="button" className="voice__play" onClick={toggle} aria-label={playing ? "Tạm dừng" : "Nghe lại"}>
+        <button type="button" className="voice__play" onClick={toggle} aria-label={playing ? t("voice.pause") : t("voice.play")}>
           <Icon name={playing ? "pause" : "play"} size={18} />
         </button>
         <div className="voice__track" aria-hidden="true">
           <span style={{ width: `${progress * 100}%` }} />
         </div>
         <span className="voice__time num">{mmss(duration)}</span>
-        <button type="button" className="iconbtn" onClick={remove} aria-label="Xoá ghi âm">
+        <button type="button" className="iconbtn" onClick={remove} aria-label={t("voice.delete")}>
           <Icon name="trash" size={17} />
         </button>
         <audio
@@ -188,7 +190,7 @@ export function VoiceRecorder({ value, onChange }: { value: Blob | null; onChang
         onPointerLeave={(e) => e.buttons && onUp()}
         onClick={onClick}
         onContextMenu={(e) => e.preventDefault()}
-        aria-label={recording ? "Dừng ghi âm" : "Ghi âm lời nhắn"}
+        aria-label={recording ? t("voice.stop") : t("voice.record")}
         aria-pressed={recording}
       >
         <span className="voice__icon">
@@ -197,15 +199,13 @@ export function VoiceRecorder({ value, onChange }: { value: Blob | null; onChang
         <span className="voice__text">
           {recording ? (
             <>
-              <b>
-                Đang ghi… <span className="num">{mmss(elapsed)}</span>
-              </b>
-              <small>Chạm để dừng · Tap to stop</small>
+              <b className="num">{t("voice.recording", { t: mmss(elapsed) })}</b>
+              <small>{t("voice.stopHint")}</small>
             </>
           ) : (
             <>
-              <b>Ghi âm lời nhắn</b>
-              <small>Chạm hoặc giữ để nói · Tap or hold to talk</small>
+              <b>{t("voice.record")}</b>
+              <small>{t("voice.hint")}</small>
             </>
           )}
         </span>

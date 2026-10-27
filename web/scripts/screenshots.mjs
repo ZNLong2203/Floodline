@@ -178,32 +178,76 @@ if (want("report") || only?.includes("report-live")) {
   await ctx.close();
 }
 
-// ------------------------------------------------------------- seeded backend, read-only (ONLY=real)
-// Only navigates, opens drawers and asks for routes (GET). Never presses Replay, Clear,
-// status buttons or submits a report: the seeded backend spends real API credit.
-if (only?.includes("real")) {
+// ------------------------------------------------------------- mock assistant (ONLY=mockask)
+if (only?.includes("mockask")) {
   const ctx = await browser.newContext({ viewport: { width: 1280, height: 720 } });
   const page = await ctx.newPage();
   page.on("pageerror", (e) => console.error("pageerror:", e.message));
-  // Hard guard: abort anything but GET to the API.
+  await page.goto(`${base}/?mock=1`);
+  await page.waitForSelector(".card:not(.card--skeleton)");
+  await wait(2500);
+  await shot(page, "mock-console-en");
+  await page.click(".askbtn");
+  await page.waitForSelector(".ask__example");
+  await page.click(".ask__example >> nth=0");
+  await wait(3000);
+  await shot(page, "mock-ask-thinking");
+  await page.waitForSelector(".ask__a", { timeout: 30000 });
+  await wait(2500);
+  await shot(page, "mock-ask-answer");
+  await page.click(".ask__how summary");
+  await wait(400);
+  await page.evaluate(() => document.querySelector(".ask__scroll")?.scrollTo({ top: 99999 }));
+  await wait(400);
+  await shot(page, "mock-ask-steps");
+  await page.click(".ask__chip >> nth=0");
+  await page.waitForSelector(".detail");
+  await wait(1500);
+  await page.evaluate(() => {
+    const s = document.querySelector(".detail__scroll");
+    const w = document.querySelector(".words");
+    if (s && w) s.scrollTop = w.offsetTop - 120;
+  });
+  await wait(500);
+  await shot(page, "mock-drawer-words");
+  // Vietnamese UI
+  await page.click('.langtoggle button:has-text("VI")');
+  await wait(1200);
+  await shot(page, "mock-drawer-vi");
+  await ctx.close();
+}
+
+// ------------------------------------------------------------- seeded backend (ONLY=real)
+// Only navigates, opens drawers, asks for routes (GET) and asks the assistant ONE recorded
+// example question (POST /api/ask, which spends real credit). Never presses Replay, Clear or
+// status buttons, never submits a report.
+if (only?.includes("real")) {
+  const ctx = await browser.newContext({ viewport: { width: 1280, height: 720 }, locale: "en-US" });
+  const page = await ctx.newPage();
+  page.on("pageerror", (e) => console.error("pageerror:", e.message));
+  let asks = 0;
   await page.route("**/api/**", (route) => {
     const req = route.request();
-    if (req.method() !== "GET") {
+    const ask = req.method() === "POST" && new URL(req.url()).pathname === "/api/ask";
+    if (req.method() !== "GET" && !(ask && asks++ < 1)) {
       console.error(`blocked ${req.method()} ${req.url()}`);
       return route.abort();
     }
     return route.continue();
   });
-  const scrollTo = async (index) => {
-    await page.evaluate((i) => {
-      const s = document.querySelector(".detail__scroll");
-      const sec = [...document.querySelectorAll(".dsec")][i];
-      if (s && sec) s.scrollTop = sec.offsetTop - 10;
-    }, index);
+  const scrollTo = async (selector, offset = 10) => {
+    await page.evaluate(
+      ([sel, off]) => {
+        const s = document.querySelector(".detail__scroll");
+        const el = document.querySelector(sel);
+        if (s && el) s.scrollTop = el.offsetTop - off;
+      },
+      [selector, offset],
+    );
     await wait(600);
   };
   const back = async () => {
-    await page.click('button[aria-label="Back to the queue"]').catch(() => {});
+    await page.click('.detail button[aria-label="Back"]').catch(() => {});
     await wait(500);
   };
 
@@ -211,63 +255,131 @@ if (only?.includes("real")) {
   await page.waitForSelector(".card:not(.card--skeleton)", { timeout: 20000 });
   await page.waitForSelector(".mk");
   await wait(5000);
-  await shot(page, "real-console-truck");
+  await shot(page, "real-console");
 
   await page.click(".routebtn");
   await page.click(".preset >> nth=0");
   await page.waitForSelector(".routecard__result", { timeout: 15000 });
   await wait(2500);
-  await shot(page, "real-route-thanhnoi");
-
+  await shot(page, "real-route");
   await page.click(".routecard__result .btn");
   await page.click(".preset >> nth=1");
   await page.waitForSelector(".noroute", { timeout: 15000 });
   await wait(2500);
-  await shot(page, "real-route-dongba-noroute");
-  await page.click('button[aria-label="Close route planner"]');
+  await shot(page, "real-route-noroute");
+  await page.click(".routecard .iconbtn");
   await wait(600);
 
-  await page.click('.card:has-text("Kiệt Chi Lăng ngập quá đầu người")');
+  await page.click('.card:has-text("House No. 12")');
   await page.waitForSelector(".detail");
   await wait(3000);
-  await shot(page, "real-drawer-chilang");
-  await scrollTo(0);
-  await shot(page, "real-drawer-chilang-depth");
+  await shot(page, "real-drawer");
+  await scrollTo(".words", 150);
+  await shot(page, "real-drawer-translation");
+  await scrollTo(".drafts", 300);
+  await shot(page, "real-drawer-dispatch");
   await back();
 
-  await page.click('.card:has(.card__clip):has-text("Phú Xuân")');
+  await page.click('.card:has(.card__clip):has-text("Phu Xuan")');
   await page.waitForSelector(".detail");
   await wait(4500);
   await shot(page, "real-drawer-clip");
-  await page.evaluate(() => {
-    const s = document.querySelector(".detail__scroll");
-    const c = document.querySelector(".clipobjs");
-    if (s && c) s.scrollTop = c.offsetTop - 250;
-  });
-  await wait(800);
+  await scrollTo(".clipobjs", 250);
   await shot(page, "real-drawer-clip-frames");
-  await scrollTo(1);
-  await shot(page, "real-evidence-clip");
   await back();
 
-  await page.click('.card:has-text("cây xăng Hùng Vương")');
+  await page.click('.card:has-text("gas station")');
   await page.waitForSelector(".detail");
   await wait(2500);
-  await scrollTo(1);
+  await page.evaluate(() => {
+    const s = document.querySelector(".detail__scroll");
+    const ev = [...document.querySelectorAll(".dsec")].find((d) => d.querySelector(".ev"));
+    if (s && ev) s.scrollTop = ev.offsetTop - 10;
+  });
+  await wait(600);
   await shot(page, "real-evidence");
   await back();
 
-  // dark theme is a per-browser setting (localStorage), nothing is written to the server
-  await page.click('button[aria-label="Switch to dark theme"]');
-  await wait(3000);
-  await shot(page, "real-console-dark");
-  await page.click('button[aria-label="Switch to light theme"]');
+  if (!process.env.NO_ASK) {
+    await page.click(".askbtn");
+    await page.waitForSelector(".ask__example", { timeout: 15000 });
+    await page.click('.ask__example:has-text("Chi Lăng")');
+    await wait(6000);
+    await shot(page, "real-ask-thinking");
+    await page.waitForSelector(".ask__a, .ask__err", { timeout: 150000 });
+    await wait(3500);
+    await shot(page, "real-assistant");
+    await page.click(".ask__how summary").catch(() => {});
+    await wait(400);
+    await page.evaluate(() => document.querySelector(".ask__scroll")?.scrollTo({ top: 99999 }));
+    await wait(500);
+    await shot(page, "real-assistant-steps");
+  }
 
   await page.goto(`${base}/attribution`);
   await page.waitForSelector(".attr__table", { timeout: 15000 });
   await wait(3500);
   await shot(page, "real-attribution");
   await ctx.close();
+}
+
+// ------------------------------------------------------------- assistant only (ONLY=realask): one POST /api/ask
+if (only?.includes("realask")) {
+  const ctx = await browser.newContext({ viewport: { width: 1280, height: 720 }, locale: "en-US" });
+  const page = await ctx.newPage();
+  page.on("pageerror", (e) => console.error("pageerror:", e.message));
+  let asks = 0;
+  await page.route("**/api/**", (route) => {
+    const req = route.request();
+    const ask = req.method() === "POST" && new URL(req.url()).pathname === "/api/ask";
+    if (req.method() !== "GET" && !(ask && asks++ < 1)) {
+      console.error(`blocked ${req.method()} ${req.url()}`);
+      return route.abort();
+    }
+    return route.continue();
+  });
+  await page.goto(`${base}/`);
+  await page.waitForSelector(".mk", { timeout: 20000 });
+  await wait(3000);
+  await page.click(".askbtn");
+  await page.waitForSelector(".ask__example", { timeout: 15000 });
+  await page.click('.ask__example:has-text("Chi Lăng")');
+  await page.waitForSelector(".ask__a, .ask__err", { timeout: 150000 });
+  await wait(4000);
+  await shot(page, "real-assistant");
+  await page.click(".ask__how summary").catch(() => {});
+  await wait(400);
+  await page.evaluate(() => document.querySelector(".ask__scroll")?.scrollTo({ top: 99999 }));
+  await wait(600);
+  await shot(page, "real-assistant-steps");
+  await ctx.close();
+}
+
+// ------------------------------------------------------------- resident page, EN and VI (ONLY=resident, mock)
+if (only?.includes("resident")) {
+  for (const [lang, locale, geo] of [
+    ["en", "en-US", { latitude: 37.4848, longitude: -122.1484 }],
+    ["vi", "vi-VN", { latitude: 21.0285, longitude: 105.8542 }],
+  ]) {
+    const ctx = await browser.newContext({
+      viewport: { width: 390, height: 844 },
+      deviceScaleFactor: 2,
+      isMobile: true,
+      hasTouch: true,
+      locale,
+      geolocation: geo,
+      permissions: ["geolocation"],
+    });
+    const page = await ctx.newPage();
+    page.on("pageerror", (e) => console.error("pageerror:", e.message));
+    await page.goto(`${base}/report?mock=1`);
+    await page.waitForSelector(".camerabtn");
+    await wait(2000);
+    await shot(page, `resident-${lang}`);
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    console.log(`horizontal overflow on /report (${lang}):`, overflow);
+    await ctx.close();
+  }
 }
 
 // ------------------------------------------------------------- attribution (needs the backend)

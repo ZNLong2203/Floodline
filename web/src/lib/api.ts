@@ -1,6 +1,8 @@
 import type {
+  AskResponse,
   AttributionData,
   Catalog,
+  City,
   Health,
   LiveEvent,
   Report,
@@ -12,6 +14,7 @@ import type {
 export type LiveState = "connecting" | "live" | "offline";
 
 export interface NewReport {
+  city?: string;
   /** A photo, or a 10–30 s clip in `video` (sent as the `video` field instead of `photo`). */
   photo?: File | Blob | null;
   video?: File | Blob | null;
@@ -24,16 +27,21 @@ export interface NewReport {
 
 export interface FloodlineApi {
   health(): Promise<Health>;
-  catalog(): Promise<Catalog>;
-  reports(): Promise<Report[]>;
+  cities(): Promise<City[]>;
+  catalog(city?: string): Promise<Catalog>;
+  reports(city?: string): Promise<Report[]>;
   createReport(input: NewReport, signal?: AbortSignal): Promise<Report>;
   setStatus(id: string, status: ReportStatus): Promise<Report>;
-  segments(): Promise<SegmentCollection>;
-  route(from: [number, number], to: [number, number], vehicle: string): Promise<RouteResponse>;
-  /** Replay the scripted Huế flood night; reports arrive over SSE. Resolves when done. */
-  demoSeed(): Promise<{ created: number }>;
-  /** Clear every report (emits reports.reset). */
-  demoReset(): Promise<void>;
+  segments(city?: string): Promise<SegmentCollection>;
+  route(from: [number, number], to: [number, number], vehicle: string, city?: string): Promise<RouteResponse>;
+  /** Replay a city's scripted flood night; reports arrive over SSE. Resolves when done. */
+  demoSeed(city?: string): Promise<{ created: number }>;
+  /** Clear every report of a city (emits reports.reset). */
+  demoReset(city?: string): Promise<void>;
+  /** Ask the Muse Spark tool-use assistant. Takes 20–40 s. */
+  ask(question: string, city?: string, signal?: AbortSignal): Promise<AskResponse>;
+  /** Questions with a recorded answer for this city. */
+  askExamples(city?: string): Promise<string[]>;
   /** Author, licence and source of every demo photo and clip (data/demo/photos.json). */
   attribution(): Promise<AttributionData>;
   /** Subscribe to live events. Returns an unsubscribe function. */
@@ -85,10 +93,17 @@ async function call<T>(path: string, init?: RequestInit): Promise<T> {
   return (await res.json()) as T;
 }
 
+/** "?city=hue" (or "&city=hue"), or nothing when no city is given. */
+function withCity(path: string, city?: string): string {
+  if (!city) return path;
+  return `${path}${path.includes("?") ? "&" : "?"}city=${encodeURIComponent(city)}`;
+}
+
 const real: FloodlineApi = {
   health: () => call("/api/health"),
-  catalog: () => call("/api/catalog"),
-  reports: () => call("/api/reports"),
+  cities: () => call("/api/cities"),
+  catalog: (city) => call(withCity("/api/catalog", city)),
+  reports: (city) => call(withCity("/api/reports", city)),
   createReport(input, signal) {
     const form = new FormData();
     if (input.video) {
@@ -102,6 +117,7 @@ const real: FloodlineApi = {
     form.append("lon", String(input.lon));
     form.append("note", input.note);
     form.append("source", input.source ?? "web");
+    if (input.city) form.append("city", input.city);
     if (input.audio) {
       const ext = input.audio.type.includes("ogg") ? "ogg" : input.audio.type.includes("mp4") ? "m4a" : "webm";
       form.append("audio", input.audio, `voice.${ext}`);
@@ -114,17 +130,25 @@ const real: FloodlineApi = {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ status }),
     }),
-  segments: () => call("/api/segments"),
-  route(from, to, vehicle) {
+  segments: (city) => call(withCity("/api/segments", city)),
+  route(from, to, vehicle, city) {
     const q = new URLSearchParams({
       from: `${from[0]},${from[1]}`,
       to: `${to[0]},${to[1]}`,
       vehicle,
     });
-    return call(`/api/route?${q}`);
+    return call(withCity(`/api/route?${q}`, city));
   },
-  demoSeed: () => call("/api/demo/seed?reset=true", { method: "POST" }),
-  demoReset: () => call<unknown>("/api/demo/reset", { method: "POST" }).then(() => undefined),
+  demoSeed: (city) => call(withCity("/api/demo/seed?reset=true", city), { method: "POST" }),
+  demoReset: (city) => call<unknown>(withCity("/api/demo/reset", city), { method: "POST" }).then(() => undefined),
+  ask: (question, city, signal) =>
+    call("/api/ask", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ question, city }),
+      signal,
+    }),
+  askExamples: (city) => call(withCity("/api/ask/examples", city)),
   attribution: () => call("/api/attribution"),
   subscribe(onEvent, onState) {
     onState("connecting");
@@ -155,14 +179,17 @@ function mock(): Promise<FloodlineApi> {
 export const api: FloodlineApi = isMock
   ? {
       health: () => mock().then((a) => a.health()),
-      catalog: () => mock().then((a) => a.catalog()),
-      reports: () => mock().then((a) => a.reports()),
+      cities: () => mock().then((a) => a.cities()),
+      catalog: (c) => mock().then((a) => a.catalog(c)),
+      reports: (c) => mock().then((a) => a.reports(c)),
       createReport: (i, s) => mock().then((a) => a.createReport(i, s)),
       setStatus: (id, st) => mock().then((a) => a.setStatus(id, st)),
-      segments: () => mock().then((a) => a.segments()),
-      route: (f, t, v) => mock().then((a) => a.route(f, t, v)),
-      demoSeed: () => mock().then((a) => a.demoSeed()),
-      demoReset: () => mock().then((a) => a.demoReset()),
+      segments: (c) => mock().then((a) => a.segments(c)),
+      route: (f, t, v, c) => mock().then((a) => a.route(f, t, v, c)),
+      demoSeed: (c) => mock().then((a) => a.demoSeed(c)),
+      demoReset: (c) => mock().then((a) => a.demoReset(c)),
+      ask: (q, c, s) => mock().then((a) => a.ask(q, c, s)),
+      askExamples: (c) => mock().then((a) => a.askExamples(c)),
       // Credits are static data: use the backend's when it is running.
       attribution: () => call<AttributionData>("/api/attribution").catch(() => ({ photos: [], videos: [] })),
       subscribe(onEvent, onState) {

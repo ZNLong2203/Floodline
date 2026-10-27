@@ -120,9 +120,10 @@ def triage(
         text=(
             f"Resident's message (may be empty):\n{words or '(none)'}\n\n"
             f"What the photo showed: {photo_facts}\n\n"
-            "Extract the facts. language: the language of the resident's message (or "
-            f"{local_language} if there is none). message_en: the message translated to English, "
-            "faithfully, empty if there is none. summary_en / summary_local: one line for the "
+            "Extract the facts. language: the ISO 639-1 code of the resident's message, e.g. "
+            f"vi, es, en (the code for {local_language} if there is none). message_en: the "
+            "message translated to English, faithfully, empty if there is none. "
+            "summary_en / summary_local: one line for the "
             f"coordinator, in English and in {local_language}. dispatch_en / dispatch_local: a "
             "short message a coordinator could send to a rescue team, including the depth range, "
             f"in English and in {local_language}."

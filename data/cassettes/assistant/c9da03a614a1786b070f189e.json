@@ -2,7 +2,7 @@
  "city": "hue",
  "question": "Can a rescue truck get from the Central Hospital to the people trapped in the Chi Lăng lanes? What should I send?",
  "answer": {
-  "answer": "No — truck cannot get through from Central Hospital to Chi Lăng lanes.\n\n* Route: ~2.7 km shortest. **No safe road for truck** — 14 impassable segments.\n* Chi Lăng: 5/5 segments impassable for **all vehicles: pedestrian, scooter, car, suv, truck**. Depth about 0.0-4.1 m.\n\nPeople waiting:\n\n1. House No. 12, Kiet Chi Lang — 3 trapped (2 elderly + 1 heart patient). Depth about 0.0-3.4 m. Resident: *\"Chi Lang alley is flooded over head height, the whole hamlet has to go by boat. House No. 12 has 2 elderly people and 1 heart patient who have not been able to get out yet.\"*\n2. kiệt 45 Chi Lăng — 5 on attic, incl. 2 small children, 1st floor flooded, phone low battery. Depth about 0.0-3.4 m. Resident: *\"We are on the attic of a house in kiệt 45 Chi Lăng, five people, with two small children. Water has flooded the entire first floor. The phone is about to run out of battery.\"*\n\nSend:\n\n**Do not send truck / car / SUV — send boat + medical to both Chi Lăng points.** Prioritize No.12 first (medical), then kiệt 45 (children, low battery).\nTruck can stage at nearest passable edge only, then transfer by boat.\n",
+  "answer": "No — truck cannot get through from Central Hospital to Chi Lăng lanes.\n\n* Chi Lăng: about 0.0-4.1 m, impassable for all road vehicles — pedestrian, scooter, car, suv, truck all impassable on 5 segments.\n* Route check Central Hospital -> Chi Lăng: no safe road. Shortest road ~2.7 km has 14 impassable segments.\n\nPeople waiting:\n\n1. House No. 12, Kiệt Chi Lăng — 3 trapped, 2 elderly + 1 heart patient, boat + medical needed. Resident: \"Chi Lang alley is flooded over head height, the whole hamlet has to go by boat. House number 12 has 2 elderly people and 1 person with heart disease who have not been able to get out.\"\n2. kiệt 45 Chi Lăng — 5 trapped on upper floor incl. 2 small children, first floor flooded, phone dying. Resident: \"We are on the upper floor of the house in alley 45 Chi Lang, five people, with two small children. Water has flooded the entire first floor. Phone is about to run out of battery.\" Area depth about 0.0-3.4 m, impassable for truck and all vehicles.\n\nSend:\n* Boat team to Kiệt Chi Lăng, prioritize House No. 12 + kiệt 45 Chi Lăng. Bring medical support for heart patient / elderly, and power bank.\n* Truck can stage to nearest passable edge only — do not attempt entry into Chi Lăng lanes.\n",
   "steps": [
    {
     "tool": "list_reports",
@@ -13,11 +13,11 @@
      "count": 18,
      "reports": [
       {
-       "id": "20261028-010159-46b0",
+       "id": "hue-03",
        "street": "Chi Lăng",
        "lat": 16.483,
        "lon": 107.5902,
-       "minutes_ago": 66,
+       "minutes_ago": 64,
        "depth_m": [
         0.0,
         3.4
@@ -28,16 +28,16 @@
         "elderly",
         "sick"
        ],
-       "summary": "3 trapped at House No. 12, Kiet Chi Lang (2 elderly, 1 heart patient), water over head-deep, need boat evacuation; photo shows 5 people in life jackets boating relief supplies through deep flooded fields (0.0-3.4m), no urgent entrapment visible.",
-       "message_en": "Chi Lang alley is flooded over head height, the whole hamlet has to go by boat. House No. 12 has 2 elderly people and 1 heart patient who have not been able to get out yet.",
+       "summary": "3 trapped at House No. 12, Kiệt Chi Lăng (2 elderly, 1 heart patient), alley flooded over head, boat evacuation needed.",
+       "message_en": "Chi Lang alley is flooded over head height, the whole hamlet has to go by boat. House number 12 has 2 elderly people and 1 person with heart disease who have not been able to get out.",
        "status": "new"
       },
       {
-       "id": "20261028-010406-7ccd",
+       "id": "hue-15",
        "street": "",
        "lat": 16.4815,
        "lon": 107.5925,
-       "minutes_ago": 21,
+       "minutes_ago": 19,
        "depth_m": [
         0.0,
         3.4
@@ -47,57 +47,36 @@
        "vulnerable": [
         "child"
        ],
-       "summary": "5 people incl. 2 young children on house attic in kiệt 45 Chi Lăng, first floor flooded, phone low battery; photo shows 6 people moving by boat in widespread deep flood.",
-       "message_en": "We are on the attic of a house in kiệt 45 Chi Lăng, five people, with two small children. Water has flooded the entire first floor. The phone is about to run out of battery.",
+       "summary": "5 people trapped on upper floor at kiệt 45 Chi Lăng with 2 small children, first floor flooded, phone dying.",
+       "message_en": "We are on the upper floor of the house in alley 45 Chi Lang, five people, with two small children. Water has flooded the entire first floor. Phone is about to run out of battery.",
        "status": "new"
       },
       {
-       "id": "20261028-010322-90ed",
+       "id": "hue-10",
        "street": "Trần Huy Liệu",
        "lat": 16.4712,
        "lon": 107.5866,
-       "minutes_ago": 36,
+       "minutes_ago": 34,
        "depth_m": [
         0.062,
         0.718
        ],
-       "priority": 35,
-       "people": 4,
-       "vulnerable": [
-        "elderly",
-        "child",
-        "disabled"
-       ],
-       "summary": "House on Tran Hung Dao near Dong Ba market flooded to thigh level and still rising, with 82yo with mobility difficulty and 3yo child; photo shows knee-to-thigh yard flooding with 4 people wading, no urgent distress signal.",
-       "message_en": "Hello, my house is on Tran Hung Dao near Dong Ba market, water has entered the house up to thigh level. In the house there is my 82-year-old mother who has difficulty walking and a 3-year-old child. The water is still rising. Hope the rescue team comes soon.",
-       "status": "new"
-      },
-      {
-       "id": "20261028-010257-1bbb",
-       "street": "Cầu Cửa Thượng Tứ",
-       "lat": 16.4697,
-       "lon": 107.5842,
-       "minutes_ago": 41,
-       "depth_m": [
-        0.0,
-        0.787
-       ],
-       "priority": 25,
-       "people": 9,
+       "priority": 45,
+       "people": 3,
        "vulnerable": [
         "elderly",
         "child"
        ],
-       "summary": "9 people (including children/elderly) wading in knee-deep water at Đinh Tiên Hoàng in the Citadel; no entrapment.",
-       "message_en": "Dinh Tien Hoang inside the Citadel, water up to the knees",
+       "summary": "Thigh-deep rising water in house on Trần Hưng Đạo near Đông Ba market, 3 people including 82yo with mobility difficulty and 3yo child requesting early rescue.",
+       "message_en": "Hello, my house is on Trần Hưng Đạo near Đông Ba market, water has entered the house up to thigh level. In the house are my 82-year-old mother who has difficulty walking and a small 3-year-old child. The water is still rising. Hope the rescue team comes soon.",
        "status": "new"
       },
       {
-       "id": "20261028-010355-3a96",
+       "id": "hue-14",
        "street": "Đống Đa",
        "lat": 16.4602,
        "lon": 107.5917,
-       "minutes_ago": 26,
+       "minutes_ago": 24,
        "depth_m": [
         0.0,
         0.216
@@ -107,67 +86,67 @@
        "vulnerable": [
         "child"
        ],
-       "summary": "11 people including children at Dong Da, water 0-22cm at doorsteps, standing at shop entrance, not signalling for urgent rescue.",
-       "message_en": "In Dong Da, water is right at the doorsteps of houses",
+       "summary": "11 people including children at shop doorway in Dong Da, water up to doorsteps 0-0.22m, not signalling for emergency rescue.",
+       "message_en": "In Dong Da water is close to the doorsteps of houses",
        "status": "new"
       },
       {
-       "id": "20261028-010339-a24a",
+       "id": "hue-12",
        "street": "Mai Thúc Loan",
        "lat": 16.478,
        "lon": 107.5844,
-       "minutes_ago": 31,
+       "minutes_ago": 29,
        "depth_m": [
         0.0,
-        1.066
+        1.061
        ],
        "priority": 20,
        "people": 14,
        "vulnerable": [],
-       "summary": "Car stuck mid-road on Mai Thúc Loan; ~14 people wading through 0.4-0.8m fast-flowing street flood.",
-       "message_en": "Mai Thúc Loan, car stuck in the middle of the road",
+       "summary": "Car stuck on Mai Thúc Loan; 14 people wading through thigh-deep fast-flowing water (0.0-1.06m).",
+       "message_en": "Mai Thuc Loan, car stuck in the middle of the road",
        "status": "new"
       },
       {
-       "id": "20261028-010236-a31e",
+       "id": "hue-07",
        "street": "Nguyễn Trãi",
        "lat": 16.4679,
        "lon": 107.5724,
-       "minutes_ago": 51,
+       "minutes_ago": 49,
        "depth_m": [
         0.0,
-        0.663
+        0.661
        ],
        "priority": 15,
        "people": 8,
        "vulnerable": [],
-       "summary": "Nguyen Trai flooded 0.0-0.66m, water rising fast in last 30 minutes, 8 people seen, motorbikes still passable, no urgent rescue needed.",
-       "message_en": "Nguyen Trai water has risen fast in the past 30 minutes",
+       "summary": "Nguyen Trai water rose fast in last 30 min; street flooded 0.0-0.66m, 8 people seen, motorbikes still passable, no emergency rescue needed.",
+       "message_en": "On Nguyen Trai, water has risen fast in the last 30 minutes",
        "status": "new"
       },
       {
-       "id": "20261028-010702-ebd7",
+       "id": "hue-18",
        "street": "Cầu Phú Xuân",
        "lat": 16.4652,
        "lon": 107.5853,
-       "minutes_ago": 11,
+       "minutes_ago": 9,
        "depth_m": [
         0.0,
-        0.503
+        0.501
        ],
        "priority": 5,
        "people": 6,
        "vulnerable": [],
-       "summary": "Knee-deep street flooding 0.0-0.5m at Phu Xuan bridgehead Le Loi side, 6 people wading, motorbikes stalling but cars still passing, not trapped.",
-       "message_en": "Clip at Phu Xuan bridgehead on the Le Loi side: motorbikes stalled and had to be pushed, cars still trying to get through",
+       "summary": "Knee-deep street flooding (0.0-0.5m) at Phu Xuan bridgehead on Le Loi side with 6 people wading; motorbikes stalled, cars still passing.",
+       "message_en": "Clip from Phu Xuan bridgehead on Le Loi side: motorbikes stalled and have to be pushed, cars still trying to get through",
        "status": "new"
       },
       {
-       "id": "20261028-010525-e964",
+       "id": "hue-17",
        "street": "Phan Đình Phùng",
        "lat": 16.4566,
        "lon": 107.5921,
-       "minutes_ago": 16,
+       "minutes_ago": 14,
        "depth_m": [
         0.0,
         0.268
@@ -175,16 +154,16 @@
        "priority": 5,
        "people": 12,
        "vulnerable": [],
-       "summary": "Lý Thường Kiệt flooded to mid-motorbike-wheel, depth 0.0-0.27m, motorbikes still moving, 12 people in photo with no distress signal.",
-       "message_en": "Lý Thường Kiệt is flooded up to the middle of motorbike wheels.",
+       "summary": "Street flooding at Ly Thuong Kiet up to motorbike wheel, depth 0.0-0.27m, 12 people seen, motorbikes still passable, no urgent rescue.",
+       "message_en": "Ly Thuong Kiet flooded up to the middle of motorbike wheels",
        "status": "new"
       },
       {
-       "id": "20261028-010515-1792",
+       "id": "hue-16",
        "street": "",
        "lat": 16.4593,
        "lon": 107.5944,
-       "minutes_ago": 18,
+       "minutes_ago": 16,
        "depth_m": [
         0.0,
         0.134
@@ -192,8 +171,25 @@
        "priority": 5,
        "people": 5,
        "vulnerable": [],
-       "summary": "5 people seen on Hùng Vương near ngã sáu with ankle-deep water (0.0-0.13m) at road edge, moving normally, no rescue needed.",
-       "message_en": "Filmed a clip of the Hùng Vương section near ngã sáu, shallow water at the edge of the road",
+       "summary": "Shallow ankle-deep flooding (0-0.13m) on Hung Vuong near Nga Sau, 5 people walking normally, no emergency rescue needed.",
+       "message_en": "Filmed a clip of the Hung Vuong section near Nga Sau, shallow water at the edge of the road",
+       "status": "new"
+      },
+      {
+       "id": "hue-13",
+       "street": "Trần Hưng Đạo",
+       "lat": 16.4736,
+       "lon": 107.5884,
+       "minutes_ago": 24,
+       "depth_m": [
+        0.112,
+        0.737
+       ],
+       "priority": 5,
+       "people": 6,
+       "vulnerable": [],
+       "summary": "Stalled taxi at Huỳnh Thúc Kháng đầu cầu Gia Hội with 6 people in street flood 0.11-0.74m pushing the vehicle.",
+       "message_en": "Huỳnh Thúc Kháng at Gia Hội bridgehead, taxi stalled and has to be pushed",
        "status": "new"
       }
      ]
@@ -243,7 +239,7 @@
      "segments_with_reports": 5,
      "depth_m_range": [
       0.0,
-      4.14
+      4.12
      ],
      "segments_by_status_per_vehicle": {
       "pedestrian": {
@@ -263,21 +259,21 @@
       }
      },
      "reports": [
-      "20261028-010159-46b0"
+      "hue-03"
      ]
     }
    },
    {
     "tool": "report_detail",
     "args": {
-     "report_id": "20261028-010159-46b0"
+     "report_id": "hue-03"
     },
     "result": {
-     "id": "20261028-010159-46b0",
+     "id": "hue-03",
      "street": "Chi Lăng",
      "lat": 16.483,
      "lon": 107.5902,
-     "minutes_ago": 66,
+     "minutes_ago": 64,
      "depth_m": [
       0.0,
       3.4
@@ -288,8 +284,8 @@
       "elderly",
       "sick"
      ],
-     "summary": "3 trapped at House No. 12, Kiet Chi Lang (2 elderly, 1 heart patient), water over head-deep, need boat evacuation; photo shows 5 people in life jackets boating relief supplies through deep flooded fields (0.0-3.4m), no urgent entrapment visible.",
-     "message_en": "Chi Lang alley is flooded over head height, the whole hamlet has to go by boat. House No. 12 has 2 elderly people and 1 heart patient who have not been able to get out yet.",
+     "summary": "3 trapped at House No. 12, Kiệt Chi Lăng (2 elderly, 1 heart patient), alley flooded over head, boat evacuation needed.",
+     "message_en": "Chi Lang alley is flooded over head height, the whole hamlet has to go by boat. House number 12 has 2 elderly people and 1 person with heart disease who have not been able to get out.",
      "status": "new",
      "verdicts": {
       "pedestrian": "impassable",
@@ -308,19 +304,19 @@
      "readings_used": 1,
      "facts": {
       "address_hint": "Kiệt Chi Lăng, Nhà số 12",
-      "dispatch_en": "Rescue House No.12, Kiet Chi Lang: evacuate 3 (2 elderly, 1 heart patient) by boat. Water over head-deep, depth 0.0-3.4m.",
-      "dispatch_local": "Cứu hộ Nhà số 12, Kiệt Chi Lăng: sơ tán 3 người (2 cụ già, 1 người bệnh tim) bằng thuyền. Nước ngập quá đầu người, độ sâu 0,0-3,4m.",
+      "dispatch_en": "Rescue to Kiệt Chi Lăng, House No. 12: 3 people unable to get out (2 elderly, 1 heart patient), alley flooded over head height, area depth 0.0-3.4m, need boat evacuation and medical support.",
+      "dispatch_local": "Cứu hộ đến Kiệt Chi Lăng, Nhà số 12: 3 người chưa ra được (2 cụ già, 1 người bệnh tim), kiệt ngập quá đầu người, độ sâu khu vực 0.0-3.4m, cần thuyền di tản và hỗ trợ y tế.",
       "injury_or_medical": true,
       "language": "vi",
-      "message_en": "Chi Lang alley is flooded over head height, the whole hamlet has to go by boat. House No. 12 has 2 elderly people and 1 heart patient who have not been able to get out yet.",
+      "message_en": "Chi Lang alley is flooded over head height, the whole hamlet has to go by boat. House number 12 has 2 elderly people and 1 person with heart disease who have not been able to get out.",
       "needs": [
        "evacuation",
        "boat",
        "medical"
       ],
       "people_count": 3,
-      "summary_en": "3 trapped at House No. 12, Kiet Chi Lang (2 elderly, 1 heart patient), water over head-deep, need boat evacuation; photo shows 5 people in life jackets boating relief supplies through deep flooded fields (0.0-3.4m), no urgent entrapment visible.",
-      "summary_local": "3 người mắc kẹt tại Nhà số 12, Kiệt Chi Lăng (2 cụ già, 1 người bệnh tim), ngập quá đầu người, cần thuyền sơ tán; ảnh cho thấy 5 người mặc áo phao chèo thuyền chở hàng cứu trợ qua đồng ruộng ngập sâu (0,0-3,4m), không thấy mắc kẹt khẩn.",
+      "summary_en": "3 trapped at House No. 12, Kiệt Chi Lăng (2 elderly, 1 heart patient), alley flooded over head, boat evacuation needed.",
+      "summary_local": "3 người chưa ra được tại Nhà số 12, Kiệt Chi Lăng (2 cụ già, 1 người bệnh tim), kiệt ngập quá đầu người, cần thuyền di tản.",
       "trapped": true,
       "vulnerable": [
        "elderly",
@@ -339,14 +335,14 @@
    {
     "tool": "report_detail",
     "args": {
-     "report_id": "20261028-010406-7ccd"
+     "report_id": "hue-15"
     },
     "result": {
-     "id": "20261028-010406-7ccd",
+     "id": "hue-15",
      "street": "",
      "lat": 16.4815,
      "lon": 107.5925,
-     "minutes_ago": 21,
+     "minutes_ago": 19,
      "depth_m": [
       0.0,
       3.4
@@ -356,8 +352,8 @@
      "vulnerable": [
       "child"
      ],
-     "summary": "5 people incl. 2 young children on house attic in kiệt 45 Chi Lăng, first floor flooded, phone low battery; photo shows 6 people moving by boat in widespread deep flood.",
-     "message_en": "We are on the attic of a house in kiệt 45 Chi Lăng, five people, with two small children. Water has flooded the entire first floor. The phone is about to run out of battery.",
+     "summary": "5 people trapped on upper floor at kiệt 45 Chi Lăng with 2 small children, first floor flooded, phone dying.",
+     "message_en": "We are on the upper floor of the house in alley 45 Chi Lang, five people, with two small children. Water has flooded the entire first floor. Phone is about to run out of battery.",
      "status": "new",
      "verdicts": {
       "pedestrian": "impassable",
@@ -377,17 +373,18 @@
      "readings_used": 1,
      "facts": {
       "address_hint": "kiệt 45 Chi Lăng",
-      "dispatch_en": "Rescue to attic in kiệt 45 Chi Lăng: 5 people incl. 2 small children, first floor flooded, phone low battery. Area flood depth 0.0-3.4m.",
-      "dispatch_local": "Cứu hộ đến gác nhà trong kiệt 45 Chi Lăng: 5 người gồm 2 trẻ nhỏ, tầng một ngập hết, điện thoại sắp hết pin. Độ sâu ngập khu vực 0,0-3,4m.",
+      "dispatch_en": "Rescue to kiệt 45 Chi Lăng: 5 trapped on upper floor incl. 2 small children, first floor fully flooded (area depth 0.0-3.4m). Phone dying, bring power bank. Prioritize evacuation.",
+      "dispatch_local": "Cứu hộ đến kiệt 45 Chi Lăng: 5 người mắc kẹt trên gác gồm 2 đứa nhỏ, tầng một ngập hết (độ sâu khu vực 0,0-3,4m). Điện thoại sắp hết pin, mang theo sạc dự phòng. Ưu tiên sơ tán.",
       "injury_or_medical": false,
-      "language": "Vietnamese",
-      "message_en": "We are on the attic of a house in kiệt 45 Chi Lăng, five people, with two small children. Water has flooded the entire first floor. The phone is about to run out of battery.",
+      "language": "vi",
+      "message_en": "We are on the upper floor of the house in alley 45 Chi Lang, five people, with two small children. Water has flooded the entire first floor. Phone is about to run out of battery.",
       "needs": [
-       "evacuation"
+       "evacuation",
+       "power"
       ],
       "people_count": 5,
-      "summary_en": "5 people incl. 2 young children on house attic in kiệt 45 Chi Lăng, first floor flooded, phone low battery; photo shows 6 people moving by boat in widespread deep flood.",
-      "summary_local": "5 người gồm 2 trẻ nhỏ ở trên gác nhà trong kiệt 45 Chi Lăng, tầng một ngập hết, điện thoại sắp hết pin; ảnh cho thấy 6 người đang di chuyển bằng thuyền trong vùng ngập sâu trên diện rộng.",
+      "summary_en": "5 people trapped on upper floor at kiệt 45 Chi Lăng with 2 small children, first floor flooded, phone dying.",
+      "summary_local": "5 người mắc kẹt trên gác tại kiệt 45 Chi Lăng, có 2 đứa nhỏ, tầng một ngập hết, điện thoại sắp hết pin.",
       "trapped": true,
       "vulnerable": [
        "child"
@@ -790,16 +787,16 @@
    "reason": "every way is blocked for this vehicle"
   },
   "reports": [
-   "20261028-010159-46b0",
-   "20261028-010406-7ccd",
-   "20261028-010322-90ed",
-   "20261028-010257-1bbb",
-   "20261028-010355-3a96",
-   "20261028-010339-a24a",
-   "20261028-010236-a31e",
-   "20261028-010702-ebd7",
-   "20261028-010525-e964",
-   "20261028-010515-1792"
+   "hue-03",
+   "hue-15",
+   "hue-10",
+   "hue-14",
+   "hue-12",
+   "hue-07",
+   "hue-18",
+   "hue-17",
+   "hue-16",
+   "hue-13"
   ]
  }
 }

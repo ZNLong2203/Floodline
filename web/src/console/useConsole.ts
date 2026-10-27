@@ -23,7 +23,7 @@ export interface ConsoleData {
   eventCount: number;
 }
 
-export function useConsoleData(): ConsoleData {
+export function useConsoleData(city: string): ConsoleData {
   const [catalog, setCatalog] = useState<Catalog>(FALLBACK_CATALOG);
   const [catalogLive, setCatalogLive] = useState(false);
   const [health, setHealth] = useState<Health | null>(null);
@@ -43,7 +43,7 @@ export function useConsoleData(): ConsoleData {
     window.clearTimeout(segTimer.current);
     segTimer.current = window.setTimeout(() => {
       api
-        .segments()
+        .segments(city)
         .then((s) => {
           setSegments(s);
           setSegmentsError(null);
@@ -51,11 +51,11 @@ export function useConsoleData(): ConsoleData {
         })
         .catch((e: Error) => setSegmentsError(e.message || "Street layer unavailable"));
     }, 250);
-  }, []);
+  }, [city]);
 
   const loadReports = useCallback(() => {
     api
-      .reports()
+      .reports(city)
       .then((r) => {
         setReports(r);
         setError(null);
@@ -64,7 +64,7 @@ export function useConsoleData(): ConsoleData {
         setError(e instanceof ApiError && e.network ? "Cannot reach the Floodline server." : e.message),
       )
       .finally(() => setLoading(false));
-  }, []);
+  }, [city]);
 
   const reload = useCallback(() => {
     loadReports();
@@ -72,8 +72,11 @@ export function useConsoleData(): ConsoleData {
   }, [loadReports, loadSegments]);
 
   useEffect(() => {
+    setLoading(true);
+    setReports([]);
+    setSegments(null);
     api
-      .catalog()
+      .catalog(city)
       .then((c) => {
         if (c?.vehicles?.length) {
           setCatalog(c);
@@ -83,7 +86,7 @@ export function useConsoleData(): ConsoleData {
       .catch(() => setCatalogLive(false));
     api.health().then(setHealth).catch(() => setHealth(null));
     reload();
-  }, [reload]);
+  }, [reload, city]);
 
   // Live events
   useEffect(() => {
@@ -101,6 +104,9 @@ export function useConsoleData(): ConsoleData {
     };
     const stop = api.subscribe(
       (e) => {
+        // Events for other cities are not ours.
+        const evCity = e.type === "reports.reset" ? (e.data as { city?: string })?.city : e.data.city;
+        if (evCity && evCity !== city) return;
         setLastEvent(e);
         setEventCount((n) => n + 1);
         if (e.type === "reports.reset") {
@@ -117,7 +123,7 @@ export function useConsoleData(): ConsoleData {
       (s) => setLive(s),
     );
     return stop;
-  }, [loadSegments]);
+  }, [loadSegments, city]);
 
   // Ages widen the fused intervals over time, so refresh the street layer now and then.
   useEffect(() => {

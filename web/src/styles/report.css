@@ -28,7 +28,6 @@
 .rp__head {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   padding: 12px 16px;
   padding-top: max(12px, env(safe-area-inset-top));
   background: var(--brand);
@@ -48,9 +47,31 @@
 }
 
 .rp__city {
+  margin-left: auto;
   font-weight: 650;
   font-size: 14px;
   color: rgba(255, 255, 255, 0.75);
+}
+
+.rp__head .langtoggle {
+  margin-left: 10px;
+  margin-right: 0;
+}
+
+.loc__city {
+  display: grid;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.loc__city select {
+  height: 40px;
+  padding: 0 10px;
+  border-radius: 9px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  font-size: 15px;
 }
 
 .rp__offline {

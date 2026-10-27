@@ -81,6 +81,12 @@ export interface Perception {
 export interface SparkVideo {
   depth_m?: { low: number; high: number } | null;
   water_flow?: string;
+  what_happens_en?: string;
+  what_happens_local?: string;
+  /** Words spoken in the clip, in the original language, and in English. */
+  speech?: string;
+  speech_en?: string;
+  /** Older payloads. */
   what_happens_vi?: string;
   speech_vi?: string;
 }
@@ -112,8 +118,17 @@ export interface TriageFacts {
   trapped: boolean;
   needs: string[];
   address_hint: string;
-  summary_vi: string;
-  dispatch_vi: string;
+  /** The resident's language ("vi", or a name such as "Vietnamese"). */
+  language?: string;
+  /** The resident's words (note and transcript) translated into English. */
+  message_en?: string;
+  summary_en?: string;
+  summary_local?: string;
+  dispatch_en?: string;
+  dispatch_local?: string;
+  /** Older payloads. */
+  summary_vi?: string;
+  dispatch_vi?: string;
 }
 
 export interface Triage {
@@ -124,6 +139,7 @@ export interface Triage {
 
 export interface Report {
   id: string;
+  city?: string;
   lat: number;
   lon: number;
   at: number; // unix seconds
@@ -218,7 +234,7 @@ export interface Health {
 export type LiveEvent =
   | { type: "report.created"; data: Report }
   | { type: "report.updated"; data: Report }
-  | { type: "reports.reset"; data: Record<string, never> };
+  | { type: "reports.reset"; data: { city?: string } };
 
 /** One entry of data/demo/photos.json, served at /api/attribution. */
 export interface MediaCredit {
@@ -247,4 +263,39 @@ export interface AttributionData {
   note?: string;
   photos: MediaCredit[];
   videos?: MediaCredit[];
+}
+
+export interface CityPreset {
+  name: string;
+  name_local?: string;
+  from: [number, number]; // [lat, lon]
+  to: [number, number];
+}
+
+export interface City {
+  id: string;
+  name: string;
+  country: string;
+  /** Local language, as a code or a name ("Vietnamese"). */
+  language: string;
+  center: [number, number]; // [lat, lon]
+  zoom: number;
+  story?: string;
+  presets?: CityPreset[];
+  has_scenario?: boolean;
+  reports?: number;
+}
+
+export interface AskStep {
+  tool: string;
+  args: Record<string, unknown>;
+  result: unknown;
+}
+
+export interface AskResponse {
+  answer: string; // markdown
+  steps: AskStep[];
+  route: RouteResponse | null;
+  reports: string[];
+  recorded?: boolean;
 }

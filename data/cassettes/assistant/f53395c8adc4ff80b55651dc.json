@@ -1,0 +1,287 @@
+{
+ "city": "hue",
+ "question": "Which three reports should we handle first, and what does each one need?",
+ "answer": {
+  "answer": "Top 3 by priority — handle in this order:\n\n**1. hue-03 – Kiệt Chi Lăng, House No. 12 – PRIORITY 85**\n* Waiting: 3 trapped – 2 elderly + 1 heart patient.\n* Resident: \"Chi Lang alley is flooded over head height, the whole hamlet has to go by boat. House number 12 has 2 elderly people and 1 person with heart disease who have not been able to get out.\"\n* Depth: about 0.0-3.4 m.\n* Passability: pedestrian / scooter / car / suv / truck – all impassable.\n* Send: boat evacuation + medical support. No road vehicle can get in.\n\n**2. hue-15 – kiệt 45 Chi Lăng – PRIORITY 55**\n* Waiting: 5 trapped on upper floor, incl. 2 small children, first floor flooded. Phone dying.\n* Resident: \"We are on the upper floor of the house in alley 45 Chi Lang, five people, with two small children. Water has flooded the entire first floor. Phone is about to run out of battery.\"\n* Depth: about 0.0-3.4 m.\n* Passability: pedestrian / scooter / car / suv / truck – all impassable.\n* Send: boat evacuation + power bank. No road vehicle can get in. Contact fast – battery low.\n\n**3. hue-10 – Trần Hưng Đạo near Đông Ba market – PRIORITY 45**\n* Waiting: 3 people in house – 82yo with mobility difficulty + 3yo child. Water rising.\n* Resident: \"Hello, my house is on Trần Hưng Đạo near Đông Ba market, water has entered the house up to thigh level. In the house are my 82-year-old mother who has difficulty walking and a small 3-year-old child. The water is still rising.\"\n* Depth: about 0.06-0.72 m.\n* Passability: scooter / car – impassable. pedestrian / suv / truck – risky.\n* Send: truck or suv for evacuation, do not send scooter / car. Prepare for rising water.\n",
+  "steps": [
+   {
+    "tool": "list_reports",
+    "args": {
+     "limit": 3
+    },
+    "result": {
+     "count": 18,
+     "reports": [
+      {
+       "id": "hue-03",
+       "street": "Chi Lăng",
+       "lat": 16.483,
+       "lon": 107.5902,
+       "minutes_ago": 65,
+       "depth_m": [
+        0.0,
+        3.4
+       ],
+       "priority": 85,
+       "people": 3,
+       "vulnerable": [
+        "elderly",
+        "sick"
+       ],
+       "summary": "3 trapped at House No. 12, Kiệt Chi Lăng (2 elderly, 1 heart patient), alley flooded over head, boat evacuation needed.",
+       "message_en": "Chi Lang alley is flooded over head height, the whole hamlet has to go by boat. House number 12 has 2 elderly people and 1 person with heart disease who have not been able to get out.",
+       "status": "new"
+      },
+      {
+       "id": "hue-15",
+       "street": "",
+       "lat": 16.4815,
+       "lon": 107.5925,
+       "minutes_ago": 20,
+       "depth_m": [
+        0.0,
+        3.4
+       ],
+       "priority": 55,
+       "people": 5,
+       "vulnerable": [
+        "child"
+       ],
+       "summary": "5 people trapped on upper floor at kiệt 45 Chi Lăng with 2 small children, first floor flooded, phone dying.",
+       "message_en": "We are on the upper floor of the house in alley 45 Chi Lang, five people, with two small children. Water has flooded the entire first floor. Phone is about to run out of battery.",
+       "status": "new"
+      },
+      {
+       "id": "hue-10",
+       "street": "Trần Huy Liệu",
+       "lat": 16.4712,
+       "lon": 107.5866,
+       "minutes_ago": 35,
+       "depth_m": [
+        0.062,
+        0.718
+       ],
+       "priority": 45,
+       "people": 3,
+       "vulnerable": [
+        "elderly",
+        "child"
+       ],
+       "summary": "Thigh-deep rising water in house on Trần Hưng Đạo near Đông Ba market, 3 people including 82yo with mobility difficulty and 3yo child requesting early rescue.",
+       "message_en": "Hello, my house is on Trần Hưng Đạo near Đông Ba market, water has entered the house up to thigh level. In the house are my 82-year-old mother who has difficulty walking and a small 3-year-old child. The water is still rising. Hope the rescue team comes soon.",
+       "status": "new"
+      }
+     ]
+    }
+   },
+   {
+    "tool": "report_detail",
+    "args": {
+     "report_id": "hue-03"
+    },
+    "result": {
+     "id": "hue-03",
+     "street": "Chi Lăng",
+     "lat": 16.483,
+     "lon": 107.5902,
+     "minutes_ago": 65,
+     "depth_m": [
+      0.0,
+      3.4
+     ],
+     "priority": 85,
+     "people": 3,
+     "vulnerable": [
+      "elderly",
+      "sick"
+     ],
+     "summary": "3 trapped at House No. 12, Kiệt Chi Lăng (2 elderly, 1 heart patient), alley flooded over head, boat evacuation needed.",
+     "message_en": "Chi Lang alley is flooded over head height, the whole hamlet has to go by boat. House number 12 has 2 elderly people and 1 person with heart disease who have not been able to get out.",
+     "status": "new",
+     "verdicts": {
+      "pedestrian": "impassable",
+      "scooter": "impassable",
+      "car": "impassable",
+      "suv": "impassable",
+      "truck": "impassable"
+     },
+     "objects_measured": [
+      "person",
+      "person",
+      "person",
+      "person",
+      "person"
+     ],
+     "readings_used": 1,
+     "facts": {
+      "address_hint": "Kiệt Chi Lăng, Nhà số 12",
+      "dispatch_en": "Rescue to Kiệt Chi Lăng, House No. 12: 3 people unable to get out (2 elderly, 1 heart patient), alley flooded over head height, area depth 0.0-3.4m, need boat evacuation and medical support.",
+      "dispatch_local": "Cứu hộ đến Kiệt Chi Lăng, Nhà số 12: 3 người chưa ra được (2 cụ già, 1 người bệnh tim), kiệt ngập quá đầu người, độ sâu khu vực 0.0-3.4m, cần thuyền di tản và hỗ trợ y tế.",
+      "injury_or_medical": true,
+      "language": "vi",
+      "message_en": "Chi Lang alley is flooded over head height, the whole hamlet has to go by boat. House number 12 has 2 elderly people and 1 person with heart disease who have not been able to get out.",
+      "needs": [
+       "evacuation",
+       "boat",
+       "medical"
+      ],
+      "people_count": 3,
+      "summary_en": "3 trapped at House No. 12, Kiệt Chi Lăng (2 elderly, 1 heart patient), alley flooded over head, boat evacuation needed.",
+      "summary_local": "3 người chưa ra được tại Nhà số 12, Kiệt Chi Lăng (2 cụ già, 1 người bệnh tim), kiệt ngập quá đầu người, cần thuyền di tản.",
+      "trapped": true,
+      "vulnerable": [
+       "elderly",
+       "sick"
+      ],
+      "water_rising": "unknown"
+     },
+     "priority_reasons": [
+      "injury or medical need",
+      "vulnerable: elderly, sick",
+      "trapped",
+      "depth 1.3 m"
+     ]
+    }
+   },
+   {
+    "tool": "report_detail",
+    "args": {
+     "report_id": "hue-15"
+    },
+    "result": {
+     "id": "hue-15",
+     "street": "",
+     "lat": 16.4815,
+     "lon": 107.5925,
+     "minutes_ago": 20,
+     "depth_m": [
+      0.0,
+      3.4
+     ],
+     "priority": 55,
+     "people": 5,
+     "vulnerable": [
+      "child"
+     ],
+     "summary": "5 people trapped on upper floor at kiệt 45 Chi Lăng with 2 small children, first floor flooded, phone dying.",
+     "message_en": "We are on the upper floor of the house in alley 45 Chi Lang, five people, with two small children. Water has flooded the entire first floor. Phone is about to run out of battery.",
+     "status": "new",
+     "verdicts": {
+      "pedestrian": "impassable",
+      "scooter": "impassable",
+      "car": "impassable",
+      "suv": "impassable",
+      "truck": "impassable"
+     },
+     "objects_measured": [
+      "person",
+      "person",
+      "person",
+      "person",
+      "person",
+      "person"
+     ],
+     "readings_used": 1,
+     "facts": {
+      "address_hint": "kiệt 45 Chi Lăng",
+      "dispatch_en": "Rescue to kiệt 45 Chi Lăng: 5 trapped on upper floor incl. 2 small children, first floor fully flooded (area depth 0.0-3.4m). Phone dying, bring power bank. Prioritize evacuation.",
+      "dispatch_local": "Cứu hộ đến kiệt 45 Chi Lăng: 5 người mắc kẹt trên gác gồm 2 đứa nhỏ, tầng một ngập hết (độ sâu khu vực 0,0-3,4m). Điện thoại sắp hết pin, mang theo sạc dự phòng. Ưu tiên sơ tán.",
+      "injury_or_medical": false,
+      "language": "vi",
+      "message_en": "We are on the upper floor of the house in alley 45 Chi Lang, five people, with two small children. Water has flooded the entire first floor. Phone is about to run out of battery.",
+      "needs": [
+       "evacuation",
+       "power"
+      ],
+      "people_count": 5,
+      "summary_en": "5 people trapped on upper floor at kiệt 45 Chi Lăng with 2 small children, first floor flooded, phone dying.",
+      "summary_local": "5 người mắc kẹt trên gác tại kiệt 45 Chi Lăng, có 2 đứa nhỏ, tầng một ngập hết, điện thoại sắp hết pin.",
+      "trapped": true,
+      "vulnerable": [
+       "child"
+      ],
+      "water_rising": "unknown"
+     },
+     "priority_reasons": [
+      "vulnerable: child",
+      "trapped",
+      "depth 1.3 m",
+      "5 people"
+     ]
+    }
+   },
+   {
+    "tool": "report_detail",
+    "args": {
+     "report_id": "hue-10"
+    },
+    "result": {
+     "id": "hue-10",
+     "street": "Trần Huy Liệu",
+     "lat": 16.4712,
+     "lon": 107.5866,
+     "minutes_ago": 35,
+     "depth_m": [
+      0.062,
+      0.718
+     ],
+     "priority": 45,
+     "people": 3,
+     "vulnerable": [
+      "elderly",
+      "child"
+     ],
+     "summary": "Thigh-deep rising water in house on Trần Hưng Đạo near Đông Ba market, 3 people including 82yo with mobility difficulty and 3yo child requesting early rescue.",
+     "message_en": "Hello, my house is on Trần Hưng Đạo near Đông Ba market, water has entered the house up to thigh level. In the house are my 82-year-old mother who has difficulty walking and a small 3-year-old child. The water is still rising. Hope the rescue team comes soon.",
+     "status": "new",
+     "verdicts": {
+      "pedestrian": "risky",
+      "scooter": "impassable",
+      "car": "impassable",
+      "suv": "risky",
+      "truck": "risky"
+     },
+     "objects_measured": [
+      "person",
+      "person",
+      "person",
+      "person",
+      "door"
+     ],
+     "readings_used": 17,
+     "facts": {
+      "address_hint": "Trần Hưng Đạo gần chợ Đông Ba",
+      "dispatch_en": "Rescue needed at Trần Hưng Đạo gần chợ Đông Ba: thigh-deep water rising, 0.06-0.72 m, 82yo with mobility difficulty and 3yo child, 3 people total.",
+      "dispatch_local": "Cần cứu hộ tại Trần Hưng Đạo gần chợ Đông Ba: nước trong nhà tới đùi đang lên, 0,06-0,72 m, có cụ 82 tuổi đi lại khó khăn và cháu 3 tuổi, tổng 3 người.",
+      "injury_or_medical": false,
+      "language": "vi",
+      "message_en": "Hello, my house is on Trần Hưng Đạo near Đông Ba market, water has entered the house up to thigh level. In the house are my 82-year-old mother who has difficulty walking and a small 3-year-old child. The water is still rising. Hope the rescue team comes soon.",
+      "needs": [
+       "evacuation"
+      ],
+      "people_count": 3,
+      "summary_en": "Thigh-deep rising water in house on Trần Hưng Đạo near Đông Ba market, 3 people including 82yo with mobility difficulty and 3yo child requesting early rescue.",
+      "summary_local": "Nước tới đùi đang lên trong nhà ở Trần Hưng Đạo gần chợ Đông Ba, có 3 người gồm cụ 82 tuổi đi lại khó khăn và cháu nhỏ 3 tuổi, mong cứu hộ tới sớm.",
+      "trapped": true,
+      "vulnerable": [
+       "elderly",
+       "child"
+      ],
+      "water_rising": "yes"
+     },
+     "priority_reasons": [
+      "vulnerable: elderly, child",
+      "trapped",
+      "water rising"
+     ]
+    }
+   }
+  ],
+  "route": null,
+  "reports": [
+   "hue-03",
+   "hue-15",
+   "hue-10"
+  ]
+ }
+}

@@ -1,24 +1,50 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { StatusGlyph } from "../components/Status";
 import { api, ApiError } from "../lib/api";
-import { defaultVehicle } from "../lib/catalog";
+import { defaultVehicle, vehicleName } from "../lib/catalog";
+import { cityLang, FALLBACK_CITIES, saveCity, savedCity } from "../lib/cities";
+import { useI18n } from "../lib/i18n";
 import { useNow, useTheme } from "../lib/theme";
+import type { City, RouteResponse } from "../lib/types";
 import { About } from "./About";
+import { AskPanel } from "./AskPanel";
 import { MapView } from "./MapView";
 import { Queue } from "./Queue";
 import { ReportDetail } from "./ReportDetail";
-import { type LatLon, type Place, PRESETS, ROUTE_CLOSED, RoutePanel, type RouteState } from "./RoutePanel";
+import { type LatLon, type Place, type Preset, ROUTE_CLOSED, RoutePanel, type RouteState } from "./RoutePanel";
 import { type SeedState, TopBar } from "./TopBar";
 import { useConsoleData } from "./useConsole";
 
+/** Route presets for a city, named in the reader's language when it is the city's own. */
+function presetsFor(city: City, lang: string): Preset[] {
+  const local = lang === cityLang(city);
+  return (city.presets ?? []).map((p, i) => {
+    const label = (local && p.name_local) || p.name;
+    const [from, to] = label.split(/\s*→\s*/);
+    return {
+      id: `${city.id}-${i}`,
+      label,
+      from: { name: from || label, at: p.from },
+      to: { name: to || label, at: p.to },
+    };
+  });
+}
+
 export default function Console() {
-  const data = useConsoleData();
+  const { t, lang } = useI18n();
+  const [cities, setCities] = useState<City[]>(FALLBACK_CITIES);
+  const [cityId, setCityId] = useState<string>(() => savedCity() ?? FALLBACK_CITIES[0].id);
+  const city = cities.find((c) => c.id === cityId) ?? cities[0];
+  const data = useConsoleData(city.id);
   const [theme, toggleTheme] = useTheme();
   const now = useNow(20_000);
   const [vehicleId, setVehicleId] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [focus, setFocus] = useState<{ lat: number; lon: number; key: number } | null>(null);
   const [route, setRoute] = useState<RouteState>(ROUTE_CLOSED);
+  const [askOpen, setAskOpen] = useState(false);
+  const [askRoute, setAskRoute] = useState<RouteResponse | null>(null);
+  const [highlight, setHighlight] = useState<Set<string>>(new Set());
   const [about, setAbout] = useState(false);
   const [seed, setSeed] = useState<SeedState>({ running: false, received: 0, total: null, message: null });
   const [toast, setToast] = useState<{ text: string; tone: "ok" | "bad" } | null>(null);
@@ -29,15 +55,34 @@ export default function Console() {
     toastTimer.current = window.setTimeout(() => setToast(null), 6000);
   }, []);
 
+  useEffect(() => {
+    api
+      .cities()
+      .then((cs) => {
+        if (Array.isArray(cs) && cs.length) setCities(cs);
+      })
+      .catch(() => undefined);
+  }, []);
+
+  const switchCity = (id: string) => {
+    saveCity(id);
+    setCityId(id);
+    setSelectedId(null);
+    setRoute(ROUTE_CLOSED);
+    setAskRoute(null);
+    setHighlight(new Set());
+  };
+
   const vehicles = data.catalog.vehicles;
   const vehicle = vehicleId && vehicles.some((v) => v.id === vehicleId) ? vehicleId : defaultVehicle(vehicles);
   const currentVehicle = vehicles.find((v) => v.id === vehicle);
   const selected = useMemo(() => data.reports.find((r) => r.id === selectedId) ?? null, [data.reports, selectedId]);
   const openCount = data.reports.filter((r) => r.status !== "closed").length;
+  const presets = useMemo(() => presetsFor(city, lang), [city, lang]);
 
   useEffect(() => {
-    document.title = openCount ? `(${openCount}) Floodline · Huế` : "Floodline · Huế";
-  }, [openCount]);
+    document.title = `${openCount ? `(${openCount}) ` : ""}Floodline · ${city.name}`;
+  }, [openCount, city.name]);
 
   // Deselect when a report disappears (e.g. reports.reset).
   useEffect(() => {
@@ -53,7 +98,6 @@ export default function Console() {
     if (e?.type !== "report.created") return;
     const progress = e.data.seed;
     if (progress) {
-      // Also shows a replay started from another console.
       setSeed((s) => ({ ...s, running: progress.index < progress.total, received: progress.index, total: progress.total }));
     } else {
       setSeed((s) => (s.running ? { ...s, received: s.received + 1 } : s));
@@ -77,36 +121,39 @@ export default function Console() {
     const id = ++routeReq.current;
     setRoute((r) => ({ ...r, loading: true, error: null }));
     api
-      .route(a.at, b.at, vehicle)
+      .route(a.at, b.at, vehicle, city.id)
       .then((res) => id === routeReq.current && setRoute((r) => ({ ...r, loading: false, result: res })))
       .catch((e: Error) => {
         if (id !== routeReq.current) return;
-        const msg =
-          e instanceof ApiError && e.network ? "Cannot reach the server to plan a route." : `Routing failed: ${e.message}`;
+        const msg = e instanceof ApiError && e.network ? t("route.unreachable") : t("route.failed", { msg: e.message });
         setRoute((r) => ({ ...r, loading: false, error: msg, result: null }));
       });
-  }, [open, a, b, vehicle, data.segmentsVersion]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, a, b, vehicle, data.segmentsVersion, city.id]);
 
   const pickPhase = route.open ? (!route.a ? "a" : !route.b ? "b" : null) : null;
-  const onPick = useCallback((p: LatLon) => {
-    const place: Place = { name: `Pin ${p[0].toFixed(4)}, ${p[1].toFixed(4)}`, at: p };
-    setRoute((r) => (!r.a ? { ...r, a: place } : !r.b ? { ...r, b: place } : r));
-  }, []);
+  const onPick = useCallback(
+    (p: LatLon) => {
+      const place: Place = { name: t("route.pin", { lat: p[0].toFixed(4), lon: p[1].toFixed(4) }), at: p };
+      setRoute((r) => (!r.a ? { ...r, a: place } : !r.b ? { ...r, b: place } : r));
+    },
+    [t],
+  );
 
   const runSeed = async () => {
     setSeed({ running: true, received: 0, total: null, message: null });
     setSelectedId(null);
     try {
-      const res = await api.demoSeed();
-      setSeed((s) => ({ ...s, running: false, received: res.created, message: `Replayed ${res.created} reports.` }));
-      notify(`Scenario replayed: ${res.created} reports.`);
+      const res = await api.demoSeed(city.id);
+      setSeed((s) => ({ ...s, running: false, received: res.created, message: t("demo.replayed", { n: res.created }) }));
+      notify(t("demo.replayed", { n: res.created }));
     } catch (e) {
       const msg =
         e instanceof ApiError && e.status === 409
-          ? "A replay is already running."
+          ? t("demo.running")
           : e instanceof ApiError && e.network
-            ? "Cannot reach the server."
-            : `Replay failed: ${(e as Error).message}`;
+            ? t("demo.unreachable")
+            : t("demo.failed", { msg: (e as Error).message });
       setSeed((s) => ({ ...s, running: false, message: msg }));
       notify(msg, "bad");
       data.reload();
@@ -115,20 +162,36 @@ export default function Console() {
 
   const clearAll = async () => {
     try {
-      await api.demoReset();
+      await api.demoReset(city.id);
       setSelectedId(null);
       setRoute((r) => ({ ...r, result: null }));
       setSeed({ running: false, received: 0, total: null, message: null });
-      notify("All reports cleared.");
+      notify(t("demo.cleared"));
     } catch (e) {
-      setSeed((s) => ({ ...s, message: `Clear failed: ${(e as Error).message}` }));
-      notify(`Clear failed: ${(e as Error).message}`, "bad");
+      notify(t("demo.clearFailed", { msg: (e as Error).message }), "bad");
     }
   };
 
+  // The route on the map: the route tool's, else the assistant's.
+  const shownRoute: RouteResponse | null = route.result ?? (route.open ? null : askRoute);
+  const askEnds = askRoute && !route.result ? (askRoute.route ?? askRoute.naive)?.coordinates : null;
+  const endpoints = route.open
+    ? { a: route.a?.at ?? null, b: route.b?.at ?? null }
+    : askEnds && askEnds.length > 1
+      ? {
+          a: [askEnds[0][1], askEnds[0][0]] as [number, number],
+          b: [askEnds[askEnds.length - 1][1], askEnds[askEnds.length - 1][0]] as [number, number],
+        }
+      : { a: null, b: null };
+
+  const side = selected ? "detail" : askOpen ? "ask" : "queue";
+
   return (
-    <div className={`console ${selected ? "has-detail" : ""}`}>
+    <div className={`console side--${side}`}>
       <TopBar
+        cities={cities}
+        city={city}
+        onCity={switchCity}
         vehicles={vehicles}
         vehicle={vehicle}
         onVehicle={setVehicleId}
@@ -138,6 +201,11 @@ export default function Console() {
         theme={theme}
         onTheme={toggleTheme}
         onAbout={() => setAbout(true)}
+        askOpen={askOpen}
+        onAsk={() => {
+          setAskOpen((o) => !o);
+          setSelectedId(null);
+        }}
         seed={seed}
         onSeed={runSeed}
         onClear={clearAll}
@@ -146,16 +214,18 @@ export default function Console() {
         <div className="console__map">
           <MapView
             theme={theme}
+            city={city}
             vehicle={vehicle}
             vehicles={vehicles}
             reports={data.reports}
             segments={data.segments}
             selectedId={selectedId}
             fresh={data.fresh}
+            highlight={highlight}
             focus={focus}
             onSelect={select}
-            route={route.result ? { safe: route.result.route, naive: route.result.naive, blocked: !route.result.route } : null}
-            endpoints={{ a: route.a?.at ?? null, b: route.b?.at ?? null }}
+            route={shownRoute ? { safe: shownRoute.route, naive: shownRoute.naive, blocked: !shownRoute.route } : null}
+            endpoints={endpoints}
             picking={pickPhase}
             onPick={onPick}
           />
@@ -164,23 +234,24 @@ export default function Console() {
               state={route}
               vehicle={currentVehicle}
               segments={data.segments}
+              presets={presets}
               onOpen={() => setRoute({ ...ROUTE_CLOSED, open: true })}
               onClose={() => setRoute(ROUTE_CLOSED)}
               onReset={() => setRoute({ ...ROUTE_CLOSED, open: true })}
               onPreset={(id) => {
-                const p = PRESETS.find((x) => x.id === id);
+                const p = presets.find((x) => x.id === id);
                 if (p) setRoute({ ...ROUTE_CLOSED, open: true, a: p.from, b: p.to });
               }}
             />
           </div>
           {pickPhase && (
             <div className="mapui mapui--tc pickhint" role="status">
-              Click the map to set the {pickPhase === "a" ? "start (A)" : "destination (B)"}
+              {pickPhase === "a" ? t("map.pickA") : t("map.pickB")}
             </div>
           )}
           {data.segmentsError && !pickPhase && (
             <div className="mapui mapui--tc maperr" role="status">
-              Street layer unavailable: {data.segmentsError}
+              {t("map.segErr", { msg: data.segmentsError })}
             </div>
           )}
           {toast && (
@@ -189,12 +260,12 @@ export default function Console() {
             </div>
           )}
           <div className="mapui mapui--bl">
-            <Legend vehicleName={currentVehicle?.name_vi ?? vehicle} limit={currentVehicle?.max_depth_m} />
+            <Legend vehicleName={vehicleName(currentVehicle, lang) || vehicle} limit={currentVehicle?.max_depth_m} />
           </div>
         </div>
 
         <div className="console__side">
-          {selected ? (
+          {selected && (
             <ReportDetail
               report={selected}
               vehicle={currentVehicle}
@@ -203,7 +274,26 @@ export default function Console() {
               onStatus={data.setStatus}
               onLocate={() => setFocus({ lat: selected.lat, lon: selected.lon, key: Date.now() })}
             />
-          ) : (
+          )}
+          {askOpen && (
+            <AskPanel
+              city={city}
+              reports={data.reports}
+              hidden={Boolean(selected)}
+              onRoute={(r) => {
+                setRoute(ROUTE_CLOSED);
+                setAskRoute(r);
+              }}
+              onHighlight={(ids) => setHighlight(new Set(ids))}
+              onOpenReport={select}
+              onClose={() => {
+                setAskOpen(false);
+                setAskRoute(null);
+                setHighlight(new Set());
+              }}
+            />
+          )}
+          {!selected && !askOpen && (
             <Queue
               reports={data.reports}
               loading={data.loading}
@@ -215,42 +305,45 @@ export default function Console() {
               onSelect={select}
               onRetry={data.reload}
               emptyHint={
-                <button type="button" className="btn btn--sm" onClick={runSeed} disabled={seed.running}>
-                  Replay the Huế demo scenario
-                </button>
+                city.has_scenario !== false ? (
+                  <button type="button" className="btn btn--sm" onClick={runSeed} disabled={seed.running}>
+                    {t("queue.replay", { city: city.name })}
+                  </button>
+                ) : null
               }
             />
           )}
         </div>
       </main>
-      {about && <About catalog={data.catalog} health={data.health} onClose={() => setAbout(false)} />}
+      {about && <About catalog={data.catalog} health={data.health} city={city} onClose={() => setAbout(false)} />}
     </div>
   );
 }
 
 function Legend({ vehicleName, limit }: { vehicleName: string; limit?: number }) {
+  const { t } = useI18n();
   return (
-    <div className="legend" aria-label="Map legend">
+    <div className="legend" aria-label={t("legend.aria")}>
       <div className="legend__title">
-        <span lang="vi">{vehicleName}</span>
-        {limit != null && <span className="muted num"> · limit {limit.toFixed(2)} m</span>}
+        <span>{vehicleName}</span>
+        {limit != null && <span className="muted num"> · {t("legend.limit", { m: limit.toFixed(2) })}</span>}
       </div>
       <ul>
         <li>
           <span className="legend__line legend__line--ok" />
-          <StatusGlyph status="passable" size={13} /> Passable
+          <StatusGlyph status="passable" size={13} /> {t("status.passable")}
         </li>
         <li>
           <span className="legend__line legend__line--warn" />
-          <StatusGlyph status="risky" size={13} /> Risky
+          <StatusGlyph status="risky" size={13} /> {t("status.risky")}
         </li>
         <li>
           <span className="legend__line legend__line--bad" />
-          <StatusGlyph status="impassable" size={13} /> Impassable
+          <StatusGlyph status="impassable" size={13} /> {t("status.impassable")}
         </li>
         <li>
           <span className="legend__dot" />
-          Report · size and colour by priority
+          {t("legend.report")}
         </li>
       </ul>
     </div>

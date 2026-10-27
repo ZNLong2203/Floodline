@@ -3,10 +3,11 @@
 // formulas and the same OpenStreetMap extract the backend uses. Events are shared
 // between tabs with BroadcastChannel, so a report sent from /report?mock=1 on a
 // phone-sized window appears live on the console in another tab.
-import type { FloodlineApi, LiveState, NewReport } from "../lib/api";
+import { ApiError, type FloodlineApi, type LiveState, type NewReport } from "../lib/api";
+import { FALLBACK_CITIES } from "../lib/cities";
 import { FALLBACK_CATALOG, FALLBACK_VEHICLES } from "../lib/catalog";
 import { assess, CALIBRATION_FITTED, calibrate, COMBINE_FACTOR, combine } from "../lib/passability";
-import type { LiveEvent, Reading, Report, TriageFacts } from "../lib/types";
+import type { AskResponse, LiveEvent, Reading, Report, TriageFacts } from "../lib/types";
 import { build, LATE_SPEC, reportId, score, SPECS } from "./data";
 import { fuse, Roads, segmentsGeoJSON } from "./engine";
 
@@ -141,6 +142,10 @@ function factsFrom(text: string, depthLabel: string): TriageFacts | null {
   ].filter(Boolean) as string[];
   const summary = text.trim().replace(/\s+/g, " ").slice(0, 120);
   return {
+    language: /[ăâđêôơưạảấầẩẫậắằẳẵặẹẻẽếềểễệỉịọỏốồổỗộớờởỡợụủứừửữựỳỵỷỹ]/i.test(text) ? "vi" : "en",
+    summary_local: summary,
+    summary_en: `(mock, untranslated) ${summary}`,
+    dispatch_local: `${summary} — ${depthLabel}.`,
     people_count: count,
     vulnerable,
     injury_or_medical: injury,
@@ -148,10 +153,10 @@ function factsFrom(text: string, depthLabel: string): TriageFacts | null {
     trapped,
     needs: needs.length ? needs : ["info"],
     address_hint: "",
-    summary_vi: summary,
-    dispatch_vi: `${summary} Mực nước đo được: ${depthLabel}.`,
   };
 }
+
+const MOCK_QUESTION = "Can a rescue truck get from the Central Hospital to Đông Ba market?";
 
 export function createMockApi(): FloodlineApi {
   const now = () => Date.now() / 1000;
@@ -179,6 +184,9 @@ export function createMockApi(): FloodlineApi {
   return {
     async health() {
       return { ok: true, mode: "mock", has_key: false, reports: reports.length };
+    },
+    async cities() {
+      return FALLBACK_CITIES.map((c) => ({ ...c, reports: reports.length }));
     },
     async catalog() {
       return { ...FALLBACK_CATALOG, sources: MOCK_SOURCES };
@@ -304,7 +312,7 @@ export function createMockApi(): FloodlineApi {
       return report;
     },
     async demoSeed() {
-      emit({ type: "reports.reset", data: {} });
+      emit({ type: "reports.reset", data: { city: "hue" } });
       const specs = [...SPECS, LATE_SPEC].sort((a, b) => b.minutesAgo - a.minutesAgo);
       for (const [i, spec] of specs.entries()) {
         await sleep(900);
@@ -316,8 +324,57 @@ export function createMockApi(): FloodlineApi {
     async attribution() {
       return { photos: [], videos: [] };
     },
+    async askExamples() {
+      return [MOCK_QUESTION];
+    },
+    async ask(question: string, _city?: string, signal?: AbortSignal): Promise<AskResponse> {
+      if (question.trim().toLowerCase() !== MOCK_QUESTION.toLowerCase())
+        throw new ApiError("Mock mode only answers the example question; run the backend to ask anything.", 503);
+      await sleep(7000, signal);
+      const hospital: [number, number] = [16.4628, 107.5888];
+      const market: [number, number] = [16.4729, 107.588];
+      const r = await roads;
+      const s = await states();
+      const blocked = new Set<string>();
+      const risky = new Set<string>();
+      for (const [id, st] of s) {
+        if (st.statuses.truck === "impassable") blocked.add(id);
+        if (st.statuses.truck === "risky") risky.add(id);
+      }
+      const found = r.route(hospital, market, blocked, risky);
+      const naive = r.route(hospital, market);
+      const top = [...reports].sort((a, b) => (b.triage?.priority ?? 0) - (a.triage?.priority ?? 0)).slice(0, 3);
+      const crossed = (naive?.segments ?? []).filter((id) => blocked.has(id));
+      const answer = found
+        ? `**Yes — by a detour.** The shortest road (${(naive!.length_m / 1000).toFixed(1)} km) crosses **${crossed.length} impassable segments** on Trần Hưng Đạo; the safe route is ${(found.length_m / 1000).toFixed(1)} km.\n\nMost urgent nearby:\n\n${top
+            .map((x, i) => `${i + 1}. **P${x.triage?.priority}** — ${x.triage?.facts?.summary_en ?? x.note}`)
+            .join("\n")}\n\n*Mock answer computed in the browser.*`
+        : "**No safe road for a truck.** Send a boat.";
+      return {
+        answer,
+        steps: [
+          { tool: "list_reports", args: { limit: 10 }, result: { count: reports.length } },
+          { tool: "find_place", args: { query: "Central Hospital" }, result: { matches: [{ kind: "landmark", name: "Central Hospital" }] } },
+          { tool: "find_place", args: { query: "Đông Ba market" }, result: { matches: [{ kind: "landmark", name: "Đông Ba market" }] } },
+          {
+            tool: "plan_route",
+            args: { from_lat: hospital[0], from_lon: hospital[1], to_lat: market[0], to_lon: market[1], vehicle: "truck" },
+            result: {
+              vehicle: "truck",
+              safe_route_m: found?.length_m ?? null,
+              shortest_route_m: naive?.length_m ?? null,
+              impassable_segments_on_shortest: crossed.length,
+              no_safe_road: !found,
+            },
+          },
+        ],
+        route: { vehicle: "truck", route: found, naive, naive_blocked: crossed },
+        reports: top.map((x) => x.id),
+        recorded: true,
+      };
+    },
     async demoReset() {
-      emit({ type: "reports.reset", data: {} });
+      emit({ type: "reports.reset", data: { city: "hue" } });
       lateSent = true;
     },
     subscribe(onEvent, onState: (s: LiveState) => void) {

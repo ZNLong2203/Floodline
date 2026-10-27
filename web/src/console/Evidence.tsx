@@ -1,16 +1,16 @@
 import type { CSSProperties } from "react";
-import {
-  capitalise,
-  humanise,
-  KIND_LABEL,
-  kindShort,
-  OBJECT_VI,
-  OVERLAY_PALETTE,
-  parseNote,
-  parseSource,
-  type ReadingKind,
-} from "../lib/format";
+import { humanise, OVERLAY_PALETTE, parseNote, parseSource, type ReadingKind } from "../lib/format";
+import { type Key, useI18n, type Vars } from "../lib/i18n";
 import type { Analysis, Reading } from "../lib/types";
+
+type T = (k: Key, v?: Vars) => string;
+
+/** Look up `${prefix}.${id}`, falling back to the raw id in words. */
+function word(t: T, prefix: string, id: string): string {
+  const k = `${prefix}.${id}` as Key;
+  const s = t(k);
+  return s === k ? humanise(id) : s;
+}
 
 type Fate = "used" | "rejected" | "none";
 
@@ -19,25 +19,25 @@ const same = (a: Reading, b: Reading) =>
 
 const centre = (r: Reading) => r.mean_m ?? (r.low_m + r.high_m) / 2;
 
-function detail(r: Reading): string {
+function detail(r: Reading, t: T): string {
   const p = parseSource(r.source);
   const n = parseNote(r.note);
-  const conf = n.confidence ? ` · ${n.confidence} confidence` : "";
+  const conf = n.confidence ? ` · ${t("ev.confidence", { c: word(t, "conf", n.confidence) })}` : "";
   switch (p.kind) {
     case "landmark":
-      return `water at the ${humanise(n.text)}`;
+      return t("ev.waterAt", { part: word(t, "lm", n.text) });
     case "closeup-landmark":
-      return `water at the ${humanise(n.text)}${conf}`;
+      return t("ev.waterAt", { part: word(t, "lm", n.text) }) + conf;
     case "fraction":
     case "closeup-fraction": {
       const f = Number(n.text);
-      const what = Number.isFinite(f) ? `${Math.round(f * 100)}% of height submerged` : n.text;
+      const what = Number.isFinite(f) ? t("ev.submerged", { p: Math.round(f * 100) }) : n.text;
       return p.kind === "fraction" ? what : `${what}${conf}`;
     }
     case "scale":
-      return n.text || "visible height vs known size";
+      return n.text || t("ev.visible");
     case "spark":
-      return p.clip ? "watched the whole clip" : "whole-photo judgement";
+      return p.clip ? t("ev.wholeClip") : t("ev.wholePhoto");
     default:
       return n.text;
   }
@@ -56,6 +56,7 @@ interface Group {
 const LEGEND_ORDER: ReadingKind[] = ["scale", "landmark", "fraction", "closeup-landmark", "closeup-fraction", "spark"];
 
 export function Evidence({ analysis }: { analysis: Analysis }) {
+  const { t } = useI18n();
   const est = analysis.estimate;
   const fate = (r: Reading): Fate =>
     est?.rejected?.some((x) => same(x, r)) ? "rejected" : est?.used?.some((x) => same(x, r)) ? "used" : "none";
@@ -65,27 +66,23 @@ export function Evidence({ analysis }: { analysis: Analysis }) {
   for (const o of [...(analysis.objects ?? [])].sort((a, b) => a.index - b.index)) {
     claimed.push(...o.readings);
     const meta = [
-      o.orientation && o.orientation !== "unclear" ? humanise(o.orientation) : null,
-      o.landmark && o.landmark !== "unclear" ? `water at ${humanise(o.landmark)}` : null,
+      o.orientation && o.orientation !== "unclear" ? word(t, "orient", o.orientation) : null,
+      o.landmark && o.landmark !== "unclear" ? t("ev.waterAtMeta", { part: word(t, "lm", o.landmark) }) : null,
       o.sam_confidence != null ? `SAM ${o.sam_confidence.toFixed(2)}` : null,
-      o.frames_tracked != null ? `tracked ${o.frames_tracked} frames` : null,
-      o.frames_measured ? `waterline in ${o.frames_measured}` : null,
+      o.frames_tracked != null ? t("ev.tracked", { n: o.frames_tracked }) : null,
+      o.frames_measured ? t("ev.waterline", { n: o.frames_measured }) : null,
     ]
       .filter(Boolean)
       .join(" · ");
     groups.push({
       key: `o${o.index}`,
       index: o.index,
-      title: `${capitalise(o.label)}${OBJECT_VI[o.label] ? ` · ${OBJECT_VI[o.label]}` : ""}`,
+      title: word(t, "obj", o.label),
       meta,
       colour: OVERLAY_PALETTE[o.index % OVERLAY_PALETTE.length],
       readings: o.readings,
       muted:
-        o.standing_in_water === false
-          ? "not standing in the water, so not used"
-          : !o.readings.length
-            ? "no usable reading"
-            : undefined,
+        o.standing_in_water === false ? t("ev.notStanding") : !o.readings.length ? t("ev.noReading") : undefined,
     });
   }
   const loose = [...(est?.used ?? []), ...(est?.rejected ?? [])].filter((r) => !claimed.some((c) => same(c, r)));
@@ -93,8 +90,8 @@ export function Evidence({ analysis }: { analysis: Analysis }) {
     groups.push({
       key: "photo",
       index: null,
-      title: analysis.kind === "clip" ? "Whole clip" : "Whole photo",
-      meta: analysis.kind === "clip" ? "Muse Spark watched the clip" : "Muse Spark's own estimate",
+      title: analysis.kind === "clip" ? t("ev.groupClip") : t("ev.groupPhoto"),
+      meta: analysis.kind === "clip" ? t("ev.groupClipMeta") : t("ev.groupPhotoMeta"),
       colour: null,
       readings: loose,
     });
@@ -115,10 +112,7 @@ export function Evidence({ analysis }: { analysis: Analysis }) {
 
   if (!all.length) {
     return (
-      <div className="ev ev--empty">
-        No reading could be made from this photo. Muse Spark found no reference object standing in the water
-        {analysis.warnings?.length ? ` (${analysis.warnings.join("; ")})` : ""}.
-      </div>
+      <div className="ev ev--empty">{t("ev.empty")}</div>
     );
   }
 
@@ -126,21 +120,21 @@ export function Evidence({ analysis }: { analysis: Analysis }) {
     <div className="ev" style={{ "--max": max } as CSSProperties}>
       <div className="ev__legend">
         {LEGEND_ORDER.filter((k) => kindsPresent.has(k)).map((k) => (
-          <span key={k} className={`ev__key kind--${k}`} title={KIND_LABEL[k].hint}>
+          <span key={k} className={`ev__key kind--${k}`} title={t(`hint.${k}` as Key)}>
             <i />
-            {KIND_LABEL[k].en}
+            {t(`kind.${k}` as Key)}
           </span>
         ))}
         {raws.length > 0 && (
-          <span className="ev__key ev__key--raw" title="The catalog's range for the reading, before calibration">
+          <span className="ev__key ev__key--raw" title={t("ev.rawTitle")}>
             <i />
-            Before calibration
+            {t("ev.raw")}
           </span>
         )}
         {rejectedCount > 0 && (
           <span className="ev__key ev__key--rej">
             <i />
-            Rejected
+            {t("ev.rejected")}
           </span>
         )}
       </div>
@@ -187,9 +181,9 @@ export function Evidence({ analysis }: { analysis: Analysis }) {
                 const f = fate(r);
                 const closeup = p.kind === "closeup-landmark" || p.kind === "closeup-fraction";
                 const tip = [
-                  `${KIND_LABEL[p.kind].en}: ${r.low_m.toFixed(2)}–${r.high_m.toFixed(2)} m`,
-                  n.raw ? `before calibration ${n.raw[0].toFixed(2)}–${n.raw[1].toFixed(2)} m` : null,
-                  f === "rejected" ? "rejected as outlier" : null,
+                  `${t(`kind.${p.kind}` as Key)}: ${r.low_m.toFixed(2)}–${r.high_m.toFixed(2)} m`,
+                  n.raw ? t("ev.beforeCal", { a: n.raw[0].toFixed(2), b: n.raw[1].toFixed(2) }) : null,
+                  f === "rejected" ? t("ev.rejectedTag") : null,
                 ]
                   .filter(Boolean)
                   .join(" · ");
@@ -200,30 +194,30 @@ export function Evidence({ analysis }: { analysis: Analysis }) {
                     title={tip}
                   >
                     <div className="ev__label">
-                      <span className="ev__kind" title={KIND_LABEL[p.kind].hint}>
+                      <span className="ev__kind" title={t(`hint.${p.kind}` as Key)}>
                         {closeup && <span aria-hidden="true">⌕ </span>}
-                        {kindShort(p.kind)}
-                        {p.clip && p.kind !== "spark" && <span className="ev__cliptag">clip</span>}
+                        {closeup ? t("kind.closeup") : t(`kind.${p.kind}` as Key)}
+                        {p.clip && p.kind !== "spark" && <span className="ev__cliptag">{t("ev.clip")}</span>}
                       </span>
                       <span className="ev__nums num">
                         {r.low_m.toFixed(2)}–{r.high_m.toFixed(2)}
                       </span>
-                      <span className="ev__detail">{detail(r)}</span>
-                      {f === "rejected" && <span className="ev__rejtag">rejected as outlier</span>}
+                      <span className="ev__detail">{detail(r, t)}</span>
+                      {f === "rejected" && <span className="ev__rejtag">{t("ev.rejectedTag")}</span>}
                     </div>
                     <div className="ev__track">
                       {n.raw && (
                         <span
                           className="ev__raw"
                           style={{ left: pos(n.raw[0]), width: span(n.raw[0], n.raw[1]) }}
-                          title={`Before calibration: ${n.raw[0].toFixed(2)}–${n.raw[1].toFixed(2)} m`}
+                          title={t("ev.beforeCal", { a: n.raw[0].toFixed(2), b: n.raw[1].toFixed(2) })}
                         />
                       )}
                       <span
                         className={`ev__bar ${r.high_m > max ? "is-clipped" : ""}`}
                         style={{ left: pos(r.low_m), width: span(r.low_m, r.high_m) }}
                       />
-                      {r.high_m > max && <span className="ev__more" aria-hidden="true" title={`continues to ${r.high_m.toFixed(2)} m`} />}
+                      {r.high_m > max && <span className="ev__more" aria-hidden="true" title={t("ev.continues", { m: r.high_m.toFixed(2) })} />}
                       <span className="ev__dot" style={{ left: pos(centre(r)) }} />
                     </div>
                   </div>
@@ -235,12 +229,13 @@ export function Evidence({ analysis }: { analysis: Analysis }) {
           {est && (
             <div className="ev__row ev__row--consensus">
               <div className="ev__label">
-                <span className="ev__kind">Consensus</span>
+                <span className="ev__kind">{t("ev.consensus")}</span>
                 <span className="ev__nums num">
                   {est.low_m.toFixed(2)}–{est.high_m.toFixed(2)}
                 </span>
                 <span className="ev__detail">
-                  {est.used.length} used{rejectedCount ? `, ${rejectedCount} rejected` : ""}
+                  {t("kv.used", { n: est.used.length })}
+                  {rejectedCount ? t("kv.rejected", { n: rejectedCount }) : ""}
                 </span>
               </div>
               <div className="ev__track">
@@ -252,12 +247,11 @@ export function Evidence({ analysis }: { analysis: Analysis }) {
         </div>
       </div>
       <p className="ev__foot">
-        Outliers are dropped by median absolute deviation; the rest are combined by inverse variance, and disagreement between
-        methods widens the interval instead of being averaged away.
+        {t("ev.foot")}
         {calibrated && (
           <span className="ev__cal">
-            Calibrated on 292 labelled photos (FloodDET), 5-fold cross-validation
-            {analysis.calibration ? ` · fitted ${analysis.calibration}` : ""}.
+            {t("ev.cal")}
+            {analysis.calibration ? t("ev.fitted", { date: analysis.calibration }) : ""}.
           </span>
         )}
       </p>
