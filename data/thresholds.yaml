@@ -1,0 +1,1014 @@
+# Floodline passability thresholds (generated 2026-10-27). Conservative; every class lists evidence with source ids.
+# unverified: true marks numbers that could not be traced to a source statement about that class.
+schema_version: 1
+generated_on: '2026-10-27'
+project: Floodline
+purpose: Depth thresholds for passability by user class. Depth = height of the water surface above the road surface at the person/vehicle.
+  Every number has evidence entries pointing at sources[]; numbers that could not be sourced are flagged unverified.
+conventions:
+  max_depth_m: Still (or slow, <= ~0.5 m/s) water. Passage is NOT recommended above this depth. Conservative selection, see each class
+    "selection".
+  max_depth_flowing_m: Water that is visibly moving (current, wake, drifting debris). Always <= max_depth_m.
+  caution_depth_m: 'Depth at which a documented hazard begins; between caution_depth_m and max_depth_m: proceed only with care. null
+    = no sourced value.'
+  max_dv_m2s: 'Optional depth x velocity limit (m2/s) when velocity is known: pass if depth x velocity <= this value AND depth <= max_depth_m.'
+  source_ceiling: The highest value found in any source for that class (never used as the limit).
+  evidence_kind: verbatim = number appears in the source; derived = computed from sourced numbers (formula shown); proxy = taken from
+    a different but related class; rule_applied_by_analogy = a depth rule written for another vehicle type; manufacturer_claim_via_press
+    = secondary report of a manufacturer figure.
+  decision_rule: state = no_go if depth > max_depth_m (use max_depth_flowing_m when water is moving); caution if caution_depth_m <=
+    depth <= max_depth_m; ok otherwise. boat_only applies when depth > boat_only.min_depth_m.
+  unverified_policy: 'unverified: true with unverified_fields and unverified_reason on any class whose listed fields could not be traced
+    to a source statement about that class.'
+classes:
+- id: pedestrian_adult
+  label_en: Pedestrian - healthy adult wading
+  label_vi: Người đi bộ (người lớn khỏe mạnh)
+  max_depth_m: 0.5
+  max_depth_flowing_m: 0.15
+  caution_depth_m: 0.25
+  max_dv_m2s: 0.6
+  source_ceiling:
+    still_m: 1.2
+    flowing_m: null
+    note: 1.2 m is the highest still-water wading depth any retrieved source accepts for an able-bodied adult; it is NOT used as the
+      limit.
+  unverified: false
+  selection: max_depth_m is the ARR/AIDR H2 still-water limit (0.5 m, verbatim). It is deliberately well under the 1.2 m adult ceiling
+    because (a) FD2321 with an urban debris factor reaches "dangerous for most people" at exactly 0.5 m in still water, and (b) a photo
+    cannot show open drains, current or footing (SCARM App. J).
+  evidence:
+  - field: max_depth_m
+    value: 0.5
+    source_id: aidr_guideline_7_3
+    locator: Table 2, class H2 limiting still-water depth
+    statement: 'H2: D*V <= 0.6 m2/s, D <= 0.5 m, V <= 2.0 m/s; Table 1 says H2 is only "unsafe for small vehicles". H3 (D <= 1.2 m)
+      adds "children and the elderly"; adults are first flagged at H4.'
+    kind: verbatim
+  - field: source_ceiling.still_m
+    value: 1.2
+    source_id: wrl_2014_07
+    locator: p.17 quoting Cox et al. 2010; Table 4-1 note 1; p.3 quoting SCARM 2000 App. J
+    statement: 'Adults (H.M > 50 mKg): low hazard for D.V < 0.6 m2/s "with a maximum depth limit of 1.2 m"; SCARM: wading by able-bodied
+      adults "becomes difficult and dangerous when the depth of still water exceeds 1.2 m"; also depends on "evenness of the ground
+      surface or presence of depressions, potholes, fences or major stormwater drains".'
+    kind: verbatim
+  - field: max_depth_m
+    value: 0.5
+    source_id: defra_fd2321_tr2
+    locator: Table 4.1 (debris factor, urban) and Table 4.2 (classes); formula HR = d x (v + 0.5) + DF
+    statement: 'Urban DF = 1 for d > 0.25 m. At v = 0, d = 0.5 m: HR = 0.5 x 0.5 + 1 = 1.25 = lower bound of "Significant - dangerous
+      for most people". At d <= 0.25 m DF = 0, HR <= 0.125 = Low.'
+    kind: derived
+  - field: caution_depth_m
+    value: 0.25
+    source_id: defra_fd2321_tr2
+    locator: Table 4.1 first depth band (0 to 0.25 m)
+    statement: Above 0.25 m the urban debris factor jumps from 0 to 1, moving still water from "Low" to "Dangerous for some" (HR 1.125-1.25
+      between 0.25 and 0.5 m).
+    kind: derived
+  - field: max_depth_flowing_m
+    value: 0.15
+    source_id: govuk_flash_flooding
+    locator: Flash flooding guidance
+    statement: '"Shallow flood water (around 15cm or 6 inches) ... can knock a person over or conceal hazards."'
+    kind: verbatim
+  - field: max_depth_flowing_m
+    value: 0.15
+    source_id: nws_tadd_safety
+    locator: Turn Around Don't Drown
+    statement: '"A mere 6 inches of fast-moving flood water can knock over an adult."'
+    kind: verbatim
+  - field: max_depth_flowing_m
+    value: 0.15
+    source_id: nws_tadd_tsa
+    locator: Turn Around Don't Drown (older wording)
+    statement: '"Six inches of moving water can make you fall."'
+    kind: verbatim
+  - field: max_dv_m2s
+    value: 0.6
+    source_id: wrl_2014_07
+    locator: Table 4-1 (after Cox et al. 2010)
+    statement: 'Adults: D x V < 0.6 m2/s low hazard; 0.6-0.8 moderate; 0.8-1.2 significant ("dangerous to most"); > 1.2 extreme ("dangerous
+      to all"). Max velocity stability limit 3.0 m/s.'
+    kind: verbatim
+  note: Flowing = water visibly moving (current, wake, debris drifting). If velocity can be estimated, use D x V <= 0.6 m2/s instead
+    of the flat depth.
+  source_ids:
+  - aidr_guideline_7_3
+  - wrl_2014_07
+  - defra_fd2321_tr2
+  - govuk_flash_flooding
+  - nws_tadd_safety
+  - nws_tadd_tsa
+  source_urls:
+  - https://knowledge.aidr.org.au/media/1891/guideline-7-3-technical-flood-risk-management.pdf
+  - https://knowledge.aidr.org.au/media/2334/wrl-flood-hazard-techinical-report-september-2014.pdf
+  - https://assets.publishing.service.gov.uk/media/602bbc3de90e07055f646148/Flood_risks_to_people_-_Phase_2_Guidance_Document_Technical_report.pdf
+  - https://www.gov.uk/guidance/flash-flooding
+  - https://www.weather.gov/safety/flood-turn-around-dont-drown
+  - https://www.weather.gov/tsa/hydro_tadd
+- id: pedestrian_child_elderly
+  label_en: Pedestrian - child or elderly person
+  label_vi: Người đi bộ (trẻ em hoặc người cao tuổi)
+  max_depth_m: 0.25
+  max_depth_flowing_m: 0.15
+  caution_depth_m: null
+  max_dv_m2s: 0.4
+  source_ceiling:
+    still_m: 0.5
+    flowing_m: 0.2
+    note: 'Cox et al. 2010 children (height x mass 25-50 mKg) in good conditions: 0.5 m still; at 3.0 m/s only D < 0.2 m. No elderly-specific
+      number exists in the sources.'
+  advice: avoid_entering_floodwater_if_possible
+  unverified: true
+  unverified_fields: &id001
+  - max_depth_flowing_m
+  unverified_reason: No child- or elderly-specific flowing-water figure beyond the Cox et al. laboratory value (D < 0.2 m at 3 m/s,
+    children only). 0.15 m is the general-person value (GOV.UK / NWS) applied as a conservative cap.
+  selection: 'Lowest of the still-water figures: 0.25 m (FD2321 urban band, derived) < 0.3 m (ARR H1) < 0.5 m (Cox children, good conditions).'
+  evidence:
+  - field: max_depth_m
+    value: 0.25
+    source_id: defra_fd2321_tr2
+    locator: Tables 4.1 and 4.2
+    statement: 'Urban DF = 1 above 0.25 m: HR = 0.5d + 1 >= 1.1 even in still water, i.e. "Dangerous for some (i.e. children)" (0.75-1.25).
+      At d <= 0.25 m HR is Low.'
+    kind: derived
+  - field: max_depth_m
+    value: 0.3
+    source_id: aidr_guideline_7_3
+    locator: Tables 1-2, class H1
+    statement: 'H1 "Generally safe for vehicles, people and buildings": D <= 0.3 m, D*V <= 0.3 m2/s. H3 "Unsafe for vehicles, children
+      and the elderly" starts above the H2 limit of 0.5 m.'
+    kind: verbatim
+  - field: source_ceiling.still_m
+    value: 0.5
+    source_id: wrl_2014_07
+    locator: Table 4-1 note 1 (Cox et al. 2010)
+    statement: '"Maximum depth stability limit of 1.2 m for adults and 0.5 m for children under good conditions."'
+    kind: verbatim
+  - field: max_dv_m2s
+    value: 0.4
+    source_id: wrl_2014_07
+    locator: Table 4-1 / p.17 (Cox et al. 2010)
+    statement: 'Children (H.M 25-50): low hazard for D x V < 0.4 m2/s; 0.4-0.6 "Significant Hazard; Dangerous to most".'
+    kind: verbatim
+  - field: max_depth_flowing_m
+    value: 0.15
+    source_id: govuk_flash_flooding
+    locator: Flash flooding guidance
+    statement: 15 cm of flood water "can knock a person over" (person, not specifically a child).
+    kind: verbatim
+  - field: source_ceiling.flowing_m
+    value: 0.2
+    source_id: wrl_2014_07
+    locator: p.17 quoting Cox et al. 2010
+    statement: 'Children: "a maximum velocity of 3.0 m/s at shallow depths (D < 0.2 m)".'
+    kind: verbatim
+  - field: advice
+    value: avoid
+    source_id: wrl_2014_07
+    locator: Table 4-1 note 2
+    statement: '"More vulnerable community members such as infants and the elderly should avoid exposure to floodwater. Flood flows
+      are considered extremely hazardous to these community members under all conditions."'
+    kind: verbatim
+  note: Use the child/elderly class whenever the person is not clearly a healthy adult. The elderly and infants have no quantified safe
+    depth in any source read.
+  source_ids:
+  - defra_fd2321_tr2
+  - aidr_guideline_7_3
+  - wrl_2014_07
+  - govuk_flash_flooding
+  source_urls:
+  - https://assets.publishing.service.gov.uk/media/602bbc3de90e07055f646148/Flood_risks_to_people_-_Phase_2_Guidance_Document_Technical_report.pdf
+  - https://knowledge.aidr.org.au/media/1891/guideline-7-3-technical-flood-risk-management.pdf
+  - https://knowledge.aidr.org.au/media/2334/wrl-flood-hazard-techinical-report-september-2014.pdf
+  - https://www.gov.uk/guidance/flash-flooding
+- id: scooter
+  label_en: Scooter / motorbike (xe máy, rider on board)
+  label_vi: Xe máy (xe tay ga, xe số)
+  max_depth_m: 0.21
+  max_depth_flowing_m: 0.15
+  caution_depth_m: 0.134
+  max_dv_m2s: null
+  source_ceiling:
+    still_m: null
+    flowing_m: null
+    note: No manufacturer or government depth limit for motorbikes was found.
+  unverified: true
+  unverified_fields: &id002
+  - max_depth_m
+  - max_depth_flowing_m
+  - caution_depth_m
+  - max_dv_m2s
+  unverified_reason: 'Neither Honda Việt Nam, Yamaha Việt Nam, nor any Vietnamese government source read gives a numeric safe depth,
+    stall depth, exhaust height or air-intake height for motorbikes. max_depth_m is DERIVED by applying the "water not above the wheel
+    hub/axle" rule (Sở GTVT Đà Nẵng handbook, written for cars; Kia owner manual) to the smallest wheel hub height among the five reference
+    motorbikes (Honda LEAD rear 100/90-10: 0.217 m, rounded down to 0.21). caution_depth_m is the smallest published ground clearance
+    (Wave Alpha 0.134 m); that it marks the onset of engine/exhaust wetting is our inference, not a source statement. max_depth_flowing_m
+    reuses the lowest cited moving-water figure (15 cm) because no motorbike figure exists.'
+  selection: Conservative derived value, flagged unverified. Hub heights of the five reference motorbikes are 0.217-0.300 m (see references.yaml);
+    official ground clearance 0.134-0.175 m.
+  evidence:
+  - field: max_depth_m
+    value: 0.21
+    source_id: tuoitre_danang_handbook
+    locator: Handbook rule as quoted
+    statement: '"độ sâu ngập nước không vượt qua tâm bánh (trục bánh xe)" - water not above the wheel centre; the article does not say
+      motorbikes are covered.'
+    kind: rule_applied_by_analogy
+  - field: max_depth_m
+    value: 0.21
+    source_id: kia_owner_manual_ab_2023
+    locator: Driving in flooded areas
+    statement: '"Avoid driving through flooded areas unless you are sure the water is no higher than the bottom of the wheel hub." (car,
+      same hub rule)'
+    kind: rule_applied_by_analogy
+  - field: max_depth_m
+    value: 0.21
+    source_id: honda_vn_lead_abs
+    locator: 'Spec table: rear tyre 100/90-10 56J'
+    statement: Outer diameter = 10 x 25.4 + 2 x 100 x 90/100 = 434.0 mm; hub height 0.217 m; floor to 0.21 m.
+    kind: derived
+  - field: max_depth_m
+    value: 0.21
+    source_id: wikipedia_tire_code
+    locator: Overall diameter formula
+    statement: (2xTxA/100) + (Wx25.4) mm.
+    kind: derived
+  - field: caution_depth_m
+    value: 0.134
+    source_id: honda_vn_wave_alpha_110
+    locator: 'Spec table: Khoảng sáng gầm xe'
+    statement: 134 mm - lowest published ground clearance of the five reference motorbikes (Vision 175, Exciter 150, Air Blade 142,
+      Lead 140).
+    kind: verbatim_value_interpretation_unverified
+  - field: max_depth_flowing_m
+    value: 0.15
+    source_id: vicses_15_to_float
+    locator: Campaign page
+    statement: 'Smallest moving-water figure: a 1.05 t small car is moved by 15 cm of water at 3.6 km/h; a motorbike plus rider is lighter
+      than this.'
+    kind: proxy
+  - field: qualitative
+    value: null
+    source_id: honda_vn_faq
+    locator: 'FAQ: khi sử dụng xe trong mùa mưa'
+    statement: If the engine stalls in floodwater, do not restart; move the bike out of the water; change oil if water entered; have
+      final-drive oil checked at a HEAD dealer. No depth given.
+    kind: qualitative
+  - field: qualitative
+    value: null
+    source_id: vnexpress_khi_xe_may_loi_nuoc
+    locator: Article text
+    statement: High-mounted spark plug and air filter (just under the seat) survive best; water also enters through the exhaust and
+      crankcase vent hose. No cm values.
+    kind: qualitative
+  note: Above max_depth_m treat a motorbike as not passable. Honda Việt Nam warns that a bike that stalls in floodwater may have water
+    in the cylinder (see honda_vn_faq). Engine-stall depth for specific models (exhaust or air-intake height) is not published; measure
+    on a sample of Vision/Lead/Wave bikes if this class matters to the demo.
+  source_ids:
+  - tuoitre_danang_handbook
+  - kia_owner_manual_ab_2023
+  - honda_vn_lead_abs
+  - wikipedia_tire_code
+  - honda_vn_wave_alpha_110
+  - vicses_15_to_float
+  - honda_vn_faq
+  - vnexpress_khi_xe_may_loi_nuoc
+  source_urls:
+  - https://tuoitre.vn/mua-mua-toi-chay-o-to-qua-duong-ngap-nuoc-phai-luu-y-gi-20231001155749696.htm
+  - https://ownersmanual.kia.com/full_webhelp/AB/2023/en_GB/topics/chapter6_8_6.html
+  - https://www.honda.com.vn/xe-may/san-pham/lead-abs?category=2
+  - https://en.wikipedia.org/wiki/Tire_code
+  - https://www.honda.com.vn/xe-may/san-pham/wave-alpha-110?category=1
+  - https://www.ses.vic.gov.au/media/campaigns/15-to-float
+  - https://www.honda.com.vn/cau-hoi-thuong-gap?category=&category_child=tu-van-su-dung-xe-may
+  - https://vnexpress.net/khi-xe-may-loi-nuoc-1982877.html
+- id: sedan_car
+  label_en: Sedan / hatchback car (Vios, Accent, Morning class)
+  label_vi: Ô tô con (sedan, hatchback)
+  max_depth_m: 0.3
+  max_depth_flowing_m: 0.15
+  caution_depth_m: 0.15
+  max_dv_m2s: 0.3
+  source_ceiling:
+    still_m: 0.4
+    flowing_m: 0.3
+    note: 0.4 m = Shand et al. large passenger car (still water); 0.3 m = NWS "12 inches of rushing water to carry away most cars" /
+      VicSES mid-sized car.
+  unverified: false
+  selection: 'Still: Shand et al. small passenger car limiting still-water depth (0.3 m, verbatim), which also equals the wheel-hub
+    height of the three reference cars (0.292-0.316 m). Flowing: VicSES small car (0.15 m). Caution: NWS 6 in "reach the bottom of most
+    passenger cars". The reference cars are 3.6-4.5 m long, ground clearance 0.133-0.165 m.'
+  evidence:
+  - field: max_depth_m
+    value: 0.3
+    source_id: wrl_2014_07
+    locator: Table 4-2 (Shand et al. 2011), small passenger vehicle
+    statement: 'Length < 4.3 m, kerb weight < 1250 kg, ground clearance < 0.12 m: limiting still-water depth 0.3 m; limiting velocity
+      3.0 m/s; D.V <= 0.3. Large passenger (> 4.3 m, > 1250 kg, > 0.12 m): 0.4 m; D.V <= 0.45. Authors call these draft interim criteria.'
+    kind: verbatim
+  - field: max_depth_m
+    value: 0.3
+    source_id: wrl_2014_07
+    locator: p.3 quoting SCARM 2000 App. J
+    statement: '"Small, light, low motor vehicles crossing rapidly flowing causeways can become unstable when water depths exceed 0.3
+      m. Evacuation by larger, higher sedans is generally only possible and safe when water depths are less than 0.4 m."'
+    kind: verbatim
+  - field: max_depth_m
+    value: 0.3
+    source_id: kia_owner_manual_ab_2023
+    locator: Driving in flooded areas
+    statement: 'Manufacturer: water "no higher than the bottom of the wheel hub". Reference-car hub heights (derived from published
+      tyre sizes): Vios 0.301, Morning 0.292, Accent 0.311-0.316 m.'
+    kind: rule_cross_check
+  - field: max_depth_m
+    value: 0.3
+    source_id: tuoitre_danang_handbook
+    locator: Handbook rule as quoted
+    statement: Water not above the wheel centre (trục bánh xe).
+    kind: rule_cross_check
+  - field: hub_height_m
+    value: 0.301
+    source_id: vnexpress_vios_2023
+    locator: 'Spec block: tyre 185/60R15, ground clearance 133 mm'
+    statement: Outer diameter 603.0 mm, hub height 0.301 m (derived with the Wikipedia formula).
+    kind: derived
+  - field: hub_height_m
+    value:
+    - 0.311
+    - 0.316
+    source_id: vnexpress_accent_2024_cao_cap
+    locator: 'Spec block: tyres 185/65 R15 and 205/55 R16, ground clearance 165 mm'
+    statement: Outer diameters 621.5 and 631.9 mm, hub heights 0.311 and 0.316 m.
+    kind: derived
+  - field: hub_height_m
+    value: 0.292
+    source_id: kia_vn_new_morning
+    locator: 'Spec table: tyre 185/55 R15, ground clearance 151 mm'
+    statement: Outer diameter 584.5 mm, hub height 0.292 m.
+    kind: derived
+  - field: caution_depth_m
+    value: 0.15
+    source_id: nws_tadd_tsa
+    locator: Turn Around Don't Drown
+    statement: '"Six inches of water will reach the bottom of most passenger cars causing loss of control and possible stalling." "A
+      foot of water will float many vehicles."'
+    kind: verbatim
+  - field: max_depth_flowing_m
+    value: 0.15
+    source_id: vicses_15_to_float
+    locator: Campaign page
+    statement: Small car (1.05 t) "moved by water only 15cm deep" at 3.6 km/h; mid-sized car (1.5 t) 30 cm.
+    kind: verbatim
+  - field: max_depth_flowing_m
+    value: 0.3
+    source_id: nws_tadd_safety
+    locator: Turn Around Don't Drown
+    statement: '"just 12 inches of rushing water to carry away most cars" (source ceiling for flowing).'
+    kind: verbatim
+  - field: source_ceiling.flowing_m
+    value: 0.6
+    source_id: govuk_flash_flooding
+    locator: Flash flooding guidance
+    statement: '"around 60cm (2 feet) of water to carry away a vehicle of any size."'
+    kind: verbatim
+  - field: max_dv_m2s
+    value: 0.3
+    source_id: wrl_2014_07
+    locator: Table 4-2
+    statement: 'Small passenger: D.V <= 0.3 m2/s; large passenger D.V <= 0.45 m2/s.'
+    kind: verbatim
+  note: 'Water at or above caution_depth_m reaches the underbody of most cars (NWS) - drive slowly, do not stop in the water. Do not
+    use manufacturer wading figures for sedans: none was published for Vios, Accent or Morning in the sources read.'
+  source_ids:
+  - wrl_2014_07
+  - kia_owner_manual_ab_2023
+  - tuoitre_danang_handbook
+  - vnexpress_vios_2023
+  - vnexpress_accent_2024_cao_cap
+  - kia_vn_new_morning
+  - nws_tadd_tsa
+  - vicses_15_to_float
+  - nws_tadd_safety
+  - govuk_flash_flooding
+  source_urls:
+  - https://knowledge.aidr.org.au/media/2334/wrl-flood-hazard-techinical-report-september-2014.pdf
+  - https://ownersmanual.kia.com/full_webhelp/AB/2023/en_GB/topics/chapter6_8_6.html
+  - https://tuoitre.vn/mua-mua-toi-chay-o-to-qua-duong-ngap-nuoc-phai-luu-y-gi-20231001155749696.htm
+  - https://vnexpress.net/oto-xe-may/v-car/phien-ban-xe/toyota-vios-2023-e-cvt-3ab-673
+  - https://vnexpress.net/oto-xe-may/v-car/phien-ban-xe/hyundai-accent-2024-1-5-at-cao-cap-877
+  - https://kiavietnam.com.vn/chi-tiet-san-pham/new-morning-2025
+  - https://www.weather.gov/tsa/hydro_tadd
+  - https://www.ses.vic.gov.au/media/campaigns/15-to-float
+  - https://www.weather.gov/safety/flood-turn-around-dont-drown
+  - https://www.gov.uk/guidance/flash-flooding
+- id: suv_pickup
+  label_en: SUV / MPV / pickup (Xpander, Ranger class)
+  label_vi: Xe gầm cao (SUV, MPV, bán tải)
+  max_depth_m: 0.4
+  max_depth_flowing_m: 0.3
+  caution_depth_m: 0.225
+  max_dv_m2s: 0.45
+  source_ceiling:
+    still_m: 0.8
+    flowing_m: 0.45
+    note: 0.8 m = Ford Ranger Hi-rider rated wading depth (Ford Việt Nam via trade press); 0.45 m = VicSES four-wheel drive (2.5 t)
+      in moving water. Neither is used as the limit.
+  per_vehicle:
+  - vehicle: car_mitsubishi_xpander
+    max_depth_m: 0.4
+    basis: Shand large passenger car 0.4 m; Mitsubishi Việt Nam rating for the Xpander CROSS 0.4 m (press); hub height 0.329-0.330 m.
+  - vehicle: car_ford_ranger
+    max_depth_m: 0.5
+    basis: Shand large 4WD 0.5 m (> 2000 kg, ground clearance > 0.22 m); hub height 0.382-0.394 m; Ford rates only the Hi-rider at 0.8
+      m, standard 4x2 "not the whole tyre".
+  manufacturer_ratings:
+  - vehicle: Ford Ranger Hi-rider
+    wading_m: 0.8
+    source_id: ford_vn_flood_advice
+    reliability: secondary (trade press reporting Ford Việt Nam)
+  - vehicle: Mitsubishi Xpander Cross
+    wading_m: 0.4
+    source_id: thuonghieucongluan_xpander_cross
+    reliability: secondary (press attributing the figure to Mitsubishi Motors Việt Nam, 2020)
+  unverified: true
+  unverified_fields: &id003
+  - caution_depth_m
+  unverified_reason: caution_depth_m is the smallest published ground clearance in the class (Xpander 0.225 m); treating it as the onset
+    of underbody wetting is our inference. Manufacturer wading depths come from press reports, not from Ford/Mitsubishi spec sheets
+    (ford.com.vn returned 403; the Mitsubishi Xpander spec page lists no wading depth).
+  selection: 0.4 m = lowest of Shand large passenger (0.4) and the Xpander Cross rating (0.4); pickups heavier than 2 t may use 0.5
+    m (Shand large 4WD) via per_vehicle. Flowing 0.3 m = VicSES mid-sized car (1.5 t, comparable to Xpander 1.25-1.28 t).
+  evidence:
+  - field: max_depth_m
+    value: 0.4
+    source_id: wrl_2014_07
+    locator: Table 4-2 (Shand et al. 2011)
+    statement: 'Large passenger (> 4.3 m, > 1250 kg, > 0.12 m): still 0.4 m, D.V <= 0.45. Large 4WD (> 4.5 m, > 2000 kg, > 0.22 m):
+      still 0.5 m, D.V <= 0.6.'
+    kind: verbatim
+  - field: max_depth_m
+    value: 0.4
+    source_id: thuonghieucongluan_xpander_cross
+    locator: Launch article, 16 Jul 2020
+    statement: '"khoảng sáng gầm lên tới 225 mm ... cho khả năng lội nước đến 400 mm" (attributed to Mitsubishi Motors Việt Nam).'
+    kind: manufacturer_claim_via_press
+  - field: source_ceiling.still_m
+    value: 0.8
+    source_id: ford_vn_flood_advice
+    locator: Article text
+    statement: '"Chỉ có phiên bản Hi-rider của Ranger có khả năng lội nước tối đa là 800mm"; 4x2 (raised) and 4x4: water must stay below
+      the front wheel-arch cladding; standard 4x2: must not cover the entire tyre; advises about 7 km/h.'
+    kind: manufacturer_claim_via_press
+  - field: max_depth_m
+    value: 0.4
+    source_id: mitsubishi_vn_new_xpander
+    locator: Spec table
+    statement: Ground clearance 225 mm; tyres 205/55R17 and 195/65R16 (hub 0.329-0.330 m, derived). The page lists no wading depth.
+    kind: cross_check
+  - field: max_depth_m
+    value: 0.4
+    source_id: vnexpress_ranger_2026_wildtrak
+    locator: Spec block
+    statement: Ground clearance 235 mm, tyre 255/65 R18 (hub 0.394 m, derived). No wading depth listed.
+    kind: cross_check
+  - field: max_depth_flowing_m
+    value: 0.3
+    source_id: vicses_15_to_float
+    locator: Campaign page
+    statement: Mid-sized car (1.5 t) moved by 30 cm and four-wheel drive (2.5 t) by 45 cm, moving water at 3.6 km/h.
+    kind: verbatim
+  - field: source_ceiling.flowing_m
+    value: 0.6
+    source_id: nws_tadd_safety
+    locator: Turn Around Don't Drown
+    statement: '"just 2 feet of rushing water can carry away SUVs and trucks" (about 0.61 m); GOV.UK: "around 60cm ... a vehicle of
+      any size".'
+    kind: verbatim
+  - field: max_dv_m2s
+    value: 0.45
+    source_id: wrl_2014_07
+    locator: Table 4-2
+    statement: Large passenger D.V <= 0.45; large 4WD D.V <= 0.6.
+    kind: verbatim
+  - field: caution_depth_m
+    value: 0.225
+    source_id: mitsubishi_vn_new_xpander
+    locator: 'Spec table: khoảng sáng gầm 225 mm'
+    statement: Smallest ground clearance in the class (Ranger 235 mm).
+    kind: verbatim_value_interpretation_unverified
+  note: Manufacturer wading depths apply to slow, controlled fording with the driver aware of bow-wave and air-intake height; they are
+    not safe depths for floodwater carrying debris, current and hidden road damage.
+  source_ids:
+  - wrl_2014_07
+  - thuonghieucongluan_xpander_cross
+  - ford_vn_flood_advice
+  - mitsubishi_vn_new_xpander
+  - vnexpress_ranger_2026_wildtrak
+  - vicses_15_to_float
+  - nws_tadd_safety
+  source_urls:
+  - https://knowledge.aidr.org.au/media/2334/wrl-flood-hazard-techinical-report-september-2014.pdf
+  - https://thuonghieucongluan.com.vn/ra-mat-xe-mitsubishi-xpander-cross-tai-viet-nam-voi-gia-670-trieu-dong-a107750.html
+  - https://doanhnghiephoinhap.vn/ford-chia-se-cach-vuot-qua-nhung-cung-duong-noi-do-ngap-nuoc-46548.html
+  - https://www.mitsubishi-motors.com.vn/newxpander
+  - https://vnexpress.net/oto-xe-may/v-car/phien-ban-xe/ford-ranger-2026-wildtrak-2-0-4x4-at-1294
+  - https://www.ses.vic.gov.au/media/campaigns/15-to-float
+  - https://www.weather.gov/safety/flood-turn-around-dont-drown
+- id: truck_rescue
+  label_en: Truck / rescue truck (e.g. Vietnamese army 6x6)
+  label_vi: Xe tải / xe cứu hộ (ví dụ xe quân sự 6x6)
+  max_depth_m: 0.5
+  max_depth_flowing_m: 0.45
+  caution_depth_m: null
+  max_dv_m2s: 0.6
+  source_ceiling:
+    still_m: null
+    flowing_m: 0.6
+    note: 'GOV.UK: about 60 cm carries away a vehicle of any size (a ceiling for flowing water, not a safe depth).'
+  unverified: true
+  unverified_fields: &id004
+  - max_depth_m
+  - max_depth_flowing_m
+  - max_dv_m2s
+  unverified_reason: 'No wading/fording depth for any Vietnamese army or rescue truck was found (Wikipedia Ural-4320 and KamAZ-4310
+    pages give no fording depth; Vietnam is not listed as operator on those pages). Shand et al. (2011) state they have no data for
+    "small and large commercial vehicles and emergency service vehicles". Values are PROXIES: the heaviest classes in the cited criteria
+    (Shand large 4WD still 0.5 m, D.V <= 0.6; VicSES 4WD moving 0.45 m).'
+  selection: 'Proxy: heaviest vehicle class with a published criterion. Likely very conservative for 6x6 military trucks (e.g. Ural-4320
+    tyres 14.00-20 per Wikipedia, far larger than any car tyre here) but no source allows a higher number.'
+  evidence:
+  - field: max_depth_m
+    value: 0.5
+    source_id: wrl_2014_07
+    locator: Table 4-2, large 4WD; p.20 list of missing categories
+    statement: 'Large 4WD still 0.5 m, D.V <= 0.6. Missing data noted by the authors: "Information for additional categories including
+      small and large commercial vehicles and emergency service vehicles".'
+    kind: proxy
+  - field: max_depth_flowing_m
+    value: 0.45
+    source_id: vicses_15_to_float
+    locator: Campaign page
+    statement: Four wheel drive (2.5 t) moved by 45 cm of moving water; no heavier class given.
+    kind: proxy
+  - field: source_ceiling.flowing_m
+    value: 0.6
+    source_id: govuk_flash_flooding
+    locator: Flash flooding guidance
+    statement: '"around 60cm (2 feet) of water to carry away a vehicle of any size."'
+    kind: verbatim
+  - field: source_ceiling.flowing_m
+    value: 0.6
+    source_id: nws_tadd_safety
+    locator: Turn Around Don't Drown
+    statement: '"just 2 feet of rushing water can carry away SUVs and trucks."'
+    kind: verbatim
+  note: Treat a rescue truck as an exception requiring local judgement by the vehicle commander; the value here only prevents the tool
+    from over-promising. Replace with the technical manual (TTKT) fording depth when available.
+  source_ids:
+  - wrl_2014_07
+  - vicses_15_to_float
+  - govuk_flash_flooding
+  - nws_tadd_safety
+  source_urls:
+  - https://knowledge.aidr.org.au/media/2334/wrl-flood-hazard-techinical-report-september-2014.pdf
+  - https://www.ses.vic.gov.au/media/campaigns/15-to-float
+  - https://www.gov.uk/guidance/flash-flooding
+  - https://www.weather.gov/safety/flood-turn-around-dont-drown
+- id: boat_only
+  label_en: Boat only (no wading or road vehicles)
+  label_vi: Chỉ đi được bằng thuyền/xuồng
+  min_depth_m: 0.5
+  mandatory_above_m: 1.2
+  boat_only_if_dv_above_m2s: 1.2
+  max_depth_m: null
+  max_depth_flowing_m: null
+  unverified: false
+  derivation: min_depth_m = max(max_depth_m over land classes) = max(pedestrian_adult 0.5, truck_rescue 0.5, suv_pickup 0.4, sedan_car
+    0.3, pedestrian_child_elderly 0.25, scooter 0.21) = 0.5 (derived within this file, no external source).
+  selection: 'min_depth_m = the highest max_depth_m of any land class here (0.5 m: adult, truck proxy), i.e. beyond it no land class
+    is rated passable. mandatory_above_m = 1.2 m, the still-water depth above which no source accepts wading even for adults. boat_only_if_dv_above_m2s
+    = 1.2, above which Cox et al. rate flow "extreme hazard, dangerous to all".'
+  evidence:
+  - field: mandatory_above_m
+    value: 1.2
+    source_id: wrl_2014_07
+    locator: p.3 (SCARM 2000 App. J) and p.17 (Cox et al. 2010)
+    statement: Wading by able-bodied adults "becomes difficult and dangerous when the depth of still water exceeds 1.2 m"; adults' maximum
+      depth limit 1.2 m.
+    kind: verbatim
+  - field: mandatory_above_m
+    value: 1.2
+    source_id: aidr_guideline_7_3
+    locator: Table 2, H3 -> H4
+    statement: H3 limit D = 1.2 m; H4 (D <= 2.0 m) "Unsafe for vehicles and people"; H5/H6 add building damage (D*V > 1.0, > 4.0 m2/s).
+    kind: verbatim
+  - field: boat_only_if_dv_above_m2s
+    value: 1.2
+    source_id: wrl_2014_07
+    locator: Table 4-1 (Cox et al. 2010)
+    statement: 'D x V > 1.2 m2/s: "Extreme Hazard; Dangerous to all" for adults and children.'
+    kind: verbatim
+  note: Between min_depth_m and mandatory_above_m only trained rescuers (D x V <= 0.8 m2/s working limit, Cox et al.) or high vehicles
+    with local approval should proceed; for the tool output both ranges mean "boat recommended / boat required".
+  source_ids:
+  - wrl_2014_07
+  - aidr_guideline_7_3
+  source_urls:
+  - https://knowledge.aidr.org.au/media/2334/wrl-flood-hazard-techinical-report-september-2014.pdf
+  - https://knowledge.aidr.org.au/media/1891/guideline-7-3-technical-flood-risk-management.pdf
+reference_tables:
+  arr_aidr_combined_hazard:
+    source_id: aidr_guideline_7_3
+    locator: Tables 1 and 2 (after Smith and Wasko 2012; Smith et al. 2014)
+    rows:
+    - cls: H1
+      description: Generally safe for vehicles, people and buildings.
+      dv_limit_m2s: 0.3
+      depth_limit_m: 0.3
+      velocity_limit_ms: 2.0
+    - cls: H2
+      description: Unsafe for small vehicles.
+      dv_limit_m2s: 0.6
+      depth_limit_m: 0.5
+      velocity_limit_ms: 2.0
+    - cls: H3
+      description: Unsafe for vehicles, children and the elderly.
+      dv_limit_m2s: 0.6
+      depth_limit_m: 1.2
+      velocity_limit_ms: 2.0
+    - cls: H4
+      description: Unsafe for vehicles and people.
+      dv_limit_m2s: 1.0
+      depth_limit_m: 2.0
+      velocity_limit_ms: 2.0
+    - cls: H5
+      description: Unsafe for vehicles and people. All building types vulnerable to structural damage. Some less robust building types
+        vulnerable to failure.
+      dv_limit_m2s: 4.0
+      depth_limit_m: 4.0
+      velocity_limit_ms: 4.0
+    - cls: H6
+      description: Unsafe for vehicles and people. All building types considered vulnerable to failure.
+      dv_limit_m2s: '> 4.0'
+      depth_limit_m: null
+      velocity_limit_ms: null
+  vehicle_stability_shand_2011:
+    source_id: wrl_2014_07
+    locator: Table 4-2 (draft interim criteria, stationary vehicles)
+    rows:
+    - cls: small_passenger
+      length_m: < 4.3
+      kerb_weight_kg: < 1250
+      ground_clearance_m: < 0.12
+      still_water_depth_m: 0.3
+      depth_at_3ms_m: 0.1
+      max_velocity_ms: 3.0
+      dv_limit_m2s: 0.3
+    - cls: large_passenger
+      length_m: '> 4.3'
+      kerb_weight_kg: '> 1250'
+      ground_clearance_m: '> 0.12'
+      still_water_depth_m: 0.4
+      depth_at_3ms_m: 0.15
+      max_velocity_ms: 3.0
+      dv_limit_m2s: 0.45
+    - cls: large_4wd
+      length_m: '> 4.5'
+      kerb_weight_kg: '> 2000'
+      ground_clearance_m: '> 0.22'
+      still_water_depth_m: 0.5
+      depth_at_3ms_m: 0.2
+      max_velocity_ms: 3.0
+      dv_limit_m2s: 0.6
+  people_stability_cox_2010:
+    source_id: wrl_2014_07
+    locator: p.17 quoting Cox et al. 2010 (and Table 4-1)
+    adults_height_mass_product_above_50_mkg:
+    - dv_m2s: < 0.6
+      hazard: Low hazard (max depth 1.2 m; max velocity 3.0 m/s at D < 0.3 m)
+    - dv_m2s: 0.6 - 0.8
+      hazard: Moderate hazard; dangerous to some; 0.8 is the working limit for trained safety workers or experienced, well-equipped
+        persons
+    - dv_m2s: 0.8 - 1.2
+      hazard: Significant hazard; dangerous to most; 1.2 is the upper limit of stability seen in most investigations
+    - dv_m2s: '> 1.2'
+      hazard: Extreme hazard; dangerous to all; should not be considered safe for standing or traversing
+    children_height_mass_product_25_to_50_mkg:
+    - dv_m2s: < 0.4
+      hazard: Low hazard (max depth 0.5 m regardless of velocity; max velocity 3.0 m/s at D < 0.2 m)
+    - dv_m2s: 0.4 - 0.6
+      hazard: Significant hazard; dangerous to most (Table 4-1)
+    - dv_m2s: 0.8 - 1.2 and above
+      hazard: Extreme hazard; dangerous to all (Table 4-1; the 0.6-0.8 children cell is merged in the extracted PDF text and is not
+        reproduced)
+    notes:
+    - More vulnerable community members such as infants and the elderly should avoid exposure to floodwater under all conditions (Table
+      4-1 note 2).
+  defra_fd2321:
+    source_id: defra_fd2321_tr2
+    locator: Section 4 Tables 4.1-4.2
+    corroborating_source_ids:
+    - defra_fd2321_tr1
+    formula: HR = d x (v + 0.5) + DF
+    debris_factor:
+      urban:
+        d_0_to_0_25: 0
+        d_0_25_to_0_75: 1
+        d_above_0_75_or_v_above_2: 1
+      woodland:
+        d_0_to_0_25: 0
+        d_0_25_to_0_75: 0.5
+        d_above_0_75_or_v_above_2: 1
+      pasture_arable:
+        d_0_to_0_25: 0
+        d_0_25_to_0_75: 0
+        d_above_0_75_or_v_above_2: 0.5
+    classes:
+    - hr: < 0.75
+      degree: Low
+      description: Caution
+    - hr: 0.75 - 1.25
+      degree: Moderate
+      description: Dangerous for some (i.e. children)
+    - hr: 1.25 - 2.5
+      degree: Significant
+      description: Dangerous for most people
+    - hr: '> 2.5'
+      degree: Extreme
+      description: Dangerous for all
+    note: Designed for floodplain mapping, not street wading; used here only as a cross-check and to bound still-water depth for people
+      in urban settings.
+  nws_statements:
+    source_ids:
+    - nws_tadd_tsa
+    - nws_tadd_safety
+    statements:
+    - 6 inches (0.15 m) of moving water can make you fall / knock over an adult.
+    - 6 inches of water reaches the bottom of most passenger cars (loss of control, possible stalling).
+    - '12 inches (0.30 m): float many vehicles (tsa page); carry away most cars in rushing water (national page).'
+    - 2 feet (0.61 m) of rushing water carries away most vehicles incl. SUVs and pickups.
+  govuk_statements:
+    source_id: govuk_flash_flooding
+    statements:
+    - 15 cm (6 in) can knock a person over or conceal hazards.
+    - 60 cm (2 ft) can carry away a vehicle of any size.
+  vicses_statements:
+    source_id: vicses_15_to_float
+    statements:
+    - 'Moving water at 3.6 km/h: small car (1.05 t) 15 cm; mid-sized car (1.5 t) 30 cm; four-wheel drive (2.5 t) 45 cm.'
+limitations:
+- Depth from a photo has an error of several centimetres; thresholds are small enough that a +/- 5 cm error can change the state. Report
+  the interval, not a point.
+- Velocity cannot be measured from one photo. Use max_depth_flowing_m whenever there is any sign of current.
+- The Australian vehicle criteria (Shand et al. 2011) are described by their authors as draft interim values; they apply to stationary
+  vehicles in a flow, not to moving vehicles.
+- No source read gives a depth rule specific to Vietnamese motorbikes or to Vietnamese army/rescue trucks.
+- ford.com.vn blocked automated access (HTTP 403) and the Australian Rainfall and Runoff Book 6 PDF returned 403; the Ford ratings and
+  ARR classes are taken from secondary/mirror documents named in the sources.
+- Hazards below the waterline (open manholes, collapsed road, debris) are not modelled and make every threshold less conservative than
+  it looks.
+sources:
+- id: nws_tadd_tsa
+  title: Turn Around Don't Drown (NWS Tulsa hydrology page)
+  publisher: US National Weather Service / NOAA
+  url: https://www.weather.gov/tsa/hydro_tadd
+  type: government_guidance
+  reliability: primary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: 'Wording on this page: "Six inches of moving water can make you fall"; "Six inches of water will reach the bottom of most passenger
+    cars causing loss of control and possible stalling"; "A foot of water will float many vehicles"; "Two feet of rushing water can
+    carry away most vehicles" incl. SUVs and pickups. Matches the 6 in / 12 in / 2 ft wording in the project brief.'
+- id: nws_tadd_safety
+  title: Turn Around Don't Drown (NWS national flood safety page)
+  publisher: US National Weather Service / NOAA
+  url: https://www.weather.gov/safety/flood-turn-around-dont-drown
+  type: government_guidance
+  reliability: primary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: 'Current wording: "A mere 6 inches of fast-moving flood water can knock over an adult"; "just 12 inches of rushing water to
+    carry away most cars"; "just 2 feet of rushing water can carry away SUVs and trucks". Addresses moving water only; gives no still-water
+    thresholds.'
+- id: govuk_flash_flooding
+  title: Flash flooding (UK government guidance)
+  publisher: GOV.UK / Environment Agency
+  url: https://www.gov.uk/guidance/flash-flooding
+  type: government_guidance
+  reliability: primary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: '"Shallow flood water (around 15cm or 6 inches) that does not look dangerous can knock a person over or conceal hazards." "It
+    only takes around 60cm (2 feet) of water to carry away a vehicle of any size." Advice: do not walk or drive through flood water.'
+- id: vicses_15_to_float
+  title: 15 to float - your car's float point
+  publisher: Victoria State Emergency Service (Australia)
+  url: https://www.ses.vic.gov.au/media/campaigns/15-to-float
+  type: government_guidance
+  reliability: primary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: 'Moving water at 3.6 km/h (1.0 m/s): small car 1.05 t moved by 15 cm; mid-sized car 1.5 t by 30 cm; four-wheel drive 2.5 t by
+    45 cm. States a small car can start to float in 15 cm (UNSW float-tank test).'
+- id: aidr_guideline_7_3
+  title: 'Technical flood risk management guideline: Flood hazard (Guideline 7-3), Tables 1 and 2'
+  publisher: Australian Institute for Disaster Resilience (AIDR)
+  url: https://knowledge.aidr.org.au/media/1891/guideline-7-3-technical-flood-risk-management.pdf
+  type: national_guideline
+  reliability: primary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: Combined hazard curves H1-H6 (after Smith and Wasko 2012; Smith et al. 2014). The same classes appear in Australian Rainfall
+    and Runoff 2019 Book 6 (not read directly; ARR People and Vehicles stability PDF returned HTTP 403).
+- id: wrl_2014_07
+  title: Flood Hazard, WRL Technical Report 2014/07 (Smith, Davey and Cox), s.4 people and vehicle stability, Tables 4-1 and 4-2
+  publisher: UNSW Water Research Laboratory, for Australian Rainfall and Runoff
+  url: https://knowledge.aidr.org.au/media/2334/wrl-flood-hazard-techinical-report-september-2014.pdf
+  type: technical_report
+  reliability: primary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: Reproduces Cox et al. (2010) people criteria, Shand et al. (2011) vehicle criteria and SCARM (2000) Appendix J statements. Shand
+    et al. themselves call the vehicle criteria draft/interim and note no data for commercial and emergency vehicles.
+- id: defra_fd2321_tr2
+  title: Flood Risks to People Phase 2, Guidance Document FD2321/TR2 (Table 4.1 debris factors, Table 4.2 hazard classes)
+  publisher: DEFRA / Environment Agency (UK)
+  url: https://assets.publishing.service.gov.uk/media/602bbc3de90e07055f646148/Flood_risks_to_people_-_Phase_2_Guidance_Document_Technical_report.pdf
+  type: national_guidance
+  reliability: primary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: 'HR = d x (v + 0.5) + DF. Table 4.2: <0.75 Low (caution); 0.75-1.25 Moderate, dangerous for some (i.e. children); 1.25-2.5 Significant,
+    dangerous for most people; >2.5 Extreme, dangerous for all. (Its Figure 2.1 on another page uses 0.75-1.50 / 1.50-2.50; the two
+    pages are inconsistent.)'
+- id: defra_fd2321_tr1
+  title: Flood Risks to People Phase 2, Methodology Technical Report FD2321/TR1 (Fig. 3.2 hazard matrix, 2006)
+  publisher: DEFRA / Environment Agency (UK)
+  url: https://assets.publishing.service.gov.uk/media/602bbc768fa8f50383c41f80/Flood_risks_to_people_-_Phase_2_The_flood_risks_to_people_methodology_technical_report.pdf
+  type: national_guidance
+  reliability: primary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: Class bands 0.75 / 1.25 / 2.5 (danger for some / most / all), matching TR2 Table 4.2.
+- id: honda_vn_faq
+  title: Khi sử dụng xe trong mùa mưa cần lưu ý những vấn đề gì? (FAQ)
+  publisher: Honda Việt Nam
+  url: https://www.honda.com.vn/cau-hoi-thuong-gap?category=&category_child=tu-van-su-dung-xe-may
+  type: manufacturer_guidance
+  reliability: primary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: 'No depth limit is given. Advice: if the engine stalls in floodwater do not restart it (water may be in the cylinder), move
+    the bike out of the flooded area, change engine oil if water got in; a second FAQ says to take the bike to a HEAD dealer to check
+    final-drive oil after riding through flooded sections.'
+- id: tuoitre_danang_handbook
+  title: Mùa mưa tới, chạy ô tô qua đường ngập nước phải lưu ý gì? (reporting the Đà Nẵng Department of Transport handbook, Oct 2023)
+  publisher: Tuổi Trẻ
+  url: https://tuoitre.vn/mua-mua-toi-chay-o-to-qua-duong-ngap-nuoc-phai-luu-y-gi-20231001155749696.htm
+  type: press_on_government_guidance
+  reliability: secondary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: 'Quotes the Sở GTVT Đà Nẵng handbook rule: "độ sâu ngập nước không vượt qua tâm bánh (trục bánh xe)" and that each vehicle has
+    a different safe level. Article does not say whether motorcycles are covered; handbook itself not retrieved.'
+- id: kia_owner_manual_ab_2023
+  title: Driving in flooded areas (Kia owner's manual web help, model code "AB" 2023, en_GB)
+  publisher: Kia
+  url: https://ownersmanual.kia.com/full_webhelp/AB/2023/en_GB/topics/chapter6_8_6.html
+  type: manufacturer_guidance
+  reliability: primary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: '"Avoid driving through flooded areas unless you are sure the water is no higher than the bottom of the wheel hub." The page
+    does not name the model; code AB in the URL is, to our knowledge, the Picanto (Morning) generation, which is unverified.'
+- id: vnexpress_khi_xe_may_loi_nuoc
+  title: Khi xe máy lội nước
+  publisher: VnExpress
+  url: https://vnexpress.net/khi-xe-may-loi-nuoc-1982877.html
+  type: press
+  reliability: secondary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: 'Qualitative only: bikes with high engine, spark plug and air-filter housing (just under the seat) do best; new step-through
+    models survive water "gần yên xe" (nearly to seat); water can enter via exhaust and crankcase vent. No cm figures.'
+- id: ford_vn_flood_advice
+  title: Ford chia sẻ cách vượt qua những cung đường nội đô ngập nước (reporting Ford Việt Nam guidance)
+  publisher: Doanh nghiệp & Hội nhập
+  url: https://doanhnghiephoinhap.vn/ford-chia-se-cach-vuot-qua-nhung-cung-duong-noi-do-ngap-nuoc-46548.html
+  type: press_on_manufacturer_guidance
+  reliability: secondary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: 'Reports: only the Ranger Hi-rider can wade to 800 mm; Ranger 4x2 (raised) and 4x4 must stay below the front wheel-arch cladding;
+    standard Ranger 4x2 must not have the whole tyre covered; keep about 7 km/h. ford.com.vn itself returned HTTP 403, so the Ford primary
+    spec was not read.'
+- id: thuonghieucongluan_xpander_cross
+  title: Ra mắt xe Mitsubishi Xpander Cross tại Việt Nam (16 Jul 2020)
+  publisher: Thương hiệu & Công luận
+  url: https://thuonghieucongluan.com.vn/ra-mat-xe-mitsubishi-xpander-cross-tai-viet-nam-voi-gia-670-trieu-dong-a107750.html
+  type: press_on_manufacturer_claim
+  reliability: secondary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: '"Xpander Cross có khoảng sáng gầm lên tới 225 mm ... cho khả năng lội nước đến 400 mm", attributed to Mitsubishi Motors Việt
+    Nam. The Xpander Cross is a different trim from the Xpander on mitsubishi-motors.com.vn; that page gives no wading depth.'
+- id: honda_vn_wave_alpha_110
+  title: Wave Alpha 110 - Thông số kỹ thuật (spec table)
+  publisher: Honda Việt Nam
+  url: https://www.honda.com.vn/xe-may/san-pham/wave-alpha-110?category=1
+  type: manufacturer_spec
+  reliability: primary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: 'Fields read from page HTML: Dài x Rộng x Cao, Khoảng cách trục bánh xe, Độ cao yên, Khoảng sáng gầm xe, Kích cỡ lốp.'
+- id: honda_vn_lead_abs
+  title: LEAD ABS - Thông số kỹ thuật (spec table)
+  publisher: Honda Việt Nam
+  url: https://www.honda.com.vn/xe-may/san-pham/lead-abs?category=2
+  type: manufacturer_spec
+  reliability: primary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+- id: wikipedia_tire_code
+  title: Tire code (overall diameter formula)
+  publisher: Wikipedia
+  url: https://en.wikipedia.org/wiki/Tire_code
+  type: encyclopedia
+  reliability: tertiary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: 'States: for a size T/A_W overall diameter (mm) = (2xTxA/100) + (Wx25.4); worked example 195/55R16 = 621 mm.'
+- id: vnexpress_vios_2023
+  title: Toyota Vios 2023 E CVT 3AB - Thông số kỹ thuật (identical for E MT, E CVT and G CVT)
+  publisher: VnExpress (v-car spec database)
+  url: https://vnexpress.net/oto-xe-may/v-car/phien-ban-xe/toyota-vios-2023-e-cvt-3ab-673
+  type: press_spec_database
+  reliability: secondary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: Used because Toyota Việt Nam spec section (https://www.toyota.com.vn/vios) renders empty and its catalogue PDF is image-only.
+    Values match the bonbanh cross-check.
+- id: vnexpress_accent_2024_cao_cap
+  title: Hyundai Accent 2024 1.5 AT Cao cấp - Thông số kỹ thuật
+  publisher: VnExpress (v-car spec database)
+  url: https://vnexpress.net/oto-xe-may/v-car/phien-ban-xe/hyundai-accent-2024-1-5-at-cao-cap-877
+  type: press_spec_database
+  reliability: secondary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: Hyundai Việt Nam official page was not retrievable (404 at hyundai.com/vn/vi/oto/accent). Page lists 205/55 R16 for the Cao
+    cấp trim and 185/65 R15 for the other trims.
+- id: kia_vn_new_morning
+  title: Kia New Morning - chi tiết sản phẩm / thông số
+  publisher: Kia Việt Nam (THACO AUTO)
+  url: https://kiavietnam.com.vn/chi-tiet-san-pham/new-morning-2025
+  type: manufacturer_spec
+  reliability: primary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+- id: mitsubishi_vn_new_xpander
+  title: New Xpander - Thông số kỹ thuật (AT Premium / AT / MT)
+  publisher: Mitsubishi Motors Việt Nam
+  url: https://www.mitsubishi-motors.com.vn/newxpander
+  type: manufacturer_spec
+  reliability: primary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+- id: vnexpress_ranger_2026_wildtrak
+  title: Ford Ranger 2026 Wildtrak 2.0 4x4 AT - Thông số kỹ thuật
+  publisher: VnExpress (v-car spec database)
+  url: https://vnexpress.net/oto-xe-may/v-car/phien-ban-xe/ford-ranger-2026-wildtrak-2-0-4x4-at-1294
+  type: press_spec_database
+  reliability: secondary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: ford.com.vn returned HTTP 403 to automated access, so no Ford Việt Nam spec page was read. The page does not label the block
+    by variant; mapping to Wildtrak 2.0 4x4 AT is by engine and tyre.
+unverified_summary:
+- class_id: pedestrian_child_elderly
+  fields: *id001
+  reason: No child- or elderly-specific flowing-water figure beyond the Cox et al. laboratory value (D < 0.2 m at 3 m/s, children only).
+    0.15 m is the general-person value (GOV.UK / NWS) applied as a conservative cap.
+- class_id: scooter
+  fields: *id002
+  reason: 'Neither Honda Việt Nam, Yamaha Việt Nam, nor any Vietnamese government source read gives a numeric safe depth, stall depth,
+    exhaust height or air-intake height for motorbikes. max_depth_m is DERIVED by applying the "water not above the wheel hub/axle"
+    rule (Sở GTVT Đà Nẵng handbook, written for cars; Kia owner manual) to the smallest wheel hub height among the five reference motorbikes
+    (Honda LEAD rear 100/90-10: 0.217 m, rounded down to 0.21). caution_depth_m is the smallest published ground clearance (Wave Alpha
+    0.134 m); that it marks the onset of engine/exhaust wetting is our inference, not a source statement. max_depth_flowing_m reuses
+    the lowest cited moving-water figure (15 cm) because no motorbike figure exists.'
+- class_id: suv_pickup
+  fields: *id003
+  reason: caution_depth_m is the smallest published ground clearance in the class (Xpander 0.225 m); treating it as the onset of underbody
+    wetting is our inference. Manufacturer wading depths come from press reports, not from Ford/Mitsubishi spec sheets (ford.com.vn
+    returned 403; the Mitsubishi Xpander spec page lists no wading depth).
+- class_id: truck_rescue
+  fields: *id004
+  reason: 'No wading/fording depth for any Vietnamese army or rescue truck was found (Wikipedia Ural-4320 and KamAZ-4310 pages give
+    no fording depth; Vietnam is not listed as operator on those pages). Shand et al. (2011) state they have no data for "small and
+    large commercial vehicles and emergency service vehicles". Values are PROXIES: the heaviest classes in the cited criteria (Shand
+    large 4WD still 0.5 m, D.V <= 0.6; VicSES 4WD moving 0.45 m).'

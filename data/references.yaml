@@ -1,0 +1,3030 @@
+# Floodline reference objects (generated 2026-10-27). Every value has source_ids resolving to the sources list below.
+# Vietnamese names (*_vi) are UTF-8. Null + unverified: true means the value could not be sourced and was deliberately not guessed.
+schema_version: 1
+generated_on: '2026-10-27'
+project: Floodline
+purpose: 'Reference objects of known size for estimating street floodwater depth from photos (fraction of the object above the waterline).
+  Every number carries source_ids; anything not sourced is null with unverified: true and a reason.'
+conventions:
+  units: metres unless a key ends in _mm
+  height_total_m: typical / low / high. For single-model objects low = high = typical (no trim variation published). For generic objects
+    typical = median and low/high = min/max over listed models.
+  scale_dimensions: Horizontal dimensions that stay visible when the lower part of the object is under water.
+  landmarks: height_m is measured from the road surface to the feature. basis = official_spec | derived_from_tyre_size | derived_from_proportion
+    | national_standard_minimum | definition | not_published.
+  tyre_outer_diameter_formula: outer_diameter_mm = rim_in*25.4 + 2*section_width_mm*aspect_ratio_pct/100 (Wikipedia Tire code); hub_height
+    = outer_diameter/2, nominal unloaded value (loaded radius is somewhat smaller)
+  tyre_size_reading: 'Motorcycle "W/A-R" (e.g. 80/90-17): W = section width mm, A = aspect ratio %, R = rim in. The same formula is
+    applied (reading per Wikipedia Motorcycle tire; the article does not show the hyphen notation).'
+  unverified_policy: 'If a number could not be sourced it is null (never guessed) and flagged unverified: true with reason. Values read
+    from secondary/tertiary sources are marked by reliability in the sources list.'
+  suitability_scale: high = dimensions published and tightly controlled; medium = usable with a wider range or only some views; low
+    = wide variation or unsourced typical value, use only as a secondary cue; unsuitable = do not use.
+  threshold_class: Links each vehicle/person to a class in thresholds.yaml.
+sources:
+- id: honda_vn_wave_alpha_110
+  title: Wave Alpha 110 - Thông số kỹ thuật (spec table)
+  publisher: Honda Việt Nam
+  url: https://www.honda.com.vn/xe-may/san-pham/wave-alpha-110?category=1
+  type: manufacturer_spec
+  reliability: primary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: 'Fields read from page HTML: Dài x Rộng x Cao, Khoảng cách trục bánh xe, Độ cao yên, Khoảng sáng gầm xe, Kích cỡ lốp.'
+- id: honda_vn_vision
+  title: Vision - Thông số kỹ thuật (spec table)
+  publisher: Honda Việt Nam
+  url: https://www.honda.com.vn/xe-may/san-pham/vision?category=2
+  type: manufacturer_spec
+  reliability: primary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: One spec table for all four versions (Tiêu chuẩn, Đặc biệt, Cao cấp, Thể thao). Ground clearance 175 mm is the page value; it
+    is an outlier versus the other Honda scooters here (134-142 mm).
+- id: honda_vn_air_blade_160_125
+  title: Air Blade 160/125 - Thông số kỹ thuật (spec table)
+  publisher: Honda Việt Nam
+  url: https://www.honda.com.vn/xe-may/san-pham/air-blade-160125?category=2
+  type: manufacturer_spec
+  reliability: primary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: One spec table shared by the 125 and 160 versions; version-specific values would be in the downloadable catalogue (not read).
+- id: honda_vn_lead_abs
+  title: LEAD ABS - Thông số kỹ thuật (spec table)
+  publisher: Honda Việt Nam
+  url: https://www.honda.com.vn/xe-may/san-pham/lead-abs?category=2
+  type: manufacturer_spec
+  reliability: primary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+- id: yamaha_vn_exciter_155_std
+  title: Exciter 155 VVA phiên bản tiêu chuẩn - Thông số kỹ thuật
+  publisher: Yamaha Motor Việt Nam
+  url: https://yamaha-motor.com.vn/xe/exciter-155-vva-phien-ban-tieu-chuan-mau-moi-b5vj/
+  type: manufacturer_spec
+  reliability: primary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: Standard (non-SP/Monster) version; other Exciter versions were not compared.
+- id: vnexpress_vios_2023
+  title: Toyota Vios 2023 E CVT 3AB - Thông số kỹ thuật (identical for E MT, E CVT and G CVT)
+  publisher: VnExpress (v-car spec database)
+  url: https://vnexpress.net/oto-xe-may/v-car/phien-ban-xe/toyota-vios-2023-e-cvt-3ab-673
+  type: press_spec_database
+  reliability: secondary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: Used because Toyota Việt Nam spec section (https://www.toyota.com.vn/vios) renders empty and its catalogue PDF is image-only.
+    Values match the bonbanh cross-check.
+- id: bonbanh_vios_g_cvt_2023
+  title: Toyota Vios G 1.5 CVT 2023 - Thông số kỹ thuật
+  publisher: bonbanh.com (used-car marketplace)
+  url: https://bonbanh.com/chi-tiet-thong-so-ky-thuat-xe-toyota-vios-g-1.5-cvt-nam-2023-15075
+  type: marketplace_spec
+  reliability: tertiary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: Cross-check only.
+- id: vnexpress_accent_2024_cao_cap
+  title: Hyundai Accent 2024 1.5 AT Cao cấp - Thông số kỹ thuật
+  publisher: VnExpress (v-car spec database)
+  url: https://vnexpress.net/oto-xe-may/v-car/phien-ban-xe/hyundai-accent-2024-1-5-at-cao-cap-877
+  type: press_spec_database
+  reliability: secondary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: Hyundai Việt Nam official page was not retrievable (404 at hyundai.com/vn/vi/oto/accent). Page lists 205/55 R16 for the Cao
+    cấp trim and 185/65 R15 for the other trims.
+- id: vnreview_accent_2024
+  title: Hyundai Accent 2024 thông số, giá bán
+  publisher: VnReview
+  url: https://vnreview.vn/threads/hyundai-accent-2024-thong-so-gia-ban-va-tat-ca-nhung-thong-tin-can-biet.42257
+  type: press
+  reliability: tertiary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: Cross-check of dimensions, wheelbase, ground clearance.
+- id: kia_vn_new_morning
+  title: Kia New Morning - chi tiết sản phẩm / thông số
+  publisher: Kia Việt Nam (THACO AUTO)
+  url: https://kiavietnam.com.vn/chi-tiet-san-pham/new-morning-2025
+  type: manufacturer_spec
+  reliability: primary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+- id: mitsubishi_vn_new_xpander
+  title: New Xpander - Thông số kỹ thuật (AT Premium / AT / MT)
+  publisher: Mitsubishi Motors Việt Nam
+  url: https://www.mitsubishi-motors.com.vn/newxpander
+  type: manufacturer_spec
+  reliability: primary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+- id: vnexpress_ranger_2026_wildtrak
+  title: Ford Ranger 2026 Wildtrak 2.0 4x4 AT - Thông số kỹ thuật
+  publisher: VnExpress (v-car spec database)
+  url: https://vnexpress.net/oto-xe-may/v-car/phien-ban-xe/ford-ranger-2026-wildtrak-2-0-4x4-at-1294
+  type: press_spec_database
+  reliability: secondary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: ford.com.vn returned HTTP 403 to automated access, so no Ford Việt Nam spec page was read. The page does not label the block
+    by variant; mapping to Wildtrak 2.0 4x4 AT is by engine and tyre.
+- id: oto_com_vn_ranger_2025
+  title: Thông số kỹ thuật Ford Ranger 2025
+  publisher: Oto.com.vn (republishing Thanh Niên Việt)
+  url: https://oto.com.vn/thong-so-ky-thuat/ford-ranger-2025-articleid-0gfpb6f
+  type: press
+  reliability: secondary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: Lists two dimension sets (5,362x1,918x1,875 and 5,370x1,918x1,884), one ground clearance (235 mm) and three tyre sizes without
+    a clear per-variant mapping. No wading depth.
+- id: wikipedia_tire_code
+  title: Tire code (overall diameter formula)
+  publisher: Wikipedia
+  url: https://en.wikipedia.org/wiki/Tire_code
+  type: encyclopedia
+  reliability: tertiary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: 'States: for a size T/A_W overall diameter (mm) = (2xTxA/100) + (Wx25.4); worked example 195/55R16 = 621 mm.'
+- id: wikipedia_motorcycle_tire
+  title: 'Motorcycle tire (size marking: width / aspect ratio % / rim diameter)'
+  publisher: Wikipedia
+  url: https://en.wikipedia.org/wiki/Motorcycle_tire
+  type: encyclopedia
+  reliability: tertiary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: Defines width (mm), aspect ratio (sidewall/width %) and rim diameter (in). Applying it to "80/90-17" is our reading; the article
+    does not show that notation.
+- id: winter_fig_4_1
+  title: Winter, Biomechanics and Motor Control of Human Movement, Fig. 4.1 "Body segment lengths expressed as a fraction of body height
+    H" (after Drillis & Contini, 1966)
+  publisher: D. A. Winter / Wiley (excerpt hosted by UIUC ME481)
+  url: https://courses.grainger.illinois.edu/me481/sp2021/Anthro-Winter.pdf
+  type: textbook_figure
+  reliability: secondary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: Values were read from the figure image (rendered PDF). The original Drillis & Contini report was not retrieved. 0.720H is drawn
+    without a text label in the figure.
+- id: nin_2019_2020_sggp
+  title: Sau 10 năm, chiều cao trung bình của nam thanh niên Việt Nam tăng 3,7 cm
+  publisher: Báo SGGP, reporting Viện Dinh dưỡng quốc gia (NIN) General Nutrition Survey 2019-2020
+  url: https://www.sggp.org.vn/sau-10-nam-chieu-cao-trung-binh-cua-nam-thanh-nien-viet-nam-tang-37-cm-post590610.html
+  type: press_on_survey
+  reliability: secondary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: 'Age 18: men 168.1 cm, women 156.2 cm (2020); 2010 values 164.4 / 154.8 cm. Sample 22,400 households, 25 provinces. NIN report
+    itself not retrieved.'
+- id: vnexpress_en_height_2026
+  title: Vietnamese men stand average 3 cm below global height standard
+  publisher: VnExpress International
+  url: https://e.vnexpress.net/news/news/vietnamese-men-stand-average-3-cm-below-global-height-standard-5109035.html
+  type: press_on_survey
+  reliability: secondary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: 'Second press report of the same 2019-2020 National Nutrition Survey (NIN and Statistics Department): 168.1 cm and 156.2 cm.'
+- id: dtinews_ncdrisc_height
+  title: Vietnamese average adult height (NCD Risk Factor Collaboration database 2020, as reported)
+  publisher: Dân Trí International
+  url: https://dtinews.dantri.com.vn/print/20230614084704277.htm
+  type: press_on_database
+  reliability: tertiary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: 'All-adult means: men 164.44 cm, women 153.59 cm (older birth cohorts included, hence lower than the NIN age-18 values). NCD-RisC
+    dataset itself not read.'
+- id: vnras_hanoi_2019
+  title: Thực trạng dinh dưỡng của thanh niên 18 tuổi tại Đống Đa và Nam Từ Liêm, Hà Nội, 2019
+  publisher: Vietnam Medical Journal (Lê Thị Hiên, Nguyễn Quang Dũng)
+  url: https://vnras.com/thuc-trang-dinh-duong-cua-thanh-nien-18-tuoi-tai-hai-quan-dong-da-va-nam-tu-liem-ha-noi-nam-2019/
+  type: journal_abstract
+  reliability: secondary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: 'Local (Hanoi) sample of 906 18-year-olds: men 170.2 +/- 5.5 cm, women 159.2 +/- 4.9 cm. Used only for the spread (SD), not
+    for the mean.'
+- id: tcvn_4451_2012
+  title: TCVN 4451:2012 Nhà ở - Nguyên tắc cơ bản để thiết kế
+  publisher: Bộ Khoa học và Công nghệ (text hosted by Thư viện Pháp luật)
+  url: https://cdn.thuvienphapluat.vn/uploads/tintuc/2024/09/18/TCVN4451_2012_908347.doc
+  type: national_standard
+  reliability: primary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: 'Table 4: minimum clear width of door on escape routes 0.80 m. Table 4 note 3: "Các cửa đi trên lối thoát nạn không được nhỏ
+    hơn 2,0 m" (read as clear height; the sentence does not name the dimension).'
+- id: qcvn_06_2022_luatduonggia
+  title: QCVN 06:2022/BXD escape-route door dimensions (as summarised)
+  publisher: luatduonggia.vn (secondary summary of QCVN 06:2022/BXD)
+  url: https://luatduonggia.vn/phap-luat/quy-dinh-loi-thoat-nan-cua-thoat-hiem-phong-chay-chua-chay/
+  type: regulation_summary
+  reliability: tertiary
+  accessed: '2026-10-27'
+  verified_by_direct_read: false
+  note: 'Seen only as a search-result summary: escape exit clear height >= 1.9 m; clear width 0.8 m (1.2 m for larger occupancies).
+    Original QCVN text not read.'
+- id: voh_lo_ban_doors
+  title: Những điều cần biết để tính kích thước cửa chính chuẩn phong thủy
+  publisher: VOH (Đài Tiếng nói Nhân dân TP.HCM)
+  url: https://voh.com.vn/nha/nhung-dieu-can-biet-de-tinh-kich-thuoc-cua-chinh-chuan-phong-thuy-400448.html
+  type: press_practice_guide
+  reliability: tertiary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: 'Lỗ Ban (feng-shui ruler) clear sizes used in building practice: 1-leaf 81 x 212 cm; multi-leaf widths 109/126/153/176/211 cm;
+    with 4.5-6 cm frame 90 x 216.5 / 93 x 218 cm. Not an engineering standard.'
+- id: austdoor_austroll
+  title: Cửa cuốn thép tấm liền AUSTROLL - kích thước tối thiểu/tối đa
+  publisher: Austdoor
+  url: https://austdoor.com/vi/cua-cuon-thep-tam-lien-austroll-pd1.html
+  type: supplier_spec
+  reliability: secondary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: 'Table labelled "HpbxWpb": min 2.5 m x 2.5 m; max 5.0x6.0 (CB), 5.0x5.5 (AP), 5.0x5.0 (TM), 4.5x4.5 (EC). Abbreviations are
+    not defined on the page; read as overall height x width.'
+- id: austdoor_austgrill
+  title: Cửa cuốn khớp thoáng AUSTGRILL - kích thước tối thiểu/tối đa
+  publisher: Austdoor
+  url: https://austdoor.com/vi/cua-cuon-khop-thoang-austgrill-pd3.html
+  type: supplier_spec
+  reliability: secondary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: 'Table labelled "HpbxWpb": min 2.5 x 2.8 m; max 5.0 x 6.0 m.'
+- id: nhomduc_cua_keo
+  title: Kích thước cửa kéo Đài Loan (Fuco)
+  publisher: nhomduc.com.vn (supplier)
+  url: http://nhomduc.com.vn/kich-thuoc-cua-keo-dai-loan.html
+  type: supplier_page
+  reliability: tertiary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: 'Best-fit maximum: length 7 m, height 4 m; clear height deducts 5 cm (channel) and 4 cm (rail).'
+- id: thienphu_cua_keo
+  title: Kích thước cửa kéo Đài Loan (Thiên Phú Door)
+  publisher: Thiên Phú Door (supplier)
+  url: https://cuacuoncuakeo.vn/kich-thuoc-cua-keo-dai-loan.html
+  type: supplier_page
+  reliability: tertiary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: 'Same wording as nhomduc.com.vn: maximum length 7 m, height 4 m. The two pages may share text; treat as one supplier claim,
+    not two independent confirmations.'
+- id: sheldonbrown_tire_sizing
+  title: Tire Sizing Systems (ISO/ETRTO bead seat diameters, approximate outside diameters)
+  publisher: Sheldon Brown
+  url: https://www.sheldonbrown.com/tire-sizing.html
+  type: expert_reference
+  reliability: secondary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: 26 in = ISO 559 mm; 700C = ISO 622 mm; "26 x 2.125 ... very close to 26 inches"; many 26 x 1.75 are 25 5/8 in; narrow 26 in
+    ~24 7/8 in; narrow 700C as small as 660 mm.
+- id: duytan_medium_armchair
+  title: Medium Armchair No.715 (Duy Tân Plastics)
+  publisher: Duy Tân Plastics
+  url: https://duytan.com/en-US/medium-armchair
+  type: manufacturer_spec
+  reliability: primary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: Dimensions 48 x 43 x 65 cm (length x width x height), PP. Seat height is not published.
+- id: tcvn_13592_2022_atld
+  title: TCVN 13592:2022 Đường đô thị - Yêu cầu thiết kế (clauses 9.7.4, 9.7.5)
+  publisher: Bộ Khoa học và Công nghệ (text hosted by atld.vn)
+  url: https://www.atld.vn/law/3304/content
+  type: national_standard
+  reliability: primary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: Current urban-street design standard (Quyết định 2572/QĐ-BKHCN, 2022); the search tool reported it supersedes TCXDVN 104:2007
+    but this was not confirmed in the retrieved text. TCXDVN 104:2007 full text could not be retrieved (host unreachable / 403), so
+    no kerb value from it is used.
+- id: qcvn_41_2019_art16
+  title: QCVN 41:2019/BGTVT Điều 16 - Kích thước của biển báo
+  publisher: Bộ GTVT (text hosted by hethongphapluat.com)
+  url: https://hethongphapluat.com/quy-chuan-ky-thuat-quoc-gia-qcvn-41-2019-bgtvt-ve-bao-hieu-duong-bo/dieu-16
+  type: national_regulation
+  reliability: primary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: 'Urban roads (coefficient 1): circular sign D = 70 cm, octagonal D = 60 cm, triangular side = 70 cm.'
+- id: qcvn_41_2019_art22
+  title: QCVN 41:2019/BGTVT Điều 22 - Độ cao đặt biển và ghép biển
+  publisher: Bộ GTVT (text hosted by hethongphapluat.com)
+  url: https://hethongphapluat.com/quy-chuan-ky-thuat-quoc-gia-qcvn-41-2019-bgtvt-ve-bao-hieu-duong-bo/dieu-22
+  type: national_regulation
+  reliability: primary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: 'Clause 22.2: sign bottom edge to road surface 1.8 m outside built-up areas, 2.0 m inside; pedestrian/non-motorised signs 1.8
+    m; special cases 1.2-5.0 m. Clause 22.3: sign groups 1.7 m / 2.0 m.'
+- id: qcvn_41_2019_art24
+  title: QCVN 41:2019/BGTVT Điều 24 - Quy định về cột biển
+  publisher: Bộ GTVT (text hosted by hethongphapluat.com)
+  url: https://hethongphapluat.com/quy-chuan-ky-thuat-quoc-gia-qcvn-41-2019-bgtvt-ve-bao-hieu-duong-bo/dieu-24
+  type: national_regulation
+  reliability: primary
+  accessed: '2026-10-27'
+  verified_by_direct_read: true
+  note: 'Clause 24.1: sign post minimum cross-section diameter 8 cm (+/- 5 mm). Post height above ground and burial depth are not in
+    the retrieved excerpt.'
+- id: tcvn_5847_2016
+  title: TCVN 5847:2016 Cột điện bê tông cốt thép ly tâm
+  publisher: Bộ Khoa học và Công nghệ (catalogue page)
+  url: https://thuvienphapluat.vn/TCVN/Xay-dung/TCVN-5847-2016-Cot-dien-be-tong-cot-thep-ly-tam-915880.aspx
+  type: national_standard
+  reliability: primary
+  accessed: '2026-10-27'
+  verified_by_direct_read: false
+  note: Only the catalogue summary was seen (replaces TCVN 5847:1994 and 5846:1994; the 1994 scope was 10-20 m poles). The 2016 length/diameter
+    tables were not read.
+objects:
+- id: motorbike_generic_vn
+  category: motorbike
+  name_en: Generic Vietnamese motorbike / scooter (range over the five reference models)
+  name_vi: Xe máy (xe tay ga / xe số) phổ biến
+  sam_prompt: motorbike
+  sam_prompt_alternatives:
+  - scooter
+  - motorcycle
+  threshold_class: scooter
+  suitability: high
+  derivation: typical = median, low/high = min/max over the five official spec sheets in this file (Wave Alpha, Vision, Air Blade, Exciter,
+    Lead). Not a market-share-weighted figure.
+  height_total_m:
+    typical: 1.105
+    low: 1.076
+    high: 1.132
+  scale_dimensions:
+  - id: overall_length
+    view: side
+    typical_m: 1.913
+    low_m: 1.844
+    high_m: 1.975
+    source_ids:
+    - honda_vn_air_blade_160_125
+    - honda_vn_lead_abs
+    - honda_vn_vision
+    - honda_vn_wave_alpha_110
+    - yamaha_vn_exciter_155_std
+    - wikipedia_tire_code
+    - wikipedia_motorcycle_tire
+  - id: wheelbase
+    view: side
+    typical_m: 1.277
+    low_m: 1.224
+    high_m: 1.29
+    source_ids:
+    - honda_vn_air_blade_160_125
+    - honda_vn_lead_abs
+    - honda_vn_vision
+    - honda_vn_wave_alpha_110
+    - yamaha_vn_exciter_155_std
+    - wikipedia_tire_code
+    - wikipedia_motorcycle_tire
+  - id: overall_width
+    view: front_or_rear
+    typical_m: 0.686
+    low_m: 0.665
+    high_m: 0.714
+    source_ids:
+    - honda_vn_air_blade_160_125
+    - honda_vn_lead_abs
+    - honda_vn_vision
+    - honda_vn_wave_alpha_110
+    - yamaha_vn_exciter_155_std
+    - wikipedia_tire_code
+    - wikipedia_motorcycle_tire
+  landmarks:
+  - id: wheel_hub_front
+    name_en: Front wheel hub centre
+    name_vi: Tâm trục bánh trước
+    height_m:
+      typical: 0.275
+      low: 0.233
+      high: 0.288
+    basis: derived_from_tyre_size
+    source_ids:
+    - honda_vn_air_blade_160_125
+    - honda_vn_lead_abs
+    - honda_vn_vision
+    - honda_vn_wave_alpha_110
+    - yamaha_vn_exciter_155_std
+    - wikipedia_tire_code
+    - wikipedia_motorcycle_tire
+  - id: wheel_hub_rear
+    name_en: Rear wheel hub centre
+    name_vi: Tâm trục bánh sau
+    height_m:
+      typical: 0.259
+      low: 0.217
+      high: 0.3
+    basis: derived_from_tyre_size
+    source_ids:
+    - honda_vn_air_blade_160_125
+    - honda_vn_lead_abs
+    - honda_vn_vision
+    - honda_vn_wave_alpha_110
+    - yamaha_vn_exciter_155_std
+    - wikipedia_tire_code
+    - wikipedia_motorcycle_tire
+  - id: ground_clearance
+    name_en: Lowest point of underbody
+    name_vi: Khoảng sáng gầm xe
+    height_m:
+      typical: 0.142
+      low: 0.134
+      high: 0.175
+    basis: official_spec
+    source_ids:
+    - honda_vn_air_blade_160_125
+    - honda_vn_lead_abs
+    - honda_vn_vision
+    - honda_vn_wave_alpha_110
+    - yamaha_vn_exciter_155_std
+    - wikipedia_tire_code
+    - wikipedia_motorcycle_tire
+    note: Vision (0.175 m) is the high outlier; the other four are 0.134-0.150 m.
+  - id: seat_top
+    name_en: Seat top
+    name_vi: Độ cao yên
+    height_m:
+      typical: 0.775
+      low: 0.76
+      high: 0.795
+    basis: official_spec
+    source_ids:
+    - honda_vn_air_blade_160_125
+    - honda_vn_lead_abs
+    - honda_vn_vision
+    - honda_vn_wave_alpha_110
+    - yamaha_vn_exciter_155_std
+    - wikipedia_tire_code
+    - wikipedia_motorcycle_tire
+  - id: overall_top
+    name_en: Top of mirrors / handlebar
+    name_vi: Chiều cao toàn bộ
+    height_m:
+      typical: 1.105
+      low: 1.076
+      high: 1.132
+    basis: official_spec
+    source_ids:
+    - honda_vn_air_blade_160_125
+    - honda_vn_lead_abs
+    - honda_vn_vision
+    - honda_vn_wave_alpha_110
+    - yamaha_vn_exciter_155_std
+    - wikipedia_tire_code
+    - wikipedia_motorcycle_tire
+  - id: footboard_or_footpeg
+    name_en: Footboard / footpeg
+    name_vi: Sàn để chân / gác chân
+    height_m:
+      typical: null
+      low: null
+      high: null
+    basis: not_published
+    source_ids: []
+    unverified: true
+    reason: Not published by the manufacturers.
+  - id: exhaust_outlet
+    name_en: Exhaust outlet
+    name_vi: Cửa ống pô
+    height_m:
+      typical: null
+      low: null
+      high: null
+    basis: not_published
+    source_ids: []
+    unverified: true
+    reason: Not published by the manufacturers.
+  - id: air_intake
+    name_en: Engine air-intake opening
+    name_vi: Cửa hút gió
+    height_m:
+      typical: null
+      low: null
+      high: null
+    basis: not_published
+    source_ids: []
+    unverified: true
+    reason: Not published by the manufacturers.
+  source_ids:
+  - honda_vn_air_blade_160_125
+  - honda_vn_lead_abs
+  - honda_vn_vision
+  - honda_vn_wave_alpha_110
+  - yamaha_vn_exciter_155_std
+  - wikipedia_tire_code
+  - wikipedia_motorcycle_tire
+- id: scooter_honda_wave_alpha
+  category: motorbike
+  name_en: Honda Wave Alpha 110
+  name_vi: Xe số Honda Wave Alpha 110
+  sam_prompt: motorbike
+  sam_prompt_alternatives:
+  - motorcycle
+  - underbone motorbike
+  threshold_class: scooter
+  body_type: underbone (xe số)
+  suitability: high
+  height_total_m:
+    typical: 1.076
+    low: 1.076
+    high: 1.076
+  height_total_definition: Published "Cao" (overall height); reference point (mirror/handlebar) is not stated on the spec page.
+  scale_dimensions:
+  - id: overall_length
+    view: side
+    typical_m: 1.913
+    low_m: 1.913
+    high_m: 1.913
+    source_ids:
+    - honda_vn_wave_alpha_110
+  - id: wheelbase
+    view: side
+    typical_m: 1.224
+    low_m: 1.224
+    high_m: 1.224
+    source_ids:
+    - honda_vn_wave_alpha_110
+    note: Centre-to-centre of wheels; the axle centres are only visible if the water is below hub height.
+  - id: overall_width
+    view: front_or_rear
+    typical_m: 0.689
+    low_m: 0.689
+    high_m: 0.689
+    source_ids:
+    - honda_vn_wave_alpha_110
+  landmarks:
+  - id: wheel_hub_front
+    name_en: Front wheel hub centre
+    name_vi: Tâm trục bánh trước
+    height_m:
+      typical: 0.279
+      low: null
+      high: null
+    basis: derived_from_tyre_size
+    source_ids:
+    - honda_vn_wave_alpha_110
+    - wikipedia_tire_code
+    - wikipedia_motorcycle_tire
+  - id: wheel_hub_rear
+    name_en: Rear wheel hub centre
+    name_vi: Tâm trục bánh sau
+    height_m:
+      typical: 0.288
+      low: null
+      high: null
+    basis: derived_from_tyre_size
+    source_ids:
+    - honda_vn_wave_alpha_110
+    - wikipedia_tire_code
+    - wikipedia_motorcycle_tire
+  - id: ground_clearance
+    name_en: Lowest point of underbody (published ground clearance)
+    name_vi: Khoảng sáng gầm xe
+    height_m:
+      typical: 0.134
+      low: null
+      high: null
+    basis: official_spec
+    source_ids:
+    - honda_vn_wave_alpha_110
+  - id: seat_top
+    name_en: Seat top
+    name_vi: Độ cao yên
+    height_m:
+      typical: 0.77
+      low: null
+      high: null
+    basis: official_spec
+    source_ids:
+    - honda_vn_wave_alpha_110
+  - id: overall_top
+    name_en: Top of mirrors / handlebar (published overall height)
+    name_vi: Chiều cao toàn bộ
+    height_m:
+      typical: 1.076
+      low: null
+      high: null
+    basis: official_spec
+    source_ids:
+    - honda_vn_wave_alpha_110
+  - id: footpeg
+    name_en: Rider footpeg
+    name_vi: Gác chân
+    height_m:
+      typical: null
+      low: null
+      high: null
+    basis: not_published
+    source_ids: []
+    unverified: true
+    reason: Not given on the manufacturer spec page; needs a physical measurement or a dealer drawing.
+  - id: exhaust_outlet
+    name_en: Exhaust outlet / muffler lowest edge
+    name_vi: Cửa ống pô
+    height_m:
+      typical: null
+      low: null
+      high: null
+    basis: not_published
+    source_ids: []
+    unverified: true
+    reason: Exhaust height is not published by Honda Việt Nam or Yamaha Việt Nam in the pages read.
+  - id: air_intake
+    name_en: Engine air-intake opening
+    name_vi: Cửa hút gió
+    height_m:
+      typical: null
+      low: null
+      high: null
+    basis: not_published
+    source_ids: []
+    unverified: true
+    reason: Air-intake height is not published in the pages read.
+  raw_specs:
+    length_mm: 1913
+    width_mm: 689
+    height_mm: 1076
+    wheelbase_mm: 1224
+    seat_height_mm: 770
+    ground_clearance_mm: 134
+    mass: 96 kg (khối lượng bản thân)
+  tyres:
+  - position: front
+    size_as_published: 70/90-17M/C 38P
+    section_width_mm: 70
+    aspect_ratio_pct: 90
+    rim_in: 17
+    sidewall_mm: 63.0
+    outer_diameter_m: 0.558
+    hub_height_m: 0.279
+    source_ids:
+    - honda_vn_wave_alpha_110
+    - wikipedia_tire_code
+    - wikipedia_motorcycle_tire
+  - position: rear
+    size_as_published: 80/90-17M/C 50P
+    section_width_mm: 80
+    aspect_ratio_pct: 90
+    rim_in: 17
+    sidewall_mm: 72.0
+    outer_diameter_m: 0.576
+    hub_height_m: 0.288
+    source_ids:
+    - honda_vn_wave_alpha_110
+    - wikipedia_tire_code
+    - wikipedia_motorcycle_tire
+  tyre_outer_diameter_formula: outer_diameter_mm = rim_in*25.4 + 2*section_width_mm*aspect_ratio_pct/100 (Wikipedia Tire code); hub_height
+    = outer_diameter/2, nominal unloaded value (loaded radius is somewhat smaller)
+  source_ids:
+  - honda_vn_wave_alpha_110
+  - wikipedia_tire_code
+  - wikipedia_motorcycle_tire
+- id: scooter_honda_vision
+  category: motorbike
+  name_en: Honda Vision 110
+  name_vi: Xe tay ga Honda Vision
+  sam_prompt: scooter
+  sam_prompt_alternatives:
+  - motorbike
+  - motorcycle
+  threshold_class: scooter
+  body_type: scooter (xe tay ga)
+  suitability: high
+  height_total_m:
+    typical: 1.126
+    low: 1.126
+    high: 1.126
+  height_total_definition: Published "Cao" (overall height); reference point (mirror/handlebar) is not stated on the spec page.
+  scale_dimensions:
+  - id: overall_length
+    view: side
+    typical_m: 1.925
+    low_m: 1.925
+    high_m: 1.925
+    source_ids:
+    - honda_vn_vision
+  - id: wheelbase
+    view: side
+    typical_m: 1.277
+    low_m: 1.277
+    high_m: 1.277
+    source_ids:
+    - honda_vn_vision
+    note: Centre-to-centre of wheels; the axle centres are only visible if the water is below hub height.
+  - id: overall_width
+    view: front_or_rear
+    typical_m: 0.686
+    low_m: 0.686
+    high_m: 0.686
+    source_ids:
+    - honda_vn_vision
+  landmarks:
+  - id: wheel_hub_front
+    name_en: Front wheel hub centre
+    name_vi: Tâm trục bánh trước
+    height_m:
+      typical: 0.275
+      low: null
+      high: null
+    basis: derived_from_tyre_size
+    source_ids:
+    - honda_vn_vision
+    - wikipedia_tire_code
+    - wikipedia_motorcycle_tire
+  - id: wheel_hub_rear
+    name_en: Rear wheel hub centre
+    name_vi: Tâm trục bánh sau
+    height_m:
+      typical: 0.259
+      low: null
+      high: null
+    basis: derived_from_tyre_size
+    source_ids:
+    - honda_vn_vision
+    - wikipedia_tire_code
+    - wikipedia_motorcycle_tire
+  - id: ground_clearance
+    name_en: Lowest point of underbody (published ground clearance)
+    name_vi: Khoảng sáng gầm xe
+    height_m:
+      typical: 0.175
+      low: null
+      high: null
+    basis: official_spec
+    source_ids:
+    - honda_vn_vision
+  - id: seat_top
+    name_en: Seat top
+    name_vi: Độ cao yên
+    height_m:
+      typical: 0.785
+      low: null
+      high: null
+    basis: official_spec
+    source_ids:
+    - honda_vn_vision
+  - id: overall_top
+    name_en: Top of mirrors / handlebar (published overall height)
+    name_vi: Chiều cao toàn bộ
+    height_m:
+      typical: 1.126
+      low: null
+      high: null
+    basis: official_spec
+    source_ids:
+    - honda_vn_vision
+  - id: footboard
+    name_en: Footboard (step-through floor)
+    name_vi: Sàn để chân
+    height_m:
+      typical: null
+      low: null
+      high: null
+    basis: not_published
+    source_ids: []
+    unverified: true
+    reason: Not given on the manufacturer spec page; needs a physical measurement or a dealer drawing.
+  - id: exhaust_outlet
+    name_en: Exhaust outlet / muffler lowest edge
+    name_vi: Cửa ống pô
+    height_m:
+      typical: null
+      low: null
+      high: null
+    basis: not_published
+    source_ids: []
+    unverified: true
+    reason: Exhaust height is not published by Honda Việt Nam or Yamaha Việt Nam in the pages read.
+  - id: air_intake
+    name_en: Engine air-intake opening
+    name_vi: Cửa hút gió
+    height_m:
+      typical: null
+      low: null
+      high: null
+    basis: not_published
+    source_ids: []
+    unverified: true
+    reason: Air-intake height is not published in the pages read.
+  raw_specs:
+    length_mm: 1925
+    width_mm: 686
+    height_mm: 1126
+    wheelbase_mm: 1277
+    seat_height_mm: 785
+    ground_clearance_mm: 175
+    mass: 97 kg
+  tyres:
+  - position: front
+    size_as_published: 80/90-16M/C 43P
+    section_width_mm: 80
+    aspect_ratio_pct: 90
+    rim_in: 16
+    sidewall_mm: 72.0
+    outer_diameter_m: 0.55
+    hub_height_m: 0.275
+    source_ids:
+    - honda_vn_vision
+    - wikipedia_tire_code
+    - wikipedia_motorcycle_tire
+  - position: rear
+    size_as_published: 90/90-14M/C 46P
+    section_width_mm: 90
+    aspect_ratio_pct: 90
+    rim_in: 14
+    sidewall_mm: 81.0
+    outer_diameter_m: 0.518
+    hub_height_m: 0.259
+    source_ids:
+    - honda_vn_vision
+    - wikipedia_tire_code
+    - wikipedia_motorcycle_tire
+  tyre_outer_diameter_formula: outer_diameter_mm = rim_in*25.4 + 2*section_width_mm*aspect_ratio_pct/100 (Wikipedia Tire code); hub_height
+    = outer_diameter/2, nominal unloaded value (loaded radius is somewhat smaller)
+  source_ids:
+  - honda_vn_vision
+  - wikipedia_tire_code
+  - wikipedia_motorcycle_tire
+- id: scooter_honda_air_blade
+  category: motorbike
+  name_en: Honda Air Blade 160/125
+  name_vi: Xe tay ga Honda Air Blade 160/125
+  sam_prompt: scooter
+  sam_prompt_alternatives:
+  - motorbike
+  - motorcycle
+  threshold_class: scooter
+  body_type: scooter (xe tay ga)
+  suitability: high
+  height_total_m:
+    typical: 1.086
+    low: 1.086
+    high: 1.086
+  height_total_definition: Published "Cao" (overall height); reference point (mirror/handlebar) is not stated on the spec page.
+  scale_dimensions:
+  - id: overall_length
+    view: side
+    typical_m: 1.887
+    low_m: 1.887
+    high_m: 1.887
+    source_ids:
+    - honda_vn_air_blade_160_125
+  - id: wheelbase
+    view: side
+    typical_m: 1.286
+    low_m: 1.286
+    high_m: 1.286
+    source_ids:
+    - honda_vn_air_blade_160_125
+    note: Centre-to-centre of wheels; the axle centres are only visible if the water is below hub height.
+  - id: overall_width
+    view: front_or_rear
+    typical_m: 0.686
+    low_m: 0.686
+    high_m: 0.686
+    source_ids:
+    - honda_vn_air_blade_160_125
+  landmarks:
+  - id: wheel_hub_front
+    name_en: Front wheel hub centre
+    name_vi: Tâm trục bánh trước
+    height_m:
+      typical: 0.25
+      low: null
+      high: null
+    basis: derived_from_tyre_size
+    source_ids:
+    - honda_vn_air_blade_160_125
+    - wikipedia_tire_code
+    - wikipedia_motorcycle_tire
+  - id: wheel_hub_rear
+    name_en: Rear wheel hub centre
+    name_vi: Tâm trục bánh sau
+    height_m:
+      typical: 0.258
+      low: null
+      high: null
+    basis: derived_from_tyre_size
+    source_ids:
+    - honda_vn_air_blade_160_125
+    - wikipedia_tire_code
+    - wikipedia_motorcycle_tire
+  - id: ground_clearance
+    name_en: Lowest point of underbody (published ground clearance)
+    name_vi: Khoảng sáng gầm xe
+    height_m:
+      typical: 0.142
+      low: null
+      high: null
+    basis: official_spec
+    source_ids:
+    - honda_vn_air_blade_160_125
+  - id: seat_top
+    name_en: Seat top
+    name_vi: Độ cao yên
+    height_m:
+      typical: 0.775
+      low: null
+      high: null
+    basis: official_spec
+    source_ids:
+    - honda_vn_air_blade_160_125
+  - id: overall_top
+    name_en: Top of mirrors / handlebar (published overall height)
+    name_vi: Chiều cao toàn bộ
+    height_m:
+      typical: 1.086
+      low: null
+      high: null
+    basis: official_spec
+    source_ids:
+    - honda_vn_air_blade_160_125
+  - id: footboard
+    name_en: Footboard (step-through floor)
+    name_vi: Sàn để chân
+    height_m:
+      typical: null
+      low: null
+      high: null
+    basis: not_published
+    source_ids: []
+    unverified: true
+    reason: Not given on the manufacturer spec page; needs a physical measurement or a dealer drawing.
+  - id: exhaust_outlet
+    name_en: Exhaust outlet / muffler lowest edge
+    name_vi: Cửa ống pô
+    height_m:
+      typical: null
+      low: null
+      high: null
+    basis: not_published
+    source_ids: []
+    unverified: true
+    reason: Exhaust height is not published by Honda Việt Nam or Yamaha Việt Nam in the pages read.
+  - id: air_intake
+    name_en: Engine air-intake opening
+    name_vi: Cửa hút gió
+    height_m:
+      typical: null
+      low: null
+      high: null
+    basis: not_published
+    source_ids: []
+    unverified: true
+    reason: Air-intake height is not published in the pages read.
+  raw_specs:
+    length_mm: 1887
+    width_mm: 686
+    height_mm: 1086
+    wheelbase_mm: 1286
+    seat_height_mm: 775
+    ground_clearance_mm: 142
+    mass: 113 kg
+  tyres:
+  - position: front
+    size_as_published: 90/80-14M/C 43P
+    section_width_mm: 90
+    aspect_ratio_pct: 80
+    rim_in: 14
+    sidewall_mm: 72.0
+    outer_diameter_m: 0.5
+    hub_height_m: 0.25
+    source_ids:
+    - honda_vn_air_blade_160_125
+    - wikipedia_tire_code
+    - wikipedia_motorcycle_tire
+  - position: rear
+    size_as_published: 100/80-14M/C 48P
+    section_width_mm: 100
+    aspect_ratio_pct: 80
+    rim_in: 14
+    sidewall_mm: 80.0
+    outer_diameter_m: 0.516
+    hub_height_m: 0.258
+    source_ids:
+    - honda_vn_air_blade_160_125
+    - wikipedia_tire_code
+    - wikipedia_motorcycle_tire
+  tyre_outer_diameter_formula: outer_diameter_mm = rim_in*25.4 + 2*section_width_mm*aspect_ratio_pct/100 (Wikipedia Tire code); hub_height
+    = outer_diameter/2, nominal unloaded value (loaded radius is somewhat smaller)
+  source_ids:
+  - honda_vn_air_blade_160_125
+  - wikipedia_tire_code
+  - wikipedia_motorcycle_tire
+- id: scooter_yamaha_exciter
+  category: motorbike
+  name_en: Yamaha Exciter 155 VVA (standard version)
+  name_vi: Xe côn tay Yamaha Exciter 155 VVA
+  sam_prompt: motorbike
+  sam_prompt_alternatives:
+  - motorcycle
+  threshold_class: scooter
+  body_type: underbone sport (xe côn tay)
+  suitability: high
+  height_total_m:
+    typical: 1.105
+    low: 1.105
+    high: 1.105
+  height_total_definition: Published "Cao" (overall height); reference point (mirror/handlebar) is not stated on the spec page.
+  scale_dimensions:
+  - id: overall_length
+    view: side
+    typical_m: 1.975
+    low_m: 1.975
+    high_m: 1.975
+    source_ids:
+    - yamaha_vn_exciter_155_std
+  - id: wheelbase
+    view: side
+    typical_m: 1.29
+    low_m: 1.29
+    high_m: 1.29
+    source_ids:
+    - yamaha_vn_exciter_155_std
+    note: Centre-to-centre of wheels; the axle centres are only visible if the water is below hub height.
+  - id: overall_width
+    view: front_or_rear
+    typical_m: 0.665
+    low_m: 0.665
+    high_m: 0.665
+    source_ids:
+    - yamaha_vn_exciter_155_std
+  landmarks:
+  - id: wheel_hub_front
+    name_en: Front wheel hub centre
+    name_vi: Tâm trục bánh trước
+    height_m:
+      typical: 0.288
+      low: null
+      high: null
+    basis: derived_from_tyre_size
+    source_ids:
+    - yamaha_vn_exciter_155_std
+    - wikipedia_tire_code
+    - wikipedia_motorcycle_tire
+  - id: wheel_hub_rear
+    name_en: Rear wheel hub centre
+    name_vi: Tâm trục bánh sau
+    height_m:
+      typical: 0.3
+      low: null
+      high: null
+    basis: derived_from_tyre_size
+    source_ids:
+    - yamaha_vn_exciter_155_std
+    - wikipedia_tire_code
+    - wikipedia_motorcycle_tire
+  - id: ground_clearance
+    name_en: Lowest point of underbody (published ground clearance)
+    name_vi: Khoảng sáng gầm xe
+    height_m:
+      typical: 0.15
+      low: null
+      high: null
+    basis: official_spec
+    source_ids:
+    - yamaha_vn_exciter_155_std
+  - id: seat_top
+    name_en: Seat top
+    name_vi: Độ cao yên
+    height_m:
+      typical: 0.795
+      low: null
+      high: null
+    basis: official_spec
+    source_ids:
+    - yamaha_vn_exciter_155_std
+  - id: overall_top
+    name_en: Top of mirrors / handlebar (published overall height)
+    name_vi: Chiều cao toàn bộ
+    height_m:
+      typical: 1.105
+      low: null
+      high: null
+    basis: official_spec
+    source_ids:
+    - yamaha_vn_exciter_155_std
+  - id: footpeg
+    name_en: Rider footpeg
+    name_vi: Gác chân
+    height_m:
+      typical: null
+      low: null
+      high: null
+    basis: not_published
+    source_ids: []
+    unverified: true
+    reason: Not given on the manufacturer spec page; needs a physical measurement or a dealer drawing.
+  - id: exhaust_outlet
+    name_en: Exhaust outlet / muffler lowest edge
+    name_vi: Cửa ống pô
+    height_m:
+      typical: null
+      low: null
+      high: null
+    basis: not_published
+    source_ids: []
+    unverified: true
+    reason: Exhaust height is not published by Honda Việt Nam or Yamaha Việt Nam in the pages read.
+  - id: air_intake
+    name_en: Engine air-intake opening
+    name_vi: Cửa hút gió
+    height_m:
+      typical: null
+      low: null
+      high: null
+    basis: not_published
+    source_ids: []
+    unverified: true
+    reason: Air-intake height is not published in the pages read.
+  raw_specs:
+    length_mm: 1975
+    width_mm: 665
+    height_mm: 1105
+    wheelbase_mm: 1290
+    seat_height_mm: 795
+    ground_clearance_mm: 150
+    mass: 119 kg (trọng lượng ướt)
+  tyres:
+  - position: front
+    size_as_published: 90/80-17M/C 46P
+    section_width_mm: 90
+    aspect_ratio_pct: 80
+    rim_in: 17
+    sidewall_mm: 72.0
+    outer_diameter_m: 0.576
+    hub_height_m: 0.288
+    source_ids:
+    - yamaha_vn_exciter_155_std
+    - wikipedia_tire_code
+    - wikipedia_motorcycle_tire
+  - position: rear
+    size_as_published: 120/70-17M/C 58P
+    section_width_mm: 120
+    aspect_ratio_pct: 70
+    rim_in: 17
+    sidewall_mm: 84.0
+    outer_diameter_m: 0.6
+    hub_height_m: 0.3
+    source_ids:
+    - yamaha_vn_exciter_155_std
+    - wikipedia_tire_code
+    - wikipedia_motorcycle_tire
+  tyre_outer_diameter_formula: outer_diameter_mm = rim_in*25.4 + 2*section_width_mm*aspect_ratio_pct/100 (Wikipedia Tire code); hub_height
+    = outer_diameter/2, nominal unloaded value (loaded radius is somewhat smaller)
+  source_ids:
+  - yamaha_vn_exciter_155_std
+  - wikipedia_tire_code
+  - wikipedia_motorcycle_tire
+- id: scooter_honda_lead
+  category: motorbike
+  name_en: Honda LEAD (ABS)
+  name_vi: Xe tay ga Honda LEAD
+  sam_prompt: scooter
+  sam_prompt_alternatives:
+  - motorbike
+  - motorcycle
+  threshold_class: scooter
+  body_type: scooter (xe tay ga)
+  suitability: high
+  height_total_m:
+    typical: 1.132
+    low: 1.132
+    high: 1.132
+  height_total_definition: Published "Cao" (overall height); reference point (mirror/handlebar) is not stated on the spec page.
+  scale_dimensions:
+  - id: overall_length
+    view: side
+    typical_m: 1.844
+    low_m: 1.844
+    high_m: 1.844
+    source_ids:
+    - honda_vn_lead_abs
+  - id: wheelbase
+    view: side
+    typical_m: 1.273
+    low_m: 1.273
+    high_m: 1.273
+    source_ids:
+    - honda_vn_lead_abs
+    note: Centre-to-centre of wheels; the axle centres are only visible if the water is below hub height.
+  - id: overall_width
+    view: front_or_rear
+    typical_m: 0.714
+    low_m: 0.714
+    high_m: 0.714
+    source_ids:
+    - honda_vn_lead_abs
+  landmarks:
+  - id: wheel_hub_front
+    name_en: Front wheel hub centre
+    name_vi: Tâm trục bánh trước
+    height_m:
+      typical: 0.233
+      low: null
+      high: null
+    basis: derived_from_tyre_size
+    source_ids:
+    - honda_vn_lead_abs
+    - wikipedia_tire_code
+    - wikipedia_motorcycle_tire
+  - id: wheel_hub_rear
+    name_en: Rear wheel hub centre
+    name_vi: Tâm trục bánh sau
+    height_m:
+      typical: 0.217
+      low: null
+      high: null
+    basis: derived_from_tyre_size
+    source_ids:
+    - honda_vn_lead_abs
+    - wikipedia_tire_code
+    - wikipedia_motorcycle_tire
+  - id: ground_clearance
+    name_en: Lowest point of underbody (published ground clearance)
+    name_vi: Khoảng sáng gầm xe
+    height_m:
+      typical: 0.14
+      low: null
+      high: null
+    basis: official_spec
+    source_ids:
+    - honda_vn_lead_abs
+  - id: seat_top
+    name_en: Seat top
+    name_vi: Độ cao yên
+    height_m:
+      typical: 0.76
+      low: null
+      high: null
+    basis: official_spec
+    source_ids:
+    - honda_vn_lead_abs
+  - id: overall_top
+    name_en: Top of mirrors / handlebar (published overall height)
+    name_vi: Chiều cao toàn bộ
+    height_m:
+      typical: 1.132
+      low: null
+      high: null
+    basis: official_spec
+    source_ids:
+    - honda_vn_lead_abs
+  - id: footboard
+    name_en: Footboard (step-through floor)
+    name_vi: Sàn để chân
+    height_m:
+      typical: null
+      low: null
+      high: null
+    basis: not_published
+    source_ids: []
+    unverified: true
+    reason: Not given on the manufacturer spec page; needs a physical measurement or a dealer drawing.
+  - id: exhaust_outlet
+    name_en: Exhaust outlet / muffler lowest edge
+    name_vi: Cửa ống pô
+    height_m:
+      typical: null
+      low: null
+      high: null
+    basis: not_published
+    source_ids: []
+    unverified: true
+    reason: Exhaust height is not published by Honda Việt Nam or Yamaha Việt Nam in the pages read.
+  - id: air_intake
+    name_en: Engine air-intake opening
+    name_vi: Cửa hút gió
+    height_m:
+      typical: null
+      low: null
+      high: null
+    basis: not_published
+    source_ids: []
+    unverified: true
+    reason: Air-intake height is not published in the pages read.
+  raw_specs:
+    length_mm: 1844
+    width_mm: 714
+    height_mm: 1132
+    wheelbase_mm: 1273
+    seat_height_mm: 760
+    ground_clearance_mm: 140
+    mass: 114 kg
+  tyres:
+  - position: front
+    size_as_published: 90/90-12 44J
+    section_width_mm: 90
+    aspect_ratio_pct: 90
+    rim_in: 12
+    sidewall_mm: 81.0
+    outer_diameter_m: 0.467
+    hub_height_m: 0.233
+    source_ids:
+    - honda_vn_lead_abs
+    - wikipedia_tire_code
+    - wikipedia_motorcycle_tire
+  - position: rear
+    size_as_published: 100/90-10 56J
+    section_width_mm: 100
+    aspect_ratio_pct: 90
+    rim_in: 10
+    sidewall_mm: 90.0
+    outer_diameter_m: 0.434
+    hub_height_m: 0.217
+    source_ids:
+    - honda_vn_lead_abs
+    - wikipedia_tire_code
+    - wikipedia_motorcycle_tire
+  tyre_outer_diameter_formula: outer_diameter_mm = rim_in*25.4 + 2*section_width_mm*aspect_ratio_pct/100 (Wikipedia Tire code); hub_height
+    = outer_diameter/2, nominal unloaded value (loaded radius is somewhat smaller)
+  source_ids:
+  - honda_vn_lead_abs
+  - wikipedia_tire_code
+  - wikipedia_motorcycle_tire
+- id: car_toyota_vios
+  category: car
+  name_en: Toyota Vios (2023 generation, 1.5 L)
+  name_vi: Ô tô Toyota Vios (sedan)
+  sam_prompt: car
+  sam_prompt_alternatives:
+  - sedan
+  threshold_class: sedan_car
+  body_type: sedan
+  suitability: high
+  height_total_m:
+    typical: 1.475
+    low: 1.475
+    high: 1.475
+  scale_dimensions:
+  - id: overall_length
+    view: side
+    typical_m: 4.425
+    low_m: 4.425
+    high_m: 4.425
+    source_ids:
+    - vnexpress_vios_2023
+    - bonbanh_vios_g_cvt_2023
+  - id: wheelbase
+    view: side
+    typical_m: 2.55
+    low_m: 2.55
+    high_m: 2.55
+    source_ids:
+    - vnexpress_vios_2023
+    - bonbanh_vios_g_cvt_2023
+  - id: overall_width
+    view: front_or_rear
+    typical_m: 1.73
+    low_m: 1.73
+    high_m: 1.73
+    source_ids:
+    - vnexpress_vios_2023
+    - bonbanh_vios_g_cvt_2023
+    note: Published width excludes door mirrors.
+  landmarks:
+  - id: wheel_hub
+    name_en: Wheel hub centre
+    name_vi: Tâm trục bánh xe
+    height_m:
+      typical: 0.301
+      low: 0.301
+      high: 0.301
+    basis: derived_from_tyre_size
+    source_ids:
+    - vnexpress_vios_2023
+    - bonbanh_vios_g_cvt_2023
+    - wikipedia_tire_code
+  - id: ground_clearance
+    name_en: Lowest underbody point (published ground clearance)
+    name_vi: Khoảng sáng gầm xe
+    height_m:
+      typical: 0.133
+      low: null
+      high: null
+    basis: official_spec
+    source_ids:
+    - vnexpress_vios_2023
+    - bonbanh_vios_g_cvt_2023
+  - id: roof_top
+    name_en: Roof (published overall height)
+    name_vi: Chiều cao toàn bộ
+    height_m:
+      typical: 1.475
+      low: 1.475
+      high: 1.475
+    basis: official_spec
+    source_ids:
+    - vnexpress_vios_2023
+    - bonbanh_vios_g_cvt_2023
+  - id: sill_bottom
+    name_en: Door sill / rocker panel bottom edge
+    name_vi: Ngưỡng cửa xe (bệ bước chân)
+    height_m:
+      typical: null
+      low: null
+      high: null
+    basis: not_published
+    source_ids: []
+    unverified: true
+    reason: Not on manufacturer or press spec pages; needs measurement.
+  - id: door_handle
+    name_en: Exterior door handle
+    name_vi: Tay nắm cửa
+    height_m:
+      typical: null
+      low: null
+      high: null
+    basis: not_published
+    source_ids: []
+    unverified: true
+    reason: Not on spec pages; needs measurement.
+  - id: bonnet_top
+    name_en: Bonnet (hood) top surface at the front edge
+    name_vi: Nắp capô
+    height_m:
+      typical: null
+      low: null
+      high: null
+    basis: not_published
+    source_ids: []
+    unverified: true
+    reason: Not on spec pages; needs measurement.
+  raw_specs:
+    length_mm:
+    - 4425
+    - 4425
+    width_mm: 1730
+    height_mm:
+    - 1475
+    - 1475
+    wheelbase_mm: 2550
+    ground_clearance_mm: 133
+  tyres:
+  - position: wheel (all trims)
+    size_as_published: 185/60R15
+    section_width_mm: 185
+    aspect_ratio_pct: 60
+    rim_in: 15
+    sidewall_mm: 111.0
+    outer_diameter_m: 0.603
+    hub_height_m: 0.301
+    source_ids:
+    - vnexpress_vios_2023
+    - bonbanh_vios_g_cvt_2023
+    - wikipedia_tire_code
+  tyre_outer_diameter_formula: outer_diameter_mm = rim_in*25.4 + 2*section_width_mm*aspect_ratio_pct/100 (Wikipedia Tire code); hub_height
+    = outer_diameter/2, nominal unloaded value (loaded radius is somewhat smaller)
+  source_ids:
+  - vnexpress_vios_2023
+  - bonbanh_vios_g_cvt_2023
+  - wikipedia_tire_code
+- id: car_hyundai_accent
+  category: car
+  name_en: Hyundai Accent (2024 generation, 1.5 L)
+  name_vi: Ô tô Hyundai Accent (sedan)
+  sam_prompt: car
+  sam_prompt_alternatives:
+  - sedan
+  threshold_class: sedan_car
+  body_type: sedan
+  suitability: high
+  height_total_m:
+    typical: 1.485
+    low: 1.485
+    high: 1.485
+  scale_dimensions:
+  - id: overall_length
+    view: side
+    typical_m: 4.535
+    low_m: 4.535
+    high_m: 4.535
+    source_ids:
+    - vnexpress_accent_2024_cao_cap
+    - vnreview_accent_2024
+  - id: wheelbase
+    view: side
+    typical_m: 2.67
+    low_m: 2.67
+    high_m: 2.67
+    source_ids:
+    - vnexpress_accent_2024_cao_cap
+    - vnreview_accent_2024
+  - id: overall_width
+    view: front_or_rear
+    typical_m: 1.765
+    low_m: 1.765
+    high_m: 1.765
+    source_ids:
+    - vnexpress_accent_2024_cao_cap
+    - vnreview_accent_2024
+    note: Published width excludes door mirrors.
+  landmarks:
+  - id: wheel_hub
+    name_en: Wheel hub centre
+    name_vi: Tâm trục bánh xe
+    height_m:
+      typical: 0.314
+      low: 0.311
+      high: 0.316
+    basis: derived_from_tyre_size
+    source_ids:
+    - vnexpress_accent_2024_cao_cap
+    - vnreview_accent_2024
+    - wikipedia_tire_code
+    note: low/high span the tyre sizes offered across trims.
+  - id: ground_clearance
+    name_en: Lowest underbody point (published ground clearance)
+    name_vi: Khoảng sáng gầm xe
+    height_m:
+      typical: 0.165
+      low: null
+      high: null
+    basis: official_spec
+    source_ids:
+    - vnexpress_accent_2024_cao_cap
+    - vnreview_accent_2024
+  - id: roof_top
+    name_en: Roof (published overall height)
+    name_vi: Chiều cao toàn bộ
+    height_m:
+      typical: 1.485
+      low: 1.485
+      high: 1.485
+    basis: official_spec
+    source_ids:
+    - vnexpress_accent_2024_cao_cap
+    - vnreview_accent_2024
+  - id: sill_bottom
+    name_en: Door sill / rocker panel bottom edge
+    name_vi: Ngưỡng cửa xe (bệ bước chân)
+    height_m:
+      typical: null
+      low: null
+      high: null
+    basis: not_published
+    source_ids: []
+    unverified: true
+    reason: Not on manufacturer or press spec pages; needs measurement.
+  - id: door_handle
+    name_en: Exterior door handle
+    name_vi: Tay nắm cửa
+    height_m:
+      typical: null
+      low: null
+      high: null
+    basis: not_published
+    source_ids: []
+    unverified: true
+    reason: Not on spec pages; needs measurement.
+  - id: bonnet_top
+    name_en: Bonnet (hood) top surface at the front edge
+    name_vi: Nắp capô
+    height_m:
+      typical: null
+      low: null
+      high: null
+    basis: not_published
+    source_ids: []
+    unverified: true
+    reason: Not on spec pages; needs measurement.
+  raw_specs:
+    length_mm:
+    - 4535
+    - 4535
+    width_mm: 1765
+    height_mm:
+    - 1485
+    - 1485
+    wheelbase_mm: 2670
+    ground_clearance_mm: 165
+  tyres:
+  - position: wheel (MT / AT / AT Đặc biệt)
+    size_as_published: 185/65 R15
+    section_width_mm: 185
+    aspect_ratio_pct: 65
+    rim_in: 15
+    sidewall_mm: 120.2
+    outer_diameter_m: 0.622
+    hub_height_m: 0.311
+    source_ids:
+    - vnexpress_accent_2024_cao_cap
+    - vnreview_accent_2024
+    - wikipedia_tire_code
+  - position: wheel (AT Cao cấp)
+    size_as_published: 205/55 R16
+    section_width_mm: 205
+    aspect_ratio_pct: 55
+    rim_in: 16
+    sidewall_mm: 112.8
+    outer_diameter_m: 0.632
+    hub_height_m: 0.316
+    source_ids:
+    - vnexpress_accent_2024_cao_cap
+    - vnreview_accent_2024
+    - wikipedia_tire_code
+  tyre_outer_diameter_formula: outer_diameter_mm = rim_in*25.4 + 2*section_width_mm*aspect_ratio_pct/100 (Wikipedia Tire code); hub_height
+    = outer_diameter/2, nominal unloaded value (loaded radius is somewhat smaller)
+  source_ids:
+  - vnexpress_accent_2024_cao_cap
+  - vnreview_accent_2024
+  - wikipedia_tire_code
+- id: car_kia_morning
+  category: car
+  name_en: Kia New Morning (2025)
+  name_vi: Ô tô Kia Morning (hatchback)
+  sam_prompt: car
+  sam_prompt_alternatives:
+  - hatchback
+  threshold_class: sedan_car
+  body_type: hatchback (city car)
+  suitability: high
+  height_total_m:
+    typical: 1.495
+    low: 1.495
+    high: 1.495
+  scale_dimensions:
+  - id: overall_length
+    view: side
+    typical_m: 3.595
+    low_m: 3.595
+    high_m: 3.595
+    source_ids:
+    - kia_vn_new_morning
+  - id: wheelbase
+    view: side
+    typical_m: 2.4
+    low_m: 2.4
+    high_m: 2.4
+    source_ids:
+    - kia_vn_new_morning
+  - id: overall_width
+    view: front_or_rear
+    typical_m: 1.595
+    low_m: 1.595
+    high_m: 1.595
+    source_ids:
+    - kia_vn_new_morning
+    note: Published width excludes door mirrors.
+  landmarks:
+  - id: wheel_hub
+    name_en: Wheel hub centre
+    name_vi: Tâm trục bánh xe
+    height_m:
+      typical: 0.292
+      low: 0.292
+      high: 0.292
+    basis: derived_from_tyre_size
+    source_ids:
+    - kia_vn_new_morning
+    - wikipedia_tire_code
+  - id: ground_clearance
+    name_en: Lowest underbody point (published ground clearance)
+    name_vi: Khoảng sáng gầm xe
+    height_m:
+      typical: 0.151
+      low: null
+      high: null
+    basis: official_spec
+    source_ids:
+    - kia_vn_new_morning
+  - id: roof_top
+    name_en: Roof (published overall height)
+    name_vi: Chiều cao toàn bộ
+    height_m:
+      typical: 1.495
+      low: 1.495
+      high: 1.495
+    basis: official_spec
+    source_ids:
+    - kia_vn_new_morning
+  - id: sill_bottom
+    name_en: Door sill / rocker panel bottom edge
+    name_vi: Ngưỡng cửa xe (bệ bước chân)
+    height_m:
+      typical: null
+      low: null
+      high: null
+    basis: not_published
+    source_ids: []
+    unverified: true
+    reason: Not on manufacturer or press spec pages; needs measurement.
+  - id: door_handle
+    name_en: Exterior door handle
+    name_vi: Tay nắm cửa
+    height_m:
+      typical: null
+      low: null
+      high: null
+    basis: not_published
+    source_ids: []
+    unverified: true
+    reason: Not on spec pages; needs measurement.
+  - id: bonnet_top
+    name_en: Bonnet (hood) top surface at the front edge
+    name_vi: Nắp capô
+    height_m:
+      typical: null
+      low: null
+      high: null
+    basis: not_published
+    source_ids: []
+    unverified: true
+    reason: Not on spec pages; needs measurement.
+  raw_specs:
+    length_mm:
+    - 3595
+    - 3595
+    width_mm: 1595
+    height_mm:
+    - 1495
+    - 1495
+    wheelbase_mm: 2400
+    ground_clearance_mm: 151
+  tyres:
+  - position: wheel (all three trims on page)
+    size_as_published: 185/55 R15
+    section_width_mm: 185
+    aspect_ratio_pct: 55
+    rim_in: 15
+    sidewall_mm: 101.8
+    outer_diameter_m: 0.585
+    hub_height_m: 0.292
+    source_ids:
+    - kia_vn_new_morning
+    - wikipedia_tire_code
+  tyre_outer_diameter_formula: outer_diameter_mm = rim_in*25.4 + 2*section_width_mm*aspect_ratio_pct/100 (Wikipedia Tire code); hub_height
+    = outer_diameter/2, nominal unloaded value (loaded radius is somewhat smaller)
+  source_ids:
+  - kia_vn_new_morning
+  - wikipedia_tire_code
+- id: car_mitsubishi_xpander
+  category: car
+  name_en: Mitsubishi New Xpander (2025/26)
+  name_vi: Ô tô Mitsubishi Xpander (MPV 7 chỗ)
+  sam_prompt: car
+  sam_prompt_alternatives:
+  - minivan
+  - MPV
+  threshold_class: suv_pickup
+  body_type: MPV with raised clearance
+  suitability: high
+  height_total_m:
+    typical: 1.74
+    low: 1.73
+    high: 1.75
+  scale_dimensions:
+  - id: overall_length
+    view: side
+    typical_m: 4.595
+    low_m: 4.595
+    high_m: 4.595
+    source_ids:
+    - mitsubishi_vn_new_xpander
+  - id: wheelbase
+    view: side
+    typical_m: 2.775
+    low_m: 2.775
+    high_m: 2.775
+    source_ids:
+    - mitsubishi_vn_new_xpander
+  - id: overall_width
+    view: front_or_rear
+    typical_m: 1.75
+    low_m: 1.75
+    high_m: 1.75
+    source_ids:
+    - mitsubishi_vn_new_xpander
+    note: Published width excludes door mirrors.
+  landmarks:
+  - id: wheel_hub
+    name_en: Wheel hub centre
+    name_vi: Tâm trục bánh xe
+    height_m:
+      typical: 0.33
+      low: 0.329
+      high: 0.33
+    basis: derived_from_tyre_size
+    source_ids:
+    - mitsubishi_vn_new_xpander
+    - wikipedia_tire_code
+    note: low/high span the tyre sizes offered across trims.
+  - id: ground_clearance
+    name_en: Lowest underbody point (published ground clearance)
+    name_vi: Khoảng sáng gầm xe
+    height_m:
+      typical: 0.225
+      low: null
+      high: null
+    basis: official_spec
+    source_ids:
+    - mitsubishi_vn_new_xpander
+  - id: roof_top
+    name_en: Roof (published overall height)
+    name_vi: Chiều cao toàn bộ
+    height_m:
+      typical: 1.74
+      low: 1.73
+      high: 1.75
+    basis: official_spec
+    source_ids:
+    - mitsubishi_vn_new_xpander
+  - id: sill_bottom
+    name_en: Door sill / rocker panel bottom edge
+    name_vi: Ngưỡng cửa xe (bệ bước chân)
+    height_m:
+      typical: null
+      low: null
+      high: null
+    basis: not_published
+    source_ids: []
+    unverified: true
+    reason: Not on manufacturer or press spec pages; needs measurement.
+  - id: door_handle
+    name_en: Exterior door handle
+    name_vi: Tay nắm cửa
+    height_m:
+      typical: null
+      low: null
+      high: null
+    basis: not_published
+    source_ids: []
+    unverified: true
+    reason: Not on spec pages; needs measurement.
+  - id: bonnet_top
+    name_en: Bonnet (hood) top surface at the front edge
+    name_vi: Nắp capô
+    height_m:
+      typical: null
+      low: null
+      high: null
+    basis: not_published
+    source_ids: []
+    unverified: true
+    reason: Not on spec pages; needs measurement.
+  raw_specs:
+    length_mm:
+    - 4595
+    - 4595
+    width_mm: 1750
+    height_mm:
+    - 1730
+    - 1750
+    wheelbase_mm: 2775
+    ground_clearance_mm: 225
+  tyres:
+  - position: wheel (AT Premium)
+    size_as_published: 205/55R17
+    section_width_mm: 205
+    aspect_ratio_pct: 55
+    rim_in: 17
+    sidewall_mm: 112.8
+    outer_diameter_m: 0.657
+    hub_height_m: 0.329
+    source_ids:
+    - mitsubishi_vn_new_xpander
+    - wikipedia_tire_code
+  - position: wheel (AT and MT)
+    size_as_published: 195/65R16
+    section_width_mm: 195
+    aspect_ratio_pct: 65
+    rim_in: 16
+    sidewall_mm: 126.8
+    outer_diameter_m: 0.66
+    hub_height_m: 0.33
+    source_ids:
+    - mitsubishi_vn_new_xpander
+    - wikipedia_tire_code
+  tyre_outer_diameter_formula: outer_diameter_mm = rim_in*25.4 + 2*section_width_mm*aspect_ratio_pct/100 (Wikipedia Tire code); hub_height
+    = outer_diameter/2, nominal unloaded value (loaded radius is somewhat smaller)
+  source_ids:
+  - mitsubishi_vn_new_xpander
+  - wikipedia_tire_code
+  note: Mapped to the suv_pickup threshold class because of 225 mm ground clearance; by length (4.595 m) and mass (1,245-1,280 kg) it
+    is closer to a large passenger car.
+- id: car_ford_ranger
+  category: car
+  name_en: Ford Ranger (Wildtrak and other double-cab trims, 2025/26)
+  name_vi: Xe bán tải Ford Ranger
+  sam_prompt: pickup truck
+  sam_prompt_alternatives:
+  - truck
+  - car
+  threshold_class: suv_pickup
+  body_type: double-cab pickup
+  suitability: high
+  height_total_m:
+    typical: 1.879
+    low: 1.875
+    high: 1.884
+  scale_dimensions:
+  - id: overall_length
+    view: side
+    typical_m: 5.366
+    low_m: 5.362
+    high_m: 5.37
+    source_ids:
+    - vnexpress_ranger_2026_wildtrak
+    - oto_com_vn_ranger_2025
+  - id: wheelbase
+    view: side
+    typical_m: 3.27
+    low_m: 3.27
+    high_m: 3.27
+    source_ids:
+    - vnexpress_ranger_2026_wildtrak
+    - oto_com_vn_ranger_2025
+  - id: overall_width
+    view: front_or_rear
+    typical_m: 1.918
+    low_m: 1.918
+    high_m: 1.918
+    source_ids:
+    - vnexpress_ranger_2026_wildtrak
+    - oto_com_vn_ranger_2025
+    note: Published width excludes door mirrors.
+  landmarks:
+  - id: wheel_hub
+    name_en: Wheel hub centre
+    name_vi: Tâm trục bánh xe
+    height_m:
+      typical: 0.388
+      low: 0.382
+      high: 0.394
+    basis: derived_from_tyre_size
+    source_ids:
+    - vnexpress_ranger_2026_wildtrak
+    - oto_com_vn_ranger_2025
+    - wikipedia_tire_code
+    note: low/high span the tyre sizes offered across trims.
+  - id: ground_clearance
+    name_en: Lowest underbody point (published ground clearance)
+    name_vi: Khoảng sáng gầm xe
+    height_m:
+      typical: 0.235
+      low: null
+      high: null
+    basis: official_spec
+    source_ids:
+    - vnexpress_ranger_2026_wildtrak
+    - oto_com_vn_ranger_2025
+  - id: roof_top
+    name_en: Roof (published overall height)
+    name_vi: Chiều cao toàn bộ
+    height_m:
+      typical: 1.879
+      low: 1.875
+      high: 1.884
+    basis: official_spec
+    source_ids:
+    - vnexpress_ranger_2026_wildtrak
+    - oto_com_vn_ranger_2025
+  - id: sill_bottom
+    name_en: Door sill / rocker panel bottom edge
+    name_vi: Ngưỡng cửa xe (bệ bước chân)
+    height_m:
+      typical: null
+      low: null
+      high: null
+    basis: not_published
+    source_ids: []
+    unverified: true
+    reason: Not on manufacturer or press spec pages; needs measurement.
+  - id: door_handle
+    name_en: Exterior door handle
+    name_vi: Tay nắm cửa
+    height_m:
+      typical: null
+      low: null
+      high: null
+    basis: not_published
+    source_ids: []
+    unverified: true
+    reason: Not on spec pages; needs measurement.
+  - id: bonnet_top
+    name_en: Bonnet (hood) top surface at the front edge
+    name_vi: Nắp capô
+    height_m:
+      typical: null
+      low: null
+      high: null
+    basis: not_published
+    source_ids: []
+    unverified: true
+    reason: Not on spec pages; needs measurement.
+  raw_specs:
+    length_mm:
+    - 5362
+    - 5370
+    width_mm: 1918
+    height_mm:
+    - 1875
+    - 1884
+    wheelbase_mm: 3270
+    ground_clearance_mm: 235
+  tyres:
+  - position: wheel (XLS 2.0 (likely))
+    size_as_published: 255/70R16
+    section_width_mm: 255
+    aspect_ratio_pct: 70
+    rim_in: 16
+    sidewall_mm: 178.5
+    outer_diameter_m: 0.763
+    hub_height_m: 0.382
+    source_ids:
+    - vnexpress_ranger_2026_wildtrak
+    - oto_com_vn_ranger_2025
+    - wikipedia_tire_code
+  - position: wheel (Wildtrak 2.0 4x4 AT / XLS+ (likely))
+    size_as_published: 255/65R18
+    section_width_mm: 255
+    aspect_ratio_pct: 65
+    rim_in: 18
+    sidewall_mm: 165.8
+    outer_diameter_m: 0.789
+    hub_height_m: 0.394
+    source_ids:
+    - vnexpress_ranger_2026_wildtrak
+    - oto_com_vn_ranger_2025
+    - wikipedia_tire_code
+  - position: wheel (Wildtrak / top trims (likely))
+    size_as_published: 255/55 R20
+    section_width_mm: 255
+    aspect_ratio_pct: 55
+    rim_in: 20
+    sidewall_mm: 140.2
+    outer_diameter_m: 0.788
+    hub_height_m: 0.394
+    source_ids:
+    - vnexpress_ranger_2026_wildtrak
+    - oto_com_vn_ranger_2025
+    - wikipedia_tire_code
+  tyre_outer_diameter_formula: outer_diameter_mm = rim_in*25.4 + 2*section_width_mm*aspect_ratio_pct/100 (Wikipedia Tire code); hub_height
+    = outer_diameter/2, nominal unloaded value (loaded radius is somewhat smaller)
+  source_ids:
+  - vnexpress_ranger_2026_wildtrak
+  - oto_com_vn_ranger_2025
+  - wikipedia_tire_code
+  note: Variant mapping of tyre sizes and the two dimension sets is inferred from table alignment in the press sources (see sources).
+    No Ford Việt Nam spec sheet could be read.
+- id: car_generic_vn
+  category: car
+  name_en: Generic car (range over the five reference cars)
+  name_vi: Ô tô (khoảng giá trị chung)
+  sam_prompt: car
+  sam_prompt_alternatives:
+  - sedan
+  - pickup truck
+  - minivan
+  threshold_class: sedan_car_or_suv_pickup
+  suitability: medium
+  derivation: typical = median, low/high = min/max over Vios, Accent, Morning, Xpander, Ranger (published model midpoints). The spread
+    is wide (hatchback to double-cab pickup); identify the body type before using it.
+  height_total_m:
+    typical: 1.495
+    low: 1.475
+    high: 1.884
+  scale_dimensions:
+  - id: overall_length
+    view: side
+    typical_m: 4.535
+    low_m: 3.595
+    high_m: 5.37
+    source_ids:
+    - bonbanh_vios_g_cvt_2023
+    - kia_vn_new_morning
+    - mitsubishi_vn_new_xpander
+    - oto_com_vn_ranger_2025
+    - vnexpress_accent_2024_cao_cap
+    - vnexpress_ranger_2026_wildtrak
+    - vnexpress_vios_2023
+    - vnreview_accent_2024
+    - wikipedia_tire_code
+  - id: wheelbase
+    view: side
+    typical_m: 2.67
+    low_m: 2.4
+    high_m: 3.27
+    source_ids:
+    - bonbanh_vios_g_cvt_2023
+    - kia_vn_new_morning
+    - mitsubishi_vn_new_xpander
+    - oto_com_vn_ranger_2025
+    - vnexpress_accent_2024_cao_cap
+    - vnexpress_ranger_2026_wildtrak
+    - vnexpress_vios_2023
+    - vnreview_accent_2024
+    - wikipedia_tire_code
+  - id: overall_width
+    view: front_or_rear
+    typical_m: 1.75
+    low_m: 1.595
+    high_m: 1.918
+    source_ids:
+    - bonbanh_vios_g_cvt_2023
+    - kia_vn_new_morning
+    - mitsubishi_vn_new_xpander
+    - oto_com_vn_ranger_2025
+    - vnexpress_accent_2024_cao_cap
+    - vnexpress_ranger_2026_wildtrak
+    - vnexpress_vios_2023
+    - vnreview_accent_2024
+    - wikipedia_tire_code
+  landmarks:
+  - id: wheel_hub
+    name_en: Wheel hub centre
+    name_vi: Tâm trục bánh xe
+    height_m:
+      typical: 0.314
+      low: 0.292
+      high: 0.394
+    basis: derived_from_tyre_size
+    source_ids:
+    - bonbanh_vios_g_cvt_2023
+    - kia_vn_new_morning
+    - mitsubishi_vn_new_xpander
+    - oto_com_vn_ranger_2025
+    - vnexpress_accent_2024_cao_cap
+    - vnexpress_ranger_2026_wildtrak
+    - vnexpress_vios_2023
+    - vnreview_accent_2024
+    - wikipedia_tire_code
+  - id: ground_clearance
+    name_en: Lowest underbody point
+    name_vi: Khoảng sáng gầm xe
+    height_m:
+      typical: 0.165
+      low: 0.133
+      high: 0.235
+    basis: official_spec
+    source_ids:
+    - bonbanh_vios_g_cvt_2023
+    - kia_vn_new_morning
+    - mitsubishi_vn_new_xpander
+    - oto_com_vn_ranger_2025
+    - vnexpress_accent_2024_cao_cap
+    - vnexpress_ranger_2026_wildtrak
+    - vnexpress_vios_2023
+    - vnreview_accent_2024
+    - wikipedia_tire_code
+  - id: sill_bottom
+    name_en: Door sill bottom edge
+    name_vi: Ngưỡng cửa xe
+    height_m:
+      typical: null
+      low: null
+      high: null
+    basis: not_published
+    source_ids: []
+    unverified: true
+    reason: Not published.
+  - id: door_handle
+    name_en: Exterior door handle
+    name_vi: Tay nắm cửa
+    height_m:
+      typical: null
+      low: null
+      high: null
+    basis: not_published
+    source_ids: []
+    unverified: true
+    reason: Not published.
+  - id: bonnet_top
+    name_en: Bonnet top at front edge
+    name_vi: Nắp capô
+    height_m:
+      typical: null
+      low: null
+      high: null
+    basis: not_published
+    source_ids: []
+    unverified: true
+    reason: Not published.
+  source_ids:
+  - bonbanh_vios_g_cvt_2023
+  - kia_vn_new_morning
+  - mitsubishi_vn_new_xpander
+  - oto_com_vn_ranger_2025
+  - vnexpress_accent_2024_cao_cap
+  - vnexpress_ranger_2026_wildtrak
+  - vnexpress_vios_2023
+  - vnreview_accent_2024
+  - wikipedia_tire_code
+- id: car_wheel_passenger
+  category: wheel
+  name_en: Passenger-car wheel + tyre (Vios, Accent, Morning, Xpander)
+  name_vi: Bánh xe ô tô con / MPV
+  sam_prompt: car wheel
+  sam_prompt_alternatives:
+  - tire
+  - car tire
+  threshold_class: sedan_car_or_suv_pickup
+  suitability: high
+  derivation: Outer diameter from published tyre sizes (formula in conventions). typical = median of the 6 tyre sizes listed for these
+    four cars.
+  height_total_m:
+    typical: 0.627
+    low: 0.585
+    high: 0.66
+  height_total_definition: Outer (tyre) diameter in metres - this object is a circle; its "height" equals its horizontal diameter, which
+    makes it a self-scaling reference when visible.
+  scale_dimensions:
+  - id: tyre_outer_diameter
+    view: side
+    typical_m: 0.627
+    low_m: 0.585
+    high_m: 0.66
+    source_ids:
+    - bonbanh_vios_g_cvt_2023
+    - kia_vn_new_morning
+    - mitsubishi_vn_new_xpander
+    - vnexpress_accent_2024_cao_cap
+    - vnexpress_vios_2023
+    - vnreview_accent_2024
+    - wikipedia_tire_code
+  landmarks:
+  - id: hub_centre
+    name_en: Hub centre (axle height)
+    name_vi: Tâm trục
+    height_m:
+      typical: 0.314
+      low: 0.292
+      high: 0.33
+    basis: derived_from_tyre_size
+    source_ids:
+    - bonbanh_vios_g_cvt_2023
+    - kia_vn_new_morning
+    - mitsubishi_vn_new_xpander
+    - vnexpress_accent_2024_cao_cap
+    - vnexpress_vios_2023
+    - vnreview_accent_2024
+    - wikipedia_tire_code
+  - id: rim_bottom_edge
+    name_en: Bottom of wheel rim
+    name_vi: Mép dưới vành
+    height_m:
+      typical: null
+      low: null
+      high: null
+    basis: not_published
+    source_ids: []
+    unverified: true
+    reason: Rim diameter is published (15-17 in) but rim-edge height above ground also depends on tyre deflection.
+  source_ids:
+  - bonbanh_vios_g_cvt_2023
+  - kia_vn_new_morning
+  - mitsubishi_vn_new_xpander
+  - vnexpress_accent_2024_cao_cap
+  - vnexpress_vios_2023
+  - vnreview_accent_2024
+  - wikipedia_tire_code
+- id: car_wheel_pickup
+  category: wheel
+  name_en: Pickup wheel + tyre (Ford Ranger)
+  name_vi: Bánh xe bán tải Ranger
+  sam_prompt: car wheel
+  sam_prompt_alternatives:
+  - tire
+  - truck tire
+  threshold_class: suv_pickup
+  suitability: high
+  derivation: Outer diameter from the three Ranger tyre sizes (255/70R16, 255/65R18, 255/55R20); typical = median.
+  height_total_m:
+    typical: 0.788
+    low: 0.763
+    high: 0.789
+  height_total_definition: Outer (tyre) diameter in metres.
+  scale_dimensions:
+  - id: tyre_outer_diameter
+    view: side
+    typical_m: 0.788
+    low_m: 0.763
+    high_m: 0.789
+    source_ids:
+    - vnexpress_ranger_2026_wildtrak
+    - oto_com_vn_ranger_2025
+    - wikipedia_tire_code
+  landmarks:
+  - id: hub_centre
+    name_en: Hub centre (axle height)
+    name_vi: Tâm trục
+    height_m:
+      typical: 0.394
+      low: 0.382
+      high: 0.395
+    basis: derived_from_tyre_size
+    source_ids:
+    - vnexpress_ranger_2026_wildtrak
+    - oto_com_vn_ranger_2025
+    - wikipedia_tire_code
+  source_ids:
+  - vnexpress_ranger_2026_wildtrak
+  - oto_com_vn_ranger_2025
+  - wikipedia_tire_code
+- id: person_adult_vietnamese
+  category: person
+  name_en: Adult Vietnamese person (standing)
+  name_vi: Người trưởng thành Việt Nam (đứng)
+  sam_prompt: person
+  sam_prompt_alternatives:
+  - man
+  - woman
+  - people
+  threshold_class: pedestrian_adult
+  suitability: medium
+  derivation: 'by_sex typical = NIN 2019-2020 mean stature at age 18 (men 168.1 cm, women 156.2 cm). Generic typical = unweighted mean
+    of the two sexes (derived). low = adult female mean from the NCD-RisC database as reported (153.6 cm); high = Hanoi 2019 male 18-year-old
+    mean (170.2 cm). low/high are spreads between published population means, NOT individual extremes: individual SD is about 5 cm (Hanoi
+    2019: men 5.5, women 4.9).'
+  height_total_m:
+    typical: 1.622
+    low: 1.536
+    high: 1.702
+  height_by_sex_m:
+    male:
+      typical: 1.681
+      alternative_all_adult_mean: 1.6444
+      hanoi_2019_mean: 1.702
+      sd: 0.055
+    female:
+      typical: 1.562
+      alternative_all_adult_mean: 1.5359
+      hanoi_2019_mean: 1.592
+      sd: 0.049
+  age_caveat: The national figures are for 18-year-olds; older adults are shorter (NCD-RisC all-adult means 164.4 / 153.6 cm). Children
+    and the elderly are not covered by this object.
+  scale_dimensions:
+  - id: standing_height
+    view: any
+    typical_m: 1.622
+    low_m: 1.536
+    high_m: 1.702
+    source_ids:
+    - nin_2019_2020_sggp
+    - vnexpress_en_height_2026
+    - dtinews_ncdrisc_height
+    - vnras_hanoi_2019
+    note: 'Person is a poor scale reference (individual SD about 5 cm: Hanoi 2019, men 5.5 cm, women 4.9 cm) but a good body-part landmark
+      when partly submerged.'
+  landmarks:
+  - id: knee
+    name_en: Knee (joint centre)
+    name_vi: Đầu gối
+    height_m:
+      typical: 0.462
+      low: 0.438
+      high: 0.485
+    basis: derived_from_proportion
+    source_ids:
+    - winter_fig_4_1
+    - nin_2019_2020_sggp
+    - dtinews_ncdrisc_height
+    - vnras_hanoi_2019
+    note: Winter Fig. 4.1 value (0.285H); the figure does not say whether it is mid-patella or lateral epicondyle
+    fraction_of_height: 0.285
+    height_m_by_sex:
+      male: 0.479
+      female: 0.445
+  - id: hip
+    name_en: Hip (greater trochanter)
+    name_vi: Hông (mấu chuyển lớn)
+    height_m:
+      typical: 0.86
+      low: 0.814
+      high: 0.902
+    basis: derived_from_proportion
+    source_ids:
+    - winter_fig_4_1
+    - nin_2019_2020_sggp
+    - dtinews_ncdrisc_height
+    - vnras_hanoi_2019
+    note: Winter Fig. 4.1 shows 0.530H at the pelvis/hip joint level; the figure does not print the word trochanter, so the landmark
+      name is our reading
+    fraction_of_height: 0.53
+    height_m_by_sex:
+      male: 0.891
+      female: 0.828
+  - id: chest
+    name_en: Chest / underarm level (0.720H line, unlabelled in the figure)
+    name_vi: Ngực
+    height_m:
+      typical: 1.168
+      low: 1.106
+      high: 1.225
+    basis: derived_from_proportion
+    source_ids:
+    - winter_fig_4_1
+    - nin_2019_2020_sggp
+    - dtinews_ncdrisc_height
+    - vnras_hanoi_2019
+    note: The 0.720H line is drawn between shoulder (0.818H) and hip (0.530H) without a text label; "chest" is our interpretation
+    fraction_of_height: 0.72
+    height_m_by_sex:
+      male: 1.21
+      female: 1.125
+    unverified: true
+    reason: Numeric fraction (0.720) is read from the figure, but the anatomical landmark it denotes is not labelled in the source.
+  - id: shoulder
+    name_en: Shoulder (acromion)
+    name_vi: Vai
+    height_m:
+      typical: 1.327
+      low: 1.256
+      high: 1.392
+    basis: derived_from_proportion
+    source_ids:
+    - winter_fig_4_1
+    - nin_2019_2020_sggp
+    - dtinews_ncdrisc_height
+    - vnras_hanoi_2019
+    note: Winter Fig. 4.1 left-side scale; landmark name is our reading
+    fraction_of_height: 0.818
+    height_m_by_sex:
+      male: 1.375
+      female: 1.278
+  - id: elbow
+    name_en: Elbow
+    name_vi: Khuỷu tay
+    height_m:
+      typical: 1.022
+      low: 0.968
+      high: 1.072
+    basis: derived_from_proportion
+    source_ids:
+    - winter_fig_4_1
+    - nin_2019_2020_sggp
+    - dtinews_ncdrisc_height
+    - vnras_hanoi_2019
+    note: Winter Fig. 4.1 left-side scale
+    fraction_of_height: 0.63
+    height_m_by_sex:
+      male: 1.059
+      female: 0.984
+  - id: waist
+    name_en: Natural waist / navel
+    name_vi: Thắt lưng
+    height_m:
+      typical: null
+      low: null
+      high: null
+    basis: not_published
+    source_ids: []
+    unverified: true
+    reason: Drillis & Contini (Winter Fig. 4.1) give no waist or navel proportion; no other anthropometric source was retrieved. Use
+      hip (0.530H) as the lower-trunk landmark.
+  source_ids:
+  - winter_fig_4_1
+  - nin_2019_2020_sggp
+  - vnexpress_en_height_2026
+  - dtinews_ncdrisc_height
+  - vnras_hanoi_2019
+- id: door_swing_shophouse
+  category: door
+  name_en: Hinged entrance door of a shophouse / terraced house (cửa đi)
+  name_vi: Cửa đi (cánh mở) nhà ống
+  sam_prompt: door
+  sam_prompt_alternatives:
+  - wooden door
+  - metal door
+  threshold_class: null
+  suitability: medium
+  derivation: typical = Lỗ Ban (building-practice) clear size 212 cm high x 81 cm wide for a 1-leaf door. low = 2.0 m high / 0.80 m
+    wide code minimum for doors on escape routes (TCVN 4451:2012). high = 2.18 m (VOH example with a 6 cm frame).
+  height_total_m:
+    typical: 2.12
+    low: 2.0
+    high: 2.18
+  height_total_definition: Clear opening height; with a 4.5-6 cm frame the overall height is 2.165-2.18 m.
+  scale_dimensions:
+  - id: door_width
+    view: front
+    typical_m: 0.81
+    low_m: 0.8
+    high_m: 2.11
+    source_ids:
+    - voh_lo_ban_doors
+    - tcvn_4451_2012
+    note: '0.81 m = 1-leaf clear width (0.90-0.93 m with frame). 2-leaf and 4-leaf clear widths in practice: 1.09, 1.26, 1.53, 1.76,
+      2.11 m. 0.80 m is the TCVN 4451 minimum for an escape-route door.'
+  landmarks:
+  - id: threshold
+    name_en: Door threshold / sill
+    name_vi: Ngưỡng cửa
+    height_m:
+      typical: 0.0
+      low: 0.0
+      high: 0.0
+    basis: definition
+    source_ids: []
+  - id: handle
+    name_en: Door handle / lock
+    name_vi: Tay nắm / khóa cửa
+    height_m:
+      typical: null
+      low: null
+      high: null
+    basis: not_published
+    source_ids: []
+    unverified: true
+    reason: No source for handle height found.
+  unverified: true
+  unverified_fields:
+  - no national "typical" door size
+  unverified_reason: TCVN 9366-1:2012 (wooden doors) and TCVN 9366-2:2012 (metal doors) are paywalled and were not read; QCVN 06:2022
+    values come from a secondary summary. Typical size comes from Lỗ Ban practice (VOH), which is a feng-shui-based builders convention,
+    not an engineering standard.
+  source_ids:
+  - voh_lo_ban_doors
+  - tcvn_4451_2012
+  - qcvn_06_2022_luatduonggia
+  note: 'QCVN 06:2022/BXD (summary, not read in full): escape exit clear height >= 1.9 m, clear width >= 0.8 m.'
+- id: door_folding_steel_cua_xep
+  category: door
+  name_en: Folding steel / aluminium shop gate (cửa xếp, cửa kéo Đài Loan)
+  name_vi: Cửa xếp / cửa kéo Đài Loan
+  sam_prompt: folding metal gate
+  sam_prompt_alternatives:
+  - metal gate
+  - accordion gate
+  threshold_class: null
+  suitability: low
+  height_total_m:
+    typical: null
+    low: null
+    high: 4.0
+  scale_dimensions:
+  - id: gate_width
+    view: front
+    typical_m: null
+    low_m: null
+    high_m: 7.0
+    source_ids:
+    - nhomduc_cua_keo
+    - thienphu_cua_keo
+  landmarks:
+  - id: bottom_rail
+    name_en: Bottom of gate leaf above floor
+    name_vi: Mép dưới cánh cửa
+    height_m:
+      typical: null
+      low: null
+      high: null
+    basis: not_published
+    source_ids: []
+    unverified: true
+    reason: Gap above floor not read from a verified source.
+  unverified: true
+  unverified_fields:
+  - height_total_m.typical
+  - height_total_m.low
+  - scale_dimensions.gate_width.typical_m
+  - scale_dimensions.gate_width.low_m
+  unverified_reason: No TCVN covers cửa xếp. Only a supplier "best-fit maximum" (7 m long, 4 m high) was found, repeated by two suppliers
+    that may share text. No typical or minimum size was found. Not recommended as a depth reference.
+  source_ids:
+  - nhomduc_cua_keo
+  - thienphu_cua_keo
+- id: door_roller_shutter_cua_cuon
+  category: door
+  name_en: Roller shutter (cửa cuốn), solid-slat or perforated
+  name_vi: Cửa cuốn
+  sam_prompt: roller shutter
+  sam_prompt_alternatives:
+  - shutter door
+  - garage door
+  threshold_class: null
+  suitability: low
+  derivation: low/high are the supplier minimum/maximum overall sizes (labelled HpbxWpb) for AUSTROLL (min 2.5x2.5, max 5.0x6.0) and
+    AUSTGRILL (min 2.5x2.8, max 5.0x6.0).
+  height_total_m:
+    typical: null
+    low: 2.5
+    high: 5.0
+  height_total_definition: Supplier "Hpb" (read as overall height including the roller box) - the clear opening is smaller by the box
+    height, which the pages do not give.
+  scale_dimensions:
+  - id: shutter_width
+    view: front
+    typical_m: null
+    low_m: 2.5
+    high_m: 6.0
+    source_ids:
+    - austdoor_austroll
+    - austdoor_austgrill
+  landmarks:
+  - id: bottom_bar
+    name_en: Bottom bar of shutter when closed
+    name_vi: Thanh đáy cửa
+    height_m:
+      typical: 0.0
+      low: null
+      high: null
+    basis: definition
+    source_ids: []
+  unverified: true
+  unverified_fields:
+  - height_total_m.typical
+  - scale_dimensions.shutter_width.typical_m
+  unverified_reason: One manufacturer (Austdoor) was read; "Hpb/Wpb" is not defined on the pages; no typical frontage size for nhà ống
+    was found. No TCVN covers roller shutters. Not recommended as a depth reference.
+  source_ids:
+  - austdoor_austroll
+  - austdoor_austgrill
+- id: bicycle_26in_700c
+  category: bicycle
+  name_en: Bicycle (26-inch ISO 559 or 700C ISO 622 wheel)
+  name_vi: Xe đạp (bánh 26 inch / 700c)
+  sam_prompt: bicycle
+  sam_prompt_alternatives:
+  - bike
+  - bicycle wheel
+  threshold_class: null
+  suitability: medium
+  derivation: 'Only the wheel is sourced. Outside diameter: low 0.632 m (narrow 26-inch tyre, 24 7/8 in), typical 0.66 m (26 x 2.125
+    "very close to 26 inches"; narrow 700C "as small as 660 mm"), high 0.698 m = 622 + 2 x 38 mm (700 x 38C, computed from the ISO bead-seat
+    diameter and tyre width).'
+  height_total_m:
+    typical: null
+    low: null
+    high: null
+  scale_dimensions:
+  - id: wheel_outer_diameter
+    view: side
+    typical_m: 0.66
+    low_m: 0.632
+    high_m: 0.698
+    source_ids:
+    - sheldonbrown_tire_sizing
+  landmarks:
+  - id: wheel_hub
+    name_en: Wheel hub centre
+    name_vi: Tâm trục bánh
+    height_m:
+      typical: 0.33
+      low: 0.316
+      high: 0.349
+    basis: derived_from_tyre_size
+    source_ids:
+    - sheldonbrown_tire_sizing
+  - id: saddle_top
+    name_en: Saddle top
+    name_vi: Yên xe
+    height_m:
+      typical: null
+      low: null
+      high: null
+    basis: not_published
+    source_ids: []
+    unverified: true
+    reason: No sourced bicycle frame/saddle dimensions were retrieved.
+  unverified: true
+  unverified_fields:
+  - height_total_m
+  - frame and saddle heights
+  unverified_reason: Overall height, wheelbase and saddle height were not sourced; only wheel diameters.
+  source_ids:
+  - sheldonbrown_tire_sizing
+- id: plastic_chair_duytan
+  category: furniture
+  name_en: Plastic armchair (Duy Tân No.715 "medium armchair", PP)
+  name_vi: Ghế nhựa có tựa (Duy Tân số 715)
+  sam_prompt: plastic chair
+  sam_prompt_alternatives:
+  - chair
+  - stool
+  threshold_class: null
+  suitability: low
+  height_total_m:
+    typical: 0.65
+    low: 0.65
+    high: 0.65
+  height_total_definition: Overall height (top of backrest). Seat height is NOT published.
+  scale_dimensions:
+  - id: overall_length
+    view: side
+    typical_m: 0.48
+    low_m: 0.48
+    high_m: 0.48
+    source_ids:
+    - duytan_medium_armchair
+    note: Published as "48 x 43 x 65 cm"; the page labels the order length x width x height.
+  landmarks:
+  - id: seat_top
+    name_en: Seat surface
+    name_vi: Mặt ngồi
+    height_m:
+      typical: null
+      low: null
+      high: null
+    basis: not_published
+    source_ids: []
+    unverified: true
+    reason: Duy Tân does not publish seat height for this model; one model only was read, no range across models.
+  - id: backrest_top
+    name_en: Top of backrest
+    name_vi: Đỉnh lưng tựa
+    height_m:
+      typical: 0.65
+      low: 0.65
+      high: 0.65
+    basis: official_spec
+    source_ids:
+    - duytan_medium_armchair
+  unverified: true
+  unverified_fields:
+  - seat_top
+  unverified_reason: Seat height unsourced; a single product is not a "typical" chair.
+  source_ids:
+  - duytan_medium_armchair
+- id: kerb_urban_street
+  category: street_furniture
+  name_en: Kerb (bó vỉa) at pavement edge or traffic island, Vietnamese urban street
+  name_vi: Bó vỉa đường đô thị
+  sam_prompt: curb
+  sam_prompt_alternatives:
+  - kerb
+  - sidewalk curb
+  - road curb
+  threshold_class: null
+  suitability: low
+  derivation: 'TCVN 13592:2022 clause 9.7.4: kerb crest of pavement or traffic island at least 12.5 cm above the carriageway edge (not
+    mandatory at ramps, wheelchair access, low-speed commercial/residential streets V <= 30 km/h and pedestrian streets). Clause 9.7.5:
+    median kerb crest at least 30 cm above the road, reducible with justification to no less than 15 cm where design speed < 50 km/h.'
+  height_total_m:
+    typical: 0.125
+    low: 0.125
+    high: 0.3
+  height_total_definition: 'Height of kerb crest above carriageway edge. typical is set equal to the MINIMUM (0.125 m): the standard
+    gives only minima, so real kerbs are probably higher (not sourced).'
+  scale_dimensions: []
+  landmarks:
+  - id: kerb_crest
+    name_en: Kerb crest above carriageway
+    name_vi: Đỉnh bó vỉa
+    height_m:
+      typical: 0.125
+      low: 0.125
+      high: 0.3
+    basis: national_standard_minimum
+    source_ids:
+    - tcvn_13592_2022_atld
+  unverified: true
+  unverified_fields:
+  - height_total_m.typical (real-world kerb height)
+  unverified_reason: Standard gives minimums only; as-built kerb heights vary and ramps/low-speed streets are exempt. TCXDVN 104:2007
+    could not be read; the value comes from its current replacement TCVN 13592:2022. Submerged kerbs are also hard to see in photos.
+  source_ids:
+  - tcvn_13592_2022_atld
+- id: traffic_sign_post
+  category: street_furniture
+  name_en: Pole-mounted road sign (biển báo trên cột)
+  name_vi: Biển báo giao thông trên cột
+  sam_prompt: traffic sign
+  sam_prompt_alternatives:
+  - road sign
+  - street sign post
+  threshold_class: null
+  suitability: medium
+  derivation: 'QCVN 41:2019/BGTVT: sign bottom edge to road surface 2.0 m in built-up areas (1.8 m outside); sign groups lowest edge
+    2.0 m / 1.7 m; signs for pedestrians and non-motorised vehicles 1.8 m above road/shoulder/pavement; special cases 1.2-5.0 m (No.507
+    "Hướng rẽ" 1.2-1.5 m).'
+  height_total_m:
+    typical: null
+    low: null
+    high: null
+  height_total_definition: Pole total height is not in the retrieved excerpt of Article 24.
+  unverified: true
+  unverified_fields:
+  - height_total_m
+  unverified_reason: Pole height above ground and burial depth are not in the retrieved excerpt of QCVN 41:2019 Article 24; the sign-bottom
+    heights come from Article 22.
+  scale_dimensions:
+  - id: sign_face_size
+    view: front
+    typical_m: 0.7
+    low_m: 0.6
+    high_m: 0.7
+    source_ids:
+    - qcvn_41_2019_art16
+    note: 'Urban roads (coefficient 1): circle D = 0.70 m, octagon D = 0.60 m, triangle side = 0.70 m. Road type and legacy signs vary;
+      rectangular sign sizes not read.'
+  - id: post_diameter
+    view: front
+    typical_m: 0.08
+    low_m: 0.075
+    high_m: 0.085
+    source_ids:
+    - qcvn_41_2019_art24
+    note: Minimum cross-section diameter 8 cm +/- 5 mm.
+  landmarks:
+  - id: sign_bottom_edge
+    name_en: Bottom edge of sign panel above road surface
+    name_vi: Mép dưới biển báo
+    height_m:
+      typical: 2.0
+      low: 1.2
+      high: 5.0
+    basis: official_spec
+    source_ids:
+    - qcvn_41_2019_art22
+    note: 2.0 m inside built-up areas (1.8 m outside); 1.2 and 5.0 are the outer limits for special cases. Useful only for deep water
+      (> ~1 m) or road-surface checks; legacy signs may not comply.
+  source_ids:
+  - qcvn_41_2019_art16
+  - qcvn_41_2019_art22
+  - qcvn_41_2019_art24
+- id: utility_pole
+  category: street_furniture
+  name_en: Utility / electricity pole (cột điện)
+  name_vi: Cột điện
+  sam_prompt: utility pole
+  sam_prompt_alternatives:
+  - electric pole
+  - power pole
+  threshold_class: null
+  suitable: false
+  suitability: unsuitable
+  unsuitable_reason: Total pole length is a family of standard sizes (TCVN 5847:1994 covered 10-20 m centrifugal concrete poles; the
+    2016 tables were not read) while the part above ground depends on the embedment depth chosen per site. No standard feature (cross-arm,
+    label plate, fixed band) at a known low height was found, and the base is often hidden by vehicles, signage and water. It cannot
+    give a metric scale or a landmark near a typical street waterline.
+  height_total_m:
+    typical: null
+    low: null
+    high: null
+  scale_dimensions: []
+  landmarks: []
+  source_ids:
+  - tcvn_5847_2016
+unverified_summary:
+- object: motorbike_generic_vn
+  item: landmark:footboard_or_footpeg
+  reason: Not published by the manufacturers.
+- object: motorbike_generic_vn
+  item: landmark:exhaust_outlet
+  reason: Not published by the manufacturers.
+- object: motorbike_generic_vn
+  item: landmark:air_intake
+  reason: Not published by the manufacturers.
+- object: scooter_honda_wave_alpha
+  item: landmark:footpeg
+  reason: Not given on the manufacturer spec page; needs a physical measurement or a dealer drawing.
+- object: scooter_honda_wave_alpha
+  item: landmark:exhaust_outlet
+  reason: Exhaust height is not published by Honda Việt Nam or Yamaha Việt Nam in the pages read.
+- object: scooter_honda_wave_alpha
+  item: landmark:air_intake
+  reason: Air-intake height is not published in the pages read.
+- object: scooter_honda_vision
+  item: landmark:footboard
+  reason: Not given on the manufacturer spec page; needs a physical measurement or a dealer drawing.
+- object: scooter_honda_vision
+  item: landmark:exhaust_outlet
+  reason: Exhaust height is not published by Honda Việt Nam or Yamaha Việt Nam in the pages read.
+- object: scooter_honda_vision
+  item: landmark:air_intake
+  reason: Air-intake height is not published in the pages read.
+- object: scooter_honda_air_blade
+  item: landmark:footboard
+  reason: Not given on the manufacturer spec page; needs a physical measurement or a dealer drawing.
+- object: scooter_honda_air_blade
+  item: landmark:exhaust_outlet
+  reason: Exhaust height is not published by Honda Việt Nam or Yamaha Việt Nam in the pages read.
+- object: scooter_honda_air_blade
+  item: landmark:air_intake
+  reason: Air-intake height is not published in the pages read.
+- object: scooter_yamaha_exciter
+  item: landmark:footpeg
+  reason: Not given on the manufacturer spec page; needs a physical measurement or a dealer drawing.
+- object: scooter_yamaha_exciter
+  item: landmark:exhaust_outlet
+  reason: Exhaust height is not published by Honda Việt Nam or Yamaha Việt Nam in the pages read.
+- object: scooter_yamaha_exciter
+  item: landmark:air_intake
+  reason: Air-intake height is not published in the pages read.
+- object: scooter_honda_lead
+  item: landmark:footboard
+  reason: Not given on the manufacturer spec page; needs a physical measurement or a dealer drawing.
+- object: scooter_honda_lead
+  item: landmark:exhaust_outlet
+  reason: Exhaust height is not published by Honda Việt Nam or Yamaha Việt Nam in the pages read.
+- object: scooter_honda_lead
+  item: landmark:air_intake
+  reason: Air-intake height is not published in the pages read.
+- object: car_toyota_vios
+  item: landmark:sill_bottom
+  reason: Not on manufacturer or press spec pages; needs measurement.
+- object: car_toyota_vios
+  item: landmark:door_handle
+  reason: Not on spec pages; needs measurement.
+- object: car_toyota_vios
+  item: landmark:bonnet_top
+  reason: Not on spec pages; needs measurement.
+- object: car_hyundai_accent
+  item: landmark:sill_bottom
+  reason: Not on manufacturer or press spec pages; needs measurement.
+- object: car_hyundai_accent
+  item: landmark:door_handle
+  reason: Not on spec pages; needs measurement.
+- object: car_hyundai_accent
+  item: landmark:bonnet_top
+  reason: Not on spec pages; needs measurement.
+- object: car_kia_morning
+  item: landmark:sill_bottom
+  reason: Not on manufacturer or press spec pages; needs measurement.
+- object: car_kia_morning
+  item: landmark:door_handle
+  reason: Not on spec pages; needs measurement.
+- object: car_kia_morning
+  item: landmark:bonnet_top
+  reason: Not on spec pages; needs measurement.
+- object: car_mitsubishi_xpander
+  item: landmark:sill_bottom
+  reason: Not on manufacturer or press spec pages; needs measurement.
+- object: car_mitsubishi_xpander
+  item: landmark:door_handle
+  reason: Not on spec pages; needs measurement.
+- object: car_mitsubishi_xpander
+  item: landmark:bonnet_top
+  reason: Not on spec pages; needs measurement.
+- object: car_ford_ranger
+  item: landmark:sill_bottom
+  reason: Not on manufacturer or press spec pages; needs measurement.
+- object: car_ford_ranger
+  item: landmark:door_handle
+  reason: Not on spec pages; needs measurement.
+- object: car_ford_ranger
+  item: landmark:bonnet_top
+  reason: Not on spec pages; needs measurement.
+- object: car_generic_vn
+  item: landmark:sill_bottom
+  reason: Not published.
+- object: car_generic_vn
+  item: landmark:door_handle
+  reason: Not published.
+- object: car_generic_vn
+  item: landmark:bonnet_top
+  reason: Not published.
+- object: car_wheel_passenger
+  item: landmark:rim_bottom_edge
+  reason: Rim diameter is published (15-17 in) but rim-edge height above ground also depends on tyre deflection.
+- object: person_adult_vietnamese
+  item: landmark:chest
+  reason: Numeric fraction (0.720) is read from the figure, but the anatomical landmark it denotes is not labelled in the source.
+- object: person_adult_vietnamese
+  item: landmark:waist
+  reason: Drillis & Contini (Winter Fig. 4.1) give no waist or navel proportion; no other anthropometric source was retrieved. Use hip
+    (0.530H) as the lower-trunk landmark.
+- object: door_swing_shophouse
+  item: landmark:handle
+  reason: No source for handle height found.
+- object: door_swing_shophouse
+  item: 'object-level: no national "typical" door size'
+  reason: TCVN 9366-1:2012 (wooden doors) and TCVN 9366-2:2012 (metal doors) are paywalled and were not read; QCVN 06:2022 values come
+    from a secondary summary. Typical size comes from Lỗ Ban practice (VOH), which is a feng-shui-based builders convention, not an
+    engineering standard.
+- object: door_folding_steel_cua_xep
+  item: landmark:bottom_rail
+  reason: Gap above floor not read from a verified source.
+- object: door_folding_steel_cua_xep
+  item: 'object-level: height_total_m.typical, height_total_m.low, scale_dimensions.gate_width.typical_m, scale_dimensions.gate_width.low_m'
+  reason: No TCVN covers cửa xếp. Only a supplier "best-fit maximum" (7 m long, 4 m high) was found, repeated by two suppliers that
+    may share text. No typical or minimum size was found. Not recommended as a depth reference.
+- object: door_roller_shutter_cua_cuon
+  item: 'object-level: height_total_m.typical, scale_dimensions.shutter_width.typical_m'
+  reason: One manufacturer (Austdoor) was read; "Hpb/Wpb" is not defined on the pages; no typical frontage size for nhà ống was found.
+    No TCVN covers roller shutters. Not recommended as a depth reference.
+- object: bicycle_26in_700c
+  item: landmark:saddle_top
+  reason: No sourced bicycle frame/saddle dimensions were retrieved.
+- object: bicycle_26in_700c
+  item: 'object-level: height_total_m, frame and saddle heights'
+  reason: Overall height, wheelbase and saddle height were not sourced; only wheel diameters.
+- object: plastic_chair_duytan
+  item: landmark:seat_top
+  reason: Duy Tân does not publish seat height for this model; one model only was read, no range across models.
+- object: plastic_chair_duytan
+  item: 'object-level: seat_top'
+  reason: Seat height unsourced; a single product is not a "typical" chair.
+- object: kerb_urban_street
+  item: 'object-level: height_total_m.typical (real-world kerb height)'
+  reason: Standard gives minimums only; as-built kerb heights vary and ramps/low-speed streets are exempt. TCXDVN 104:2007 could not
+    be read; the value comes from its current replacement TCVN 13592:2022. Submerged kerbs are also hard to see in photos.
+- object: traffic_sign_post
+  item: 'object-level: height_total_m'
+  reason: Pole height above ground and burial depth are not in the retrieved excerpt of QCVN 41:2019 Article 24; the sign-bottom heights
+    come from Article 22.
