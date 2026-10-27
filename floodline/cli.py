@@ -37,6 +37,26 @@ def _analyse(args: argparse.Namespace) -> int:
     return 0
 
 
+def _seed(args: argparse.Namespace) -> int:
+    from floodline import scenario
+    from floodline.config import settings
+    from floodline.meta.client import ModelClient
+    from floodline.store import Store
+
+    store = Store(settings().state_dir / "reports")
+    if not args.keep:
+        store.clear()
+    client = ModelClient()
+    for r in scenario.seed(store, client):
+        est = r.analysis.get("estimate") or {}
+        pri = (r.triage or {}).get("priority")
+        words = r.note or r.transcript or ""
+        depth = f"{est.get('low_m', '-')}-{est.get('high_m', '-')} m"
+        print(f"{r.id}  {depth}  priority={pri}  {words[:70]}")
+    print(f"calls={client.stats.calls} replayed={client.stats.replayed}", file=sys.stderr)
+    return 0
+
+
 def _serve(args: argparse.Namespace) -> int:
     import uvicorn
 
@@ -52,6 +72,10 @@ def main(argv: list[str] | None = None) -> int:
     a.add_argument("photos", nargs="+")
     a.add_argument("--out", default="var/analyses")
     a.set_defaults(func=_analyse)
+
+    d = sub.add_parser("seed", help="load the Huế demo scenario into the local store")
+    d.add_argument("--keep", action="store_true", help="keep existing reports")
+    d.set_defaults(func=_seed)
 
     s = sub.add_parser("serve", help="run the API and the web app")
     s.add_argument("--host", default="127.0.0.1")
