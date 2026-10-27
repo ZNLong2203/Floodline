@@ -40,6 +40,8 @@
   --k-landmark: #0d9488;
   --k-fraction: #8b3fd9;
   --k-spark: #d6336c;
+  --k-closeup-landmark: #0e7490;
+  --k-closeup-fraction: #c026d3;
   --k-report: #64748b;
   --k-other: #64748b;
 
@@ -91,6 +93,8 @@
   --k-landmark: #2fc2b2;
   --k-fraction: #b07cff;
   --k-spark: #ff6b9d;
+  --k-closeup-landmark: #2bb8d8;
+  --k-closeup-fraction: #e879f9;
 
   --shadow-1: 0 1px 2px rgba(0, 0, 0, 0.4);
   --shadow-2: 0 6px 18px rgba(0, 0, 0, 0.45);

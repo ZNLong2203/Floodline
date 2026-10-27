@@ -122,6 +122,14 @@ if (want("console") && !only?.includes("live")) {
   await wait(1200);
   await shot(page, "console-dark");
   await page.click('button[aria-label="Switch to light theme"]');
+  await page.click(".detail__head .iconbtn >> nth=0").catch(() => {});
+
+  // scenario replay progress (seed: {index, total} on each report.created)
+  await page.click(".demo__btn");
+  await page.click(".demo__menu button >> nth=0");
+  await wait(4200);
+  await shot(page, "console-replay-progress");
+  await page.waitForSelector(".demo__btn:not(.is-running)", { timeout: 30000 }).catch(() => {});
   await ctx.close();
 }
 
@@ -170,6 +178,114 @@ if (want("report") || only?.includes("report-live")) {
   await ctx.close();
 }
 
+// ------------------------------------------------------------- seeded backend, read-only (ONLY=real)
+// Only navigates, opens drawers and asks for routes (GET). Never presses Replay, Clear,
+// status buttons or submits a report: the seeded backend spends real API credit.
+if (only?.includes("real")) {
+  const ctx = await browser.newContext({ viewport: { width: 1280, height: 720 } });
+  const page = await ctx.newPage();
+  page.on("pageerror", (e) => console.error("pageerror:", e.message));
+  // Hard guard: abort anything but GET to the API.
+  await page.route("**/api/**", (route) => {
+    const req = route.request();
+    if (req.method() !== "GET") {
+      console.error(`blocked ${req.method()} ${req.url()}`);
+      return route.abort();
+    }
+    return route.continue();
+  });
+  const scrollTo = async (index) => {
+    await page.evaluate((i) => {
+      const s = document.querySelector(".detail__scroll");
+      const sec = [...document.querySelectorAll(".dsec")][i];
+      if (s && sec) s.scrollTop = sec.offsetTop - 10;
+    }, index);
+    await wait(600);
+  };
+  const back = async () => {
+    await page.click('button[aria-label="Back to the queue"]').catch(() => {});
+    await wait(500);
+  };
+
+  await page.goto(`${base}/`);
+  await page.waitForSelector(".card:not(.card--skeleton)", { timeout: 20000 });
+  await page.waitForSelector(".mk");
+  await wait(5000);
+  await shot(page, "real-console-truck");
+
+  await page.click(".routebtn");
+  await page.click(".preset >> nth=0");
+  await page.waitForSelector(".routecard__result", { timeout: 15000 });
+  await wait(2500);
+  await shot(page, "real-route-thanhnoi");
+
+  await page.click(".routecard__result .btn");
+  await page.click(".preset >> nth=1");
+  await page.waitForSelector(".noroute", { timeout: 15000 });
+  await wait(2500);
+  await shot(page, "real-route-dongba-noroute");
+  await page.click('button[aria-label="Close route planner"]');
+  await wait(600);
+
+  await page.click('.card:has-text("Kiệt Chi Lăng ngập quá đầu người")');
+  await page.waitForSelector(".detail");
+  await wait(3000);
+  await shot(page, "real-drawer-chilang");
+  await scrollTo(0);
+  await shot(page, "real-drawer-chilang-depth");
+  await back();
+
+  await page.click('.card:has(.card__clip):has-text("Phú Xuân")');
+  await page.waitForSelector(".detail");
+  await wait(4500);
+  await shot(page, "real-drawer-clip");
+  await page.evaluate(() => {
+    const s = document.querySelector(".detail__scroll");
+    const c = document.querySelector(".clipobjs");
+    if (s && c) s.scrollTop = c.offsetTop - 250;
+  });
+  await wait(800);
+  await shot(page, "real-drawer-clip-frames");
+  await scrollTo(1);
+  await shot(page, "real-evidence-clip");
+  await back();
+
+  await page.click('.card:has-text("cây xăng Hùng Vương")');
+  await page.waitForSelector(".detail");
+  await wait(2500);
+  await scrollTo(1);
+  await shot(page, "real-evidence");
+  await back();
+
+  // dark theme is a per-browser setting (localStorage), nothing is written to the server
+  await page.click('button[aria-label="Switch to dark theme"]');
+  await wait(3000);
+  await shot(page, "real-console-dark");
+  await page.click('button[aria-label="Switch to light theme"]');
+
+  await page.goto(`${base}/attribution`);
+  await page.waitForSelector(".attr__table", { timeout: 15000 });
+  await wait(3500);
+  await shot(page, "real-attribution");
+  await ctx.close();
+}
+
+// ------------------------------------------------------------- attribution (needs the backend)
+if (only?.includes("attribution")) {
+  for (const [name, vp] of [["attribution-1280", { width: 1280, height: 720 }], ["attribution-390", { width: 390, height: 844 }]]) {
+    const ctx = await browser.newContext({ viewport: vp, deviceScaleFactor: vp.width < 500 ? 2 : 1 });
+    const page = await ctx.newPage();
+    page.on("pageerror", (e) => console.error("pageerror:", e.message));
+    await page.goto(`${base}/attribution`);
+    await page.waitForSelector(".attr__table, .notice", { timeout: 15000 }).catch(() => {});
+    await wait(3500);
+    await shot(page, name);
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    console.log(`horizontal overflow on /attribution at ${vp.width}px:`, overflow);
+    await ctx.close();
+  }
+}
+
 // ------------------------------------------------------------- real backend (ONLY=live)
 if (only?.includes("live")) {
   const ctx = await browser.newContext({ viewport: { width: 1280, height: 720 } });
@@ -181,21 +297,25 @@ if (only?.includes("live")) {
   await shot(page, "live-empty");
   await page.click(".demo__btn");
   await page.click(".demo__menu button >> nth=0");
-  await wait(Number(process.env.SEED_WAIT ?? 25000));
-  await shot(page, "live-seeding");
-  await page.waitForSelector(".demo__btn:not(.is-running)", { timeout: 240000 }).catch(() => {});
-  await wait(2500);
-  await shot(page, "live-seeded");
-  await page.click(".card >> nth=0").catch(() => {});
-  await wait(2000);
-  await shot(page, "live-detail");
-  await page.evaluate(() => {
-    const s = document.querySelector(".detail__scroll");
-    const ev = [...document.querySelectorAll(".dsec")][1];
-    if (s && ev) s.scrollTop = ev.offsetTop - 10;
-  });
-  await wait(500);
-  await shot(page, "live-evidence");
+  if (process.env.SEED_WAIT) {
+    // the backend has recordings for the scenario: wait for the replay to finish
+    await page.waitForSelector(".demo__btn:not(.is-running)", { timeout: Number(process.env.SEED_WAIT) }).catch(() => {});
+    await wait(2500);
+    await shot(page, "live-seeded");
+    await page.click(".card >> nth=0").catch(() => {});
+    await wait(2000);
+    await shot(page, "live-detail");
+    await page.evaluate(() => {
+      const s = document.querySelector(".detail__scroll");
+      const ev = [...document.querySelectorAll(".dsec")][1];
+      if (s && ev) s.scrollTop = ev.offsetTop - 10;
+    });
+    await wait(500);
+    await shot(page, "live-evidence");
+  } else {
+    await wait(2500);
+    await shot(page, "live-replay-result");
+  }
   await ctx.close();
 }
 

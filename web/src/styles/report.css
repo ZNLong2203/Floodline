@@ -182,6 +182,110 @@
   color: var(--text-2);
 }
 
+.capture {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.capture .camerabtn {
+  padding: 20px 10px 16px;
+  text-align: center;
+}
+
+.capture .camerabtn__icon {
+  width: 62px;
+  height: 62px;
+  margin-bottom: 4px;
+}
+
+.capture .camerabtn__text {
+  font-size: 16.5px;
+  line-height: 1.25;
+}
+
+.camerabtn--video {
+  background: var(--surface);
+  border-style: solid;
+  border-color: var(--border-strong);
+}
+
+.camerabtn--video .camerabtn__icon {
+  background: var(--brand);
+  box-shadow: none;
+}
+
+:root[data-theme="dark"] .camerabtn--video .camerabtn__icon {
+  background: var(--surface-3);
+  color: var(--text);
+}
+
+@media (max-width: 340px) {
+  .capture {
+    grid-template-columns: 1fr;
+  }
+}
+
+.rp__preview video {
+  display: block;
+  width: 100%;
+  max-height: 340px;
+  background: #000;
+}
+
+.rp__cliphint {
+  padding: 8px 12px;
+  background: var(--warn-bg);
+  color: var(--warn);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.rp__dur {
+  margin-left: auto;
+  align-self: center;
+  font-size: 13px;
+  font-weight: 650;
+  color: var(--text-2);
+}
+
+.scan video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.6);
+}
+
+.rp__imgwrap video {
+  display: block;
+  width: 100%;
+  max-height: 360px;
+  background: #000;
+}
+
+.rp__clipbadge {
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 650;
+  color: #fff;
+  background: rgba(10, 16, 24, 0.66);
+  pointer-events: none;
+}
+
+.rp__sparkwatch {
+  margin: 8px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-2);
+}
+
 .rp__gallery {
   justify-self: center;
   font-size: 13px;
@@ -625,6 +729,12 @@
   color: var(--text-2);
   font-size: 14.5px;
   line-height: 1.5;
+}
+
+.rp__error .rp__errdetail {
+  margin-top: -6px;
+  font-size: 12.5px;
+  color: var(--text-3);
 }
 
 .rp__safety {

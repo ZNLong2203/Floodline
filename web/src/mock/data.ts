@@ -2,7 +2,7 @@
 // data/catalog.yaml, and the estimate, verdicts and priority are computed with the
 // same formulas as the backend, so everything on screen is internally consistent.
 import { FALLBACK_VEHICLES } from "../lib/catalog";
-import { assess, combine } from "../lib/passability";
+import { assess, CALIBRATION_FITTED, calibrate, COMBINE_FACTOR, combine, type WorkingReading } from "../lib/passability";
 import type { Analysis, ObjectFinding, Reading, Report, ReportStatus, TriageFacts } from "../lib/types";
 import { renderScene, type Mood, type SceneObject } from "./scenes";
 
@@ -39,6 +39,8 @@ interface ObjSpec {
   landmark: string;
   fraction?: number;
   scale?: [number, number, string];
+  /** Spark's second look at an enlarged crop of the object. */
+  closeup?: { landmark?: string; fraction?: number; confidence: "low" | "medium" | "high" };
   standing?: boolean;
   plane?: SceneObject["plane"];
   flip?: boolean;
@@ -70,19 +72,31 @@ interface Spec {
 
 const r = (lo: number, hi: number) => [Math.round(lo * 1000) / 1000, Math.round(hi * 1000) / 1000] as const;
 
-function readingsFor(o: ObjSpec, i: number): Reading[] {
+function readingsFor(o: ObjSpec, i: number): WorkingReading[] {
   const tag = `${o.label}#${i + 1}`;
   const out: Reading[] = [];
   if (o.standing === false) return out;
   if (o.scale) out.push({ source: `scale:${tag}`, low_m: o.scale[0], high_m: o.scale[1], note: o.scale[2] });
   const lm = LANDMARKS[`${o.label}.${o.landmark}`];
   if (lm) out.push({ source: `landmark:${tag}`, low_m: lm[0], high_m: lm[1], note: o.landmark });
-  if (o.fraction != null) {
+  const frac = (f: number) => {
     const [h0, h1] = HEIGHT[o.label];
-    const [lo, hi] = r(Math.max(0, o.fraction - 0.12) * h0, Math.min(1, o.fraction + 0.12) * h1);
+    return r(Math.max(0, f - 0.12) * h0, Math.min(1, f + 0.12) * h1);
+  };
+  if (o.fraction != null) {
+    const [lo, hi] = frac(o.fraction);
     out.push({ source: `fraction:${tag}`, low_m: lo, high_m: hi, note: o.fraction.toFixed(2) });
   }
-  return out;
+  const c = o.closeup;
+  if (c?.landmark) {
+    const clm = LANDMARKS[`${o.label}.${c.landmark}`];
+    if (clm) out.push({ source: `closeup-landmark:${tag}`, low_m: clm[0], high_m: clm[1], note: `${c.landmark} (${c.confidence})` });
+  }
+  if (c?.fraction != null) {
+    const [lo, hi] = frac(c.fraction);
+    out.push({ source: `closeup-fraction:${tag}`, low_m: lo, high_m: hi, note: `${c.fraction.toFixed(2)} (${c.confidence})` });
+  }
+  return calibrate(out);
 }
 
 /** floodline/triage.py score() */
@@ -161,14 +175,16 @@ export function build(spec: Spec, now: number): Report {
               contact_fraction: 0.86,
               columns: box[2] - box[0],
             },
-      readings: readingsFor(o, i),
+      readings: readingsFor(o, i).map(({ sd: _sd, ...rest }) => rest),
     };
   });
-  const readings = objects.flatMap((o) => o.readings);
+  const working = spec.objects.flatMap((o, i) => readingsFor(o, i));
   if (!spec.noWater)
-    readings.push({ source: "spark:holistic", low_m: spec.holistic[0], high_m: spec.holistic[1], note: "Spark's own range" });
-  const estimate = spec.noWater ? null : combine(readings);
-  const flowing = spec.flow === "slow" || spec.flow === "fast";
+    working.push(
+      ...calibrate([{ source: "spark:holistic", low_m: spec.holistic[0], high_m: spec.holistic[1], note: "Spark's own range" }]),
+    );
+  const estimate = spec.noWater ? null : combine(working, 3, COMBINE_FACTOR);
+  const flowing = spec.flow === "fast";
   const verdicts = estimate ? assess(estimate, FALLBACK_VEHICLES, flowing) : [];
   const warnings = [
     ...(spec.noWater ? ["no water found in the photo"] : []),
@@ -193,6 +209,7 @@ export function build(spec: Spec, now: number): Report {
     water_fraction: spec.noWater ? 0 : scene.waterFraction,
     seconds: 10 + (spec.seed % 70) / 10,
     warnings,
+    calibration: CALIBRATION_FITTED,
   };
   const [priority, reasons] = score(spec.facts, estimate?.mean_m ?? null);
   const at = now - spec.minutesAgo * 60;
@@ -226,7 +243,7 @@ export const SPECS: Spec[] = [
     flow: "still",
     seed: 11,
     objects: [
-      { label: "scooter", x: 290, orientation: "side", landmark: "seat", fraction: 0.68, scale: [0.68, 0.81, "71px visible of 309px wide"], colour: "#b23a35" },
+      { label: "scooter", x: 290, orientation: "side", landmark: "seat", fraction: 0.68, scale: [0.68, 0.81, "71px visible of 309px wide"], closeup: { landmark: "seat", fraction: 0.7, confidence: "high" }, colour: "#b23a35" },
       { label: "person", x: 590, orientation: "front_or_back", landmark: "knee", fraction: 0.45, colour: "#2f6db3" },
     ],
     holistic: [0.6, 0.9],
@@ -260,7 +277,7 @@ export const SPECS: Spec[] = [
     flow: "slow",
     seed: 23,
     objects: [
-      { label: "person", x: 330, orientation: "front_or_back", landmark: "chest", fraction: 0.74, colour: "#c58b1c" },
+      { label: "person", x: 330, orientation: "front_or_back", landmark: "chest", fraction: 0.74, closeup: { landmark: "chest", confidence: "medium" }, colour: "#c58b1c" },
       { label: "door", x: 140, orientation: "front_or_back", landmark: "unclear", fraction: 0.55, colour: "#8f9aa4" },
       { label: "car", x: 610, orientation: "side", landmark: "unclear", fraction: 0.25, flip: true, colour: "#e0e2e4" },
     ],
@@ -389,7 +406,7 @@ export const SPECS: Spec[] = [
     flow: "still",
     seed: 67,
     objects: [
-      { label: "person", x: 250, orientation: "front_or_back", landmark: "thigh", fraction: 0.4, colour: "#d9a531" },
+      { label: "person", x: 250, orientation: "front_or_back", landmark: "thigh", fraction: 0.4, closeup: { landmark: "thigh", fraction: 0.42, confidence: "high" }, colour: "#d9a531" },
       { label: "car", x: 560, orientation: "side", landmark: "sill", scale: [0.55, 0.69, "112px visible of 506px wide"], colour: "#3c4f6b" },
     ],
     holistic: [0.5, 0.8],
@@ -484,7 +501,7 @@ export const LATE_SPEC: Spec = {
   flow: "still",
   seed: 97,
   objects: [
-    { label: "person", x: 300, orientation: "front_or_back", landmark: "waist", fraction: 0.55, colour: "#a83a6a" },
+    { label: "person", x: 300, orientation: "front_or_back", landmark: "waist", fraction: 0.55, closeup: { landmark: "waist", confidence: "low" }, colour: "#a83a6a" },
     { label: "door", x: 620, orientation: "front_or_back", landmark: "unclear", fraction: 0.38, colour: "#9aa3aa" },
     { label: "scooter", x: 520, orientation: "side", landmark: "above_seat", plane: "front", colour: "#2f7f6d" },
   ],

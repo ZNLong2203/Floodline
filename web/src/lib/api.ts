@@ -1,4 +1,5 @@
 import type {
+  AttributionData,
   Catalog,
   Health,
   LiveEvent,
@@ -11,7 +12,9 @@ import type {
 export type LiveState = "connecting" | "live" | "offline";
 
 export interface NewReport {
-  photo: File | Blob;
+  /** A photo, or a 10–30 s clip in `video` (sent as the `video` field instead of `photo`). */
+  photo?: File | Blob | null;
+  video?: File | Blob | null;
   lat: number;
   lon: number;
   note: string;
@@ -31,6 +34,8 @@ export interface FloodlineApi {
   demoSeed(): Promise<{ created: number }>;
   /** Clear every report (emits reports.reset). */
   demoReset(): Promise<void>;
+  /** Author, licence and source of every demo photo and clip (data/demo/photos.json). */
+  attribution(): Promise<AttributionData>;
   /** Subscribe to live events. Returns an unsubscribe function. */
   subscribe(onEvent: (e: LiveEvent) => void, onState: (s: LiveState) => void): () => void;
 }
@@ -86,8 +91,13 @@ const real: FloodlineApi = {
   reports: () => call("/api/reports"),
   createReport(input, signal) {
     const form = new FormData();
-    const name = input.photo instanceof File ? input.photo.name : "photo.jpg";
-    form.append("photo", input.photo, name || "photo.jpg");
+    if (input.video) {
+      const name = input.video instanceof File ? input.video.name : "clip.mp4";
+      form.append("video", input.video, name || "clip.mp4");
+    } else if (input.photo) {
+      const name = input.photo instanceof File ? input.photo.name : "photo.jpg";
+      form.append("photo", input.photo, name || "photo.jpg");
+    }
     form.append("lat", String(input.lat));
     form.append("lon", String(input.lon));
     form.append("note", input.note);
@@ -115,6 +125,7 @@ const real: FloodlineApi = {
   },
   demoSeed: () => call("/api/demo/seed?reset=true", { method: "POST" }),
   demoReset: () => call<unknown>("/api/demo/reset", { method: "POST" }).then(() => undefined),
+  attribution: () => call("/api/attribution"),
   subscribe(onEvent, onState) {
     onState("connecting");
     const es = new EventSource("/api/events");
@@ -152,6 +163,8 @@ export const api: FloodlineApi = isMock
       route: (f, t, v) => mock().then((a) => a.route(f, t, v)),
       demoSeed: () => mock().then((a) => a.demoSeed()),
       demoReset: () => mock().then((a) => a.demoReset()),
+      // Credits are static data: use the backend's when it is running.
+      attribution: () => call<AttributionData>("/api/attribution").catch(() => ({ photos: [], videos: [] })),
       subscribe(onEvent, onState) {
         let stop: (() => void) | null = null;
         let cancelled = false;

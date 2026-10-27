@@ -7,6 +7,8 @@ import type { Vehicle } from "../lib/types";
 export interface SeedState {
   running: boolean;
   received: number;
+  /** From the `seed: {index, total}` field on scenario report.created events. */
+  total: number | null;
   message: string | null;
 }
 
@@ -118,9 +120,16 @@ function DemoMenu({ seed, onSeed, onClear }: { seed: SeedState; onSeed(): void; 
         aria-haspopup="menu"
         aria-expanded={open}
         onClick={() => setOpen((o) => !o)}
+        style={
+          seed.running && seed.total
+            ? ({ "--p": `${Math.round((seed.received / seed.total) * 100)}%` } as React.CSSProperties)
+            : undefined
+        }
       >
         {seed.running ? <span className="spinner spinner--sm" aria-hidden="true" /> : <Icon name="flask" size={15} />}
-        <span>{seed.running ? `${seed.received} received` : "Demo"}</span>
+        <span className="num">
+          {seed.running ? (seed.total ? `${seed.received}/${seed.total} received` : `${seed.received} received`) : "Demo"}
+        </span>
       </button>
       {open && (
         <div className="demo__menu" role="menu">

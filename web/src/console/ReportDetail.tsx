@@ -9,6 +9,7 @@ import {
   capitalise,
   clock,
   humanise,
+  isClip,
   NEEDS_VI,
   REPORT_STATUS,
   STATUS,
@@ -16,6 +17,7 @@ import {
   VULNERABLE_VI,
 } from "../lib/format";
 import type { Report, ReportStatus, Vehicle } from "../lib/types";
+import { ClipMedia } from "./ClipMedia";
 import { DepthGauge } from "./DepthGauge";
 import { Evidence } from "./Evidence";
 
@@ -55,7 +57,11 @@ export function ReportDetail({ report: r, vehicle, now, onClose, onStatus, onLoc
   const est = a?.estimate ?? null;
   const facts = r.triage?.facts ?? null;
   const p = r.triage?.priority ?? null;
-  const flags = [...new Set([...(a?.warnings ?? [])])];
+  const clip = isClip(r);
+  // Clip analyses carry Spark's quality flags in perception only.
+  const flags = [
+    ...new Set(a?.warnings ?? (a?.perception?.quality_flags ?? []).map((f) => `photo: ${f.replace(/_/g, " ")}`)),
+  ];
 
   useEffect(() => {
     setView("original");
@@ -113,33 +119,37 @@ export function ReportDetail({ report: r, vehicle, now, onClose, onStatus, onLoc
         {r.scenario && (
           <a className="scenario" href={href("/attribution")} target="_blank" rel="noreferrer">
             <Icon name="flag" size={14} />
-            <span lang="vi">Kịch bản mô phỏng · ảnh thật từ Wikimedia Commons</span>
+            <span lang="vi">Kịch bản mô phỏng · {clip ? "video" : "ảnh"} thật từ Wikimedia Commons</span>
             <Icon name="external" size={13} />
           </a>
         )}
 
-        <figure className="photo">
-          <div className="photo__frame" style={{ aspectRatio: a?.size ? `${a.size[0]} / ${a.size[1]}` : "4 / 3" }}>
-            <img
-              src={view === "original" ? r.image_url : r.overlay_url}
-              alt={view === "original" ? "Resident's photo" : "Water and object masks the models found"}
-            />
-            <div className="photo__toggle seg seg--dark" role="tablist" aria-label="Photo view">
-              <button type="button" role="tab" aria-selected={view === "original"} className={view === "original" ? "is-on" : ""} onClick={() => setView("original")}>
-                Original
-              </button>
-              <button type="button" role="tab" aria-selected={view === "overlay"} className={view === "overlay" ? "is-on" : ""} onClick={() => setView("overlay")}>
-                <Icon name="spark" size={14} /> What the models saw
-              </button>
+        {clip ? (
+          <ClipMedia report={r} />
+        ) : (
+          <figure className="photo">
+            <div className="photo__frame" style={{ aspectRatio: a?.size ? `${a.size[0]} / ${a.size[1]}` : "4 / 3" }}>
+              <img
+                src={view === "original" ? r.image_url : r.overlay_url}
+                alt={view === "original" ? "Resident's photo" : "Water and object masks the models found"}
+              />
+              <div className="photo__toggle seg seg--dark" role="tablist" aria-label="Photo view">
+                <button type="button" role="tab" aria-selected={view === "original"} className={view === "original" ? "is-on" : ""} onClick={() => setView("original")}>
+                  Original
+                </button>
+                <button type="button" role="tab" aria-selected={view === "overlay"} className={view === "overlay" ? "is-on" : ""} onClick={() => setView("overlay")}>
+                  <Icon name="spark" size={14} /> What the models saw
+                </button>
+              </div>
+              <a className="photo__open" href={view === "original" ? r.image_url : r.overlay_url} target="_blank" rel="noreferrer" aria-label="Open the image full size">
+                <Icon name="external" size={15} />
+              </a>
             </div>
-            <a className="photo__open" href={view === "original" ? r.image_url : r.overlay_url} target="_blank" rel="noreferrer" aria-label="Open the image full size">
-              <Icon name="external" size={15} />
-            </a>
-          </div>
-          <figcaption className="photo__cap" lang="vi">
-            {summaryOf(r)}
-          </figcaption>
-        </figure>
+            <figcaption className="photo__cap" lang="vi">
+              {summaryOf(r)}
+            </figcaption>
+          </figure>
+        )}
 
         <section className="dsec">
           <h3 className="dsec__title">Depth</h3>
@@ -169,16 +179,28 @@ export function ReportDetail({ report: r, vehicle, now, onClose, onStatus, onLoc
                 </div>
                 <div>
                   <dt>Objects</dt>
-                  <dd>{measured} measured</dd>
+                  <dd>
+                    {clip ? `${(a?.objects ?? []).filter((o) => (o.frames_tracked ?? 0) > 0).length} tracked` : `${measured} measured`}
+                  </dd>
                 </div>
                 <div>
                   <dt>Water flow</dt>
                   <dd>{capitalise(a?.perception?.water_flow ?? "unclear")}</dd>
                 </div>
-                <div>
-                  <dt>Water in frame</dt>
-                  <dd className="num">{Math.round((a?.water_fraction ?? 0) * 100)}%</dd>
-                </div>
+                {clip ? (
+                  <div>
+                    <dt>Frames</dt>
+                    <dd className="num">
+                      {a?.frames ?? "–"}
+                      {a?.fps ? ` @ ${a.fps} fps` : ""}
+                    </dd>
+                  </div>
+                ) : (
+                  <div>
+                    <dt>Water in frame</dt>
+                    <dd className="num">{a?.water_fraction != null ? `${Math.round(a.water_fraction * 100)}%` : "–"}</dd>
+                  </div>
+                )}
               </dl>
             </div>
             <DepthGauge estimate={est} verdicts={a?.verdicts ?? []} width={420} />

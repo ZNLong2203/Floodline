@@ -5,9 +5,14 @@ export type Passability = "passable" | "risky" | "impassable";
 export type SegmentStatus = Passability | "unknown";
 
 export interface Reading {
-  source: string; // "scale:scooter#2", "landmark:person#1", "fraction:car#3", "spark:holistic"
+  // "scale:scooter#2", "landmark:person#1", "fraction:car#3", "spark:holistic",
+  // "closeup-landmark:person#1", "closeup-fraction:scooter#2"
+  source: string;
   low_m: number;
   high_m: number;
+  /** Centre of the reading; differs from the midpoint when calibration clipped the interval at 0. */
+  mean_m?: number;
+  /** Calibrated readings end with "; raw 0.44-0.49 m" (the catalog range before calibration). */
   note: string;
 }
 
@@ -24,12 +29,18 @@ export interface ObjectFinding {
   index: number;
   label: string;
   orientation: string;
-  landmark: string;
-  box_px: [number, number, number, number];
-  standing_in_water: boolean;
-  sam_confidence: number | null;
-  contact: Contact | null;
+  // Photo objects only (clip objects are tracked by SAM 3.1 across frames instead).
+  landmark?: string;
+  box_px?: [number, number, number, number];
+  standing_in_water?: boolean;
+  sam_confidence?: number | null;
+  contact?: Contact | null;
   readings: Reading[];
+  // Clip objects only.
+  frames_tracked?: number;
+  frames_measured?: number;
+  /** Raw depth in metres on each frame where the waterline was measured. */
+  depth_by_frame?: number[];
 }
 
 export interface Estimate {
@@ -67,15 +78,30 @@ export interface Perception {
   holistic_depth_m?: { low: number; high: number };
 }
 
+export interface SparkVideo {
+  depth_m?: { low: number; high: number } | null;
+  water_flow?: string;
+  what_happens_vi?: string;
+  speech_vi?: string;
+}
+
 export interface Analysis {
+  /** "clip" for video reports; absent or "photo" for photos. */
+  kind?: "photo" | "clip" | string;
   size: [number, number];
+  fps?: number;
+  frames?: number;
+  key_frame?: number;
+  spark_video?: SparkVideo;
   perception: Perception;
   objects: ObjectFinding[];
   estimate: Estimate | null;
   verdicts: Verdict[];
-  water_fraction: number;
+  water_fraction?: number;
   seconds: number;
-  warnings: string[];
+  warnings?: string[];
+  /** Date the calibration was fitted, when one was applied. */
+  calibration?: string | null;
 }
 
 export interface TriageFacts {
@@ -107,12 +133,17 @@ export interface Report {
   transcript: string | null;
   triage: Triage | null;
   analysis: Analysis;
+  /** For clips: the key frame and its overlay. */
   image_url: string;
   overlay_url: string;
+  /** For clips: an MP4 of the SAM 3.1 tracking, with waterlines and per-frame depth labels. */
+  video_url?: string | null;
   /** Set on reports from the replayable demo scenario (real photos placed on Huế streets). */
   scenario?: string;
   /** Path under data/demo of the Wikimedia Commons photo used. */
   photo_credit?: string;
+  /** On report.created events during a scenario replay. */
+  seed?: { index: number; total: number };
 }
 
 export interface Vehicle {
@@ -188,3 +219,32 @@ export type LiveEvent =
   | { type: "report.created"; data: Report }
   | { type: "report.updated"; data: Report }
   | { type: "reports.reset"; data: Record<string, never> };
+
+/** One entry of data/demo/photos.json, served at /api/attribution. */
+export interface MediaCredit {
+  file: string;
+  commons_page?: string | null;
+  commons_title?: string | null;
+  original_file_url?: string | null;
+  author?: string | null;
+  author_url?: string | null;
+  license?: string | null;
+  license_url?: string | null;
+  date?: string | null;
+  date_note?: string | null;
+  location?: string | null;
+  lat?: number | null;
+  lon?: number | null;
+  visible?: string | null;
+  license_review?: string | null;
+  personality_rights_warning?: boolean | null;
+  processing?: string | null;
+}
+
+export interface AttributionData {
+  retrieved?: string;
+  source?: string;
+  note?: string;
+  photos: MediaCredit[];
+  videos?: MediaCredit[];
+}

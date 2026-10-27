@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { Icon } from "../components/Icon";
 import { PriorityBadge, ReportStatusTag, StatusGlyph } from "../components/Status";
-import { age, queueOrder, range, STATUS, summaryOf, verdictFor } from "../lib/format";
+import { age, isClip, queueOrder, range, STATUS, summaryOf, verdictFor } from "../lib/format";
 import type { Report, Vehicle } from "../lib/types";
 
 interface Props {
@@ -119,6 +119,11 @@ function ReportCard({
       <div className="card__thumb">
         <img src={r.image_url} alt="" loading="lazy" />
         {fresh && <span className="card__new">NEW</span>}
+        {isClip(r) && (
+          <span className="card__clip" title={`Video clip${r.analysis?.frames ? `, ${r.analysis.frames} frames` : ""}`}>
+            ▶ CLIP
+          </span>
+        )}
       </div>
       <div className="card__body">
         <div className="card__top">

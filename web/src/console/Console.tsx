@@ -20,7 +20,7 @@ export default function Console() {
   const [focus, setFocus] = useState<{ lat: number; lon: number; key: number } | null>(null);
   const [route, setRoute] = useState<RouteState>(ROUTE_CLOSED);
   const [about, setAbout] = useState(false);
-  const [seed, setSeed] = useState<SeedState>({ running: false, received: 0, message: null });
+  const [seed, setSeed] = useState<SeedState>({ running: false, received: 0, total: null, message: null });
   const [toast, setToast] = useState<{ text: string; tone: "ok" | "bad" } | null>(null);
   const toastTimer = useRef<number | undefined>(undefined);
   const notify = useCallback((text: string, tone: "ok" | "bad" = "ok") => {
@@ -49,8 +49,15 @@ export default function Console() {
   useEffect(() => {
     if (data.eventCount === lastCount.current) return;
     lastCount.current = data.eventCount;
-    if (data.lastEvent?.type === "report.created")
+    const e = data.lastEvent;
+    if (e?.type !== "report.created") return;
+    const progress = e.data.seed;
+    if (progress) {
+      // Also shows a replay started from another console.
+      setSeed((s) => ({ ...s, running: progress.index < progress.total, received: progress.index, total: progress.total }));
+    } else {
       setSeed((s) => (s.running ? { ...s, received: s.received + 1 } : s));
+    }
   }, [data.eventCount, data.lastEvent]);
 
   const select = useCallback(
@@ -87,11 +94,11 @@ export default function Console() {
   }, []);
 
   const runSeed = async () => {
-    setSeed({ running: true, received: 0, message: null });
+    setSeed({ running: true, received: 0, total: null, message: null });
     setSelectedId(null);
     try {
       const res = await api.demoSeed();
-      setSeed({ running: false, received: res.created, message: `Replayed ${res.created} reports.` });
+      setSeed((s) => ({ ...s, running: false, received: res.created, message: `Replayed ${res.created} reports.` }));
       notify(`Scenario replayed: ${res.created} reports.`);
     } catch (e) {
       const msg =
@@ -100,7 +107,7 @@ export default function Console() {
           : e instanceof ApiError && e.network
             ? "Cannot reach the server."
             : `Replay failed: ${(e as Error).message}`;
-      setSeed((s) => ({ running: false, received: s.received, message: msg }));
+      setSeed((s) => ({ ...s, running: false, message: msg }));
       notify(msg, "bad");
       data.reload();
     }
@@ -111,7 +118,7 @@ export default function Console() {
       await api.demoReset();
       setSelectedId(null);
       setRoute((r) => ({ ...r, result: null }));
-      setSeed({ running: false, received: 0, message: null });
+      setSeed({ running: false, received: 0, total: null, message: null });
       notify("All reports cleared.");
     } catch (e) {
       setSeed((s) => ({ ...s, message: `Clear failed: ${(e as Error).message}` }));
@@ -147,7 +154,7 @@ export default function Console() {
             fresh={data.fresh}
             focus={focus}
             onSelect={select}
-            route={route.result ? { safe: route.result.route, naive: route.result.naive } : null}
+            route={route.result ? { safe: route.result.route, naive: route.result.naive, blocked: !route.result.route } : null}
             endpoints={{ a: route.a?.at ?? null, b: route.b?.at ?? null }}
             picking={pickPhase}
             onPick={onPick}

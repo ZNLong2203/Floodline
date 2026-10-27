@@ -11,19 +11,22 @@ export interface Place {
 
 export const PRESETS: { id: string; from: Place; to: Place }[] = [
   {
+    // Seeded scenario: the truck's shortest road crosses 4 impassable segments (2.3 km vs 2.1 km).
+    id: "bv-thanhnoi",
+    from: { name: "Bệnh viện Trung ương Huế", at: [16.4628, 107.5888] },
+    to: { name: "Thành nội (Bắc)", at: [16.476, 107.579] },
+  },
+  {
+    // Seeded scenario: no road route for any vehicle.
     id: "bv-dongba",
     from: { name: "Bệnh viện Trung ương Huế", at: [16.4627, 107.5873] },
     to: { name: "Chợ Đông Ba", at: [16.4729, 107.588] },
   },
   {
+    // The truck goes straight; a car has to detour.
     id: "ga-ngomon",
     from: { name: "Ga Huế", at: [16.4566, 107.5781] },
     to: { name: "Đại Nội (Ngọ Môn)", at: [16.4697, 107.581] },
-  },
-  {
-    id: "pdp-bv",
-    from: { name: "Kiệt 63 Phan Đình Phùng", at: [16.45641, 107.59072] },
-    to: { name: "Bệnh viện Trung ương Huế", at: [16.4627, 107.5873] },
   },
 ];
 
@@ -175,8 +178,24 @@ export function RoutePanel({ state, vehicle, segments, onOpen, onClose, onPreset
               )}
             </>
           ) : (
-            <div className="routecard__none" role="status">
-              <b>No safe route for {vehicle?.name_vi}.</b> Every way is blocked; send a boat or a higher-clearance vehicle.
+            <div className="noroute" role="alert">
+              <span className="noroute__icon" aria-hidden="true">
+                <VehicleIcon id="boat" size={26} />
+              </span>
+              <div>
+                <b lang="vi">Không còn đường bộ an toàn tới đây — cần thuyền</b>
+                <span>
+                  No safe road route{vehicle ? ` for ${vehicle.name_vi}` : ""} — send a boat.
+                </span>
+                {naive ? (
+                  <span className="noroute__naive">
+                    <span className="legend-line legend-line--blocked" aria-hidden="true" /> Shortest road, {distance(naive.length_m)},
+                    runs through flooded streets.
+                  </span>
+                ) : (
+                  <span className="noroute__naive">The destination itself is cut off by water.</span>
+                )}
+              </div>
             </div>
           )}
           <button type="button" className="btn btn--ghost btn--sm" onClick={onReset}>

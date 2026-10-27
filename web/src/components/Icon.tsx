@@ -31,6 +31,7 @@ const PATHS: Record<string, string> = {
   image: "M4 5h16v14H4zM4 15l4.5-4.5 4 4L16 11l4 4M15.5 8.5h.01",
   send: "M4 12 20 4l-6 16-3-7-7-1Z",
   flag: "M5 21V4m0 0h11l-2 4 2 4H5",
+  video: "M3 6.5h12v11H3zM15 10.5l6-3.5v10l-6-3.5",
 };
 
 export type IconName = keyof typeof PATHS;

@@ -5,7 +5,7 @@
 // phone-sized window appears live on the console in another tab.
 import type { FloodlineApi, LiveState, NewReport } from "../lib/api";
 import { FALLBACK_CATALOG, FALLBACK_VEHICLES } from "../lib/catalog";
-import { assess, combine } from "../lib/passability";
+import { assess, CALIBRATION_FITTED, calibrate, COMBINE_FACTOR, combine } from "../lib/passability";
 import type { LiveEvent, Reading, Report, TriageFacts } from "../lib/types";
 import { build, LATE_SPEC, reportId, score, SPECS } from "./data";
 import { fuse, Roads, segmentsGeoJSON } from "./engine";
@@ -74,6 +74,42 @@ async function photoAssets(photo: Blob): Promise<{ image: string; overlay: strin
     g.strokeText("mock overlay", 12, 26);
     g.fillText("mock overlay", 12, 26);
     return { image, overlay: c.toDataURL("image/jpeg", 0.8), size: [w, h] };
+  } finally {
+    URL.revokeObjectURL(url);
+  }
+}
+
+/** The middle frame of a clip, as a JPEG blob (falls back to a blank frame). */
+async function keyFrame(video: Blob): Promise<Blob> {
+  const url = URL.createObjectURL(video);
+  try {
+    const el = document.createElement("video");
+    el.muted = true;
+    el.playsInline = true;
+    el.src = url;
+    await new Promise<void>((resolve, reject) => {
+      el.onloadedmetadata = () => resolve();
+      el.onerror = () => reject(new Error("unreadable clip"));
+      window.setTimeout(() => reject(new Error("timeout")), 4000);
+    });
+    el.currentTime = Number.isFinite(el.duration) ? el.duration / 2 : 0;
+    await new Promise<void>((resolve) => {
+      el.onseeked = () => resolve();
+      window.setTimeout(resolve, 2000);
+    });
+    const c = document.createElement("canvas");
+    c.width = el.videoWidth || 960;
+    c.height = el.videoHeight || 540;
+    c.getContext("2d")!.drawImage(el, 0, 0, c.width, c.height);
+    return await new Promise<Blob>((resolve) => c.toBlob((b) => resolve(b ?? new Blob()), "image/jpeg", 0.85));
+  } catch {
+    const c = document.createElement("canvas");
+    c.width = 960;
+    c.height = 540;
+    const g = c.getContext("2d")!;
+    g.fillStyle = "#5f5236";
+    g.fillRect(0, 0, 960, 540);
+    return await new Promise<Blob>((resolve) => c.toBlob((b) => resolve(b ?? new Blob()), "image/jpeg", 0.85));
   } finally {
     URL.revokeObjectURL(url);
   }
@@ -183,15 +219,20 @@ export function createMockApi(): FloodlineApi {
     },
     async createReport(input: NewReport, signal?: AbortSignal) {
       if (!navigator.onLine) throw new TypeError("offline");
-      await sleep(9500 + Math.random() * 2500, signal);
-      const assets = await photoAssets(input.photo);
+      const clip = Boolean(input.video);
+      await sleep(clip ? 16000 : 9500 + Math.random() * 2500, signal);
+      const still = input.video ? await keyFrame(input.video) : input.photo;
+      if (!still) throw new Error("no photo");
+      const assets = await photoAssets(still);
       const mean = 0.3 + Math.random() * 0.5;
-      const readings: Reading[] = [
+      const raw: Reading[] = [
         { source: "landmark:person#1", low_m: mean - 0.08, high_m: mean + 0.1, note: "knee" },
         { source: "fraction:person#1", low_m: mean - 0.18, high_m: mean + 0.2, note: "0.30" },
         { source: "spark:holistic", low_m: mean - 0.15, high_m: mean + 0.15, note: "Spark's own range" },
       ].map((x) => ({ ...x, low_m: Math.max(0, Math.round(x.low_m * 100) / 100), high_m: Math.round(x.high_m * 100) / 100 }));
-      const estimate = combine(readings)!;
+      const working = calibrate(raw);
+      const readings = working.map(({ sd: _sd, ...r }) => r);
+      const estimate = combine(working, 3, COMBINE_FACTOR)!;
       const words = [input.note, input.audio ? "(ghi âm)" : ""].join(" ").trim();
       const facts = factsFrom(input.note, `${estimate.low_m.toFixed(2)}–${estimate.high_m.toFixed(2)} m`);
       const [priority, reasons] = score(facts, estimate.mean_m);
@@ -235,22 +276,45 @@ export function createMockApi(): FloodlineApi {
           water_fraction: 0.38,
           seconds: 11.2,
           warnings: words ? [] : ["mock mode: depth is simulated"],
+          calibration: CALIBRATION_FITTED,
         },
         image_url: assets.image,
         overlay_url: assets.overlay,
       };
+      if (input.video) {
+        // Mock clip: the resident's own video stands in for the tracking overlay.
+        const frames = Array.from({ length: 60 }, (_, i) => Math.round((mean + 0.12 + 0.04 * Math.sin(i / 6)) * 1000) / 1000);
+        report.video_url = URL.createObjectURL(input.video);
+        report.analysis = {
+          ...report.analysis,
+          kind: "clip",
+          fps: 10,
+          frames: 240,
+          key_frame: 120,
+          objects: [{ ...report.analysis.objects[0], frames_tracked: 180, frames_measured: frames.length, depth_by_frame: frames }],
+          spark_video: {
+            depth_m: { low: Math.round((mean - 0.1) * 100) / 100, high: Math.round((mean + 0.2) * 100) / 100 },
+            water_flow: "slow",
+            what_happens_vi: "Video mô phỏng: người dân lội qua đoạn đường ngập.",
+            speech_vi: "",
+          },
+        };
+      }
       emit({ type: "report.created", data: report });
       return report;
     },
     async demoSeed() {
       emit({ type: "reports.reset", data: {} });
       const specs = [...SPECS, LATE_SPEC].sort((a, b) => b.minutesAgo - a.minutesAgo);
-      for (const spec of specs) {
+      for (const [i, spec] of specs.entries()) {
         await sleep(900);
-        emit({ type: "report.created", data: build(spec, now()) });
+        emit({ type: "report.created", data: { ...build(spec, now()), seed: { index: i + 1, total: specs.length } } });
       }
       lateSent = true;
       return { created: specs.length };
+    },
+    async attribution() {
+      return { photos: [], videos: [] };
     },
     async demoReset() {
       emit({ type: "reports.reset", data: {} });

@@ -259,7 +259,7 @@ export function fuse(
     const est = combine(readings);
     if (!est) continue;
     const flowing = items.some(({ r }) =>
-      ["slow", "fast"].includes(r.analysis.perception.water_flow ?? ""),
+      r.analysis.perception.water_flow === "fast",
     );
     const verdicts = assess(est, vehicles, flowing);
     const statuses: Record<string, SegmentStatus> = {};

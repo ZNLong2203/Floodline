@@ -82,6 +82,8 @@ function statusImage(status: "passable" | "risky" | "impassable", fill: string):
 export interface RouteView {
   safe: RouteResult | null;
   naive: RouteResult | null;
+  /** No safe route exists: draw the shortest road in red. */
+  blocked?: boolean;
 }
 
 interface Props {
@@ -141,11 +143,24 @@ export function MapView(props: Props) {
         : EMPTY;
     safe.setData(line(route?.safe));
     naive.setData(line(route?.naive));
+    const c = COLORS[latest.current.theme];
+    const blocked = Boolean(route?.blocked);
+    map.setPaintProperty("route-naive", "line-color", blocked ? c.impassable : c.naive);
+    map.setPaintProperty("route-naive", "line-width", blocked ? 6 : 4);
+    map.setPaintProperty("route-naive", "line-dasharray", blocked ? [1.2, 0.8] : [1.6, 1.4]);
+    map.setPaintProperty("route-naive-casing", "line-opacity", blocked ? 0.95 : 0);
+    map.setPaintProperty("route-naive-casing", "line-color", c.routeCasing);
     const all = [...(route?.safe?.coordinates ?? []), ...(route?.naive?.coordinates ?? [])];
     if (fit && all.length > 1) {
       const b = new LngLatBounds(all[0], all[0]);
       all.forEach((c) => b.extend(c));
-      map.fitBounds(b, { padding: { top: 150, bottom: 70, left: 70, right: 70 }, maxZoom: 16.5, duration: 900 });
+      // Keep the route clear of the route card (top-left, 330 px) and the legend.
+      const wide = map.getContainer().clientWidth > 760;
+      map.fitBounds(b, {
+        padding: wide ? { top: 50, bottom: 50, left: 380, right: 70 } : { top: 260, bottom: 60, left: 40, right: 40 },
+        maxZoom: 16.5,
+        duration: 900,
+      });
     }
   };
 
@@ -192,6 +207,13 @@ export function MapView(props: Props) {
         firstLabel,
       );
     }
+    add({
+      id: "route-naive-casing",
+      type: "line",
+      source: "route-naive",
+      layout: { "line-join": "round", "line-cap": "round" },
+      paint: { "line-color": c.routeCasing, "line-width": 10, "line-opacity": 0 },
+    });
     add({
       id: "route-naive",
       type: "line",

@@ -74,6 +74,10 @@ export function priorityOf(r: Report): number {
   return r.triage?.priority ?? 0;
 }
 
+export function isClip(r: Report): boolean {
+  return r.analysis?.kind === "clip" || Boolean(r.video_url);
+}
+
 export function summaryOf(r: Report): string {
   return (
     r.triage?.facts?.summary_vi ||
@@ -97,31 +101,54 @@ export function queueOrder(a: Report, b: Report): number {
   return b.at - a.at;
 }
 
+export type ReadingKind =
+  | "scale"
+  | "landmark"
+  | "fraction"
+  | "closeup-landmark"
+  | "closeup-fraction"
+  | "spark"
+  | "report"
+  | "other";
+
 export interface SourceParts {
-  kind: "scale" | "landmark" | "fraction" | "spark" | "report" | "other";
+  kind: ReadingKind;
   object: string | null;
   index: number | null;
+  /** "scale:scooter#3@clip" (a median over the clip's frames) or "spark:video". */
+  clip: boolean;
   raw: string;
 }
 
 /** "scale:scooter#2" -> { kind: "scale", object: "scooter", index: 2 } */
 export function parseSource(source: string): SourceParts {
   const [head, rest = ""] = source.split(":", 2);
-  const kinds = ["scale", "landmark", "fraction", "spark", "report"] as const;
+  const kinds = ["scale", "landmark", "fraction", "closeup-landmark", "closeup-fraction", "spark", "report"] as const;
   const kind = (kinds as readonly string[]).includes(head) ? (head as SourceParts["kind"]) : "other";
-  const match = /^([a-z_]+)#(\d+)$/i.exec(rest);
+  const clip = /@clip$/i.test(rest) || source === "spark:video";
+  const tag = rest.replace(/@clip$/i, "");
+  const match = /^([a-z_]+)#(\d+)$/i.exec(tag);
   return {
     kind,
-    object: match ? match[1] : kind === "spark" ? null : rest || null,
+    object: match ? match[1] : kind === "spark" ? null : tag || null,
     index: match ? Number(match[2]) : null,
+    clip,
     raw: source,
   };
 }
 
-export const KIND_LABEL: Record<SourceParts["kind"], { en: string; hint: string }> = {
+export const KIND_LABEL: Record<ReadingKind, { en: string; hint: string }> = {
   scale: { en: "Scale", hint: "Pixels to metres from the object's known size" },
   landmark: { en: "Landmark", hint: "The part of the object the water reaches" },
   fraction: { en: "Fraction", hint: "Share of the object's height under water" },
+  "closeup-landmark": {
+    en: "Close-up landmark",
+    hint: "Close-up look: Spark re-examines an enlarged crop of the object and names the part the water reaches",
+  },
+  "closeup-fraction": {
+    en: "Close-up fraction",
+    hint: "Close-up look: Spark re-examines an enlarged crop of the object and judges how much is under water",
+  },
   spark: { en: "Muse Spark", hint: "The model's own overall range, as a sanity check" },
   report: { en: "Report", hint: "A nearby report, widened by distance and age" },
   other: { en: "Other", hint: "" },
@@ -175,3 +202,34 @@ export const NEEDS_VI: Record<string, string> = {
   power: "điện",
   info: "thông tin",
 };
+
+/** Label for a reading row, short enough for the evidence label column. */
+export function kindShort(kind: ReadingKind): string {
+  return kind === "closeup-landmark" || kind === "closeup-fraction" ? "Close-up" : KIND_LABEL[kind].en;
+}
+
+export interface ParsedNote {
+  /** The note without the calibration and confidence suffixes. */
+  text: string;
+  /** The catalog range before calibration, from "; raw 0.44-0.49 m". */
+  raw: [number, number] | null;
+  /** Close-up readings end with "(high)", "(medium)" or "(low)". */
+  confidence: string | null;
+}
+
+export function parseNote(note: string): ParsedNote {
+  let text = note ?? "";
+  let raw: [number, number] | null = null;
+  const r = /;?\s*raw\s+(-?\d+(?:\.\d+)?)\s*[-–]\s*(-?\d+(?:\.\d+)?)\s*m\s*$/i.exec(text);
+  if (r) {
+    raw = [Number(r[1]), Number(r[2])];
+    text = text.slice(0, r.index).trim();
+  }
+  let confidence: string | null = null;
+  const c = /\s*\((low|medium|high)\)\s*$/i.exec(text);
+  if (c) {
+    confidence = c[1].toLowerCase();
+    text = text.slice(0, c.index).trim();
+  }
+  return { text, raw, confidence };
+}
