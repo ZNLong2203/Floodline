@@ -1,6 +1,6 @@
 """The street network: snap reports to street segments and route around water.
 
-Built from OpenStreetMap ways (via Overpass) into a networkx graph. Every edge is
+Built from OpenStreetMap ways (scripts/build_roads.py) into a networkx graph. Every edge is
 one segment between two consecutive way nodes, so a report changes the street it
 was taken on, not the whole road.
 """
@@ -174,34 +174,3 @@ class Roads:
 def default() -> Roads:
     return Roads.load()
 
-
-def compact_overpass(src: Path, dst: Path) -> None:
-    """Turn an Overpass JSON dump into the small file Floodline ships with."""
-    raw = json.loads(src.read_text())
-    nodes = {}
-    ways = []
-    for el in raw["elements"]:
-        if el["type"] == "node":
-            nodes[el["id"]] = [round(el["lat"], 7), round(el["lon"], 7)]
-        elif el["type"] == "way":
-            tags = el.get("tags", {})
-            ways.append(
-                {
-                    "id": el["id"],
-                    "name": tags.get("name", ""),
-                    "highway": tags.get("highway", ""),
-                    "nodes": el["nodes"],
-                }
-            )
-    used = {n for w in ways for n in w["nodes"]}
-    dst.write_text(
-        json.dumps(
-            {
-                "source": "OpenStreetMap contributors, ODbL — via Overpass API",
-                "nodes": {k: v for k, v in nodes.items() if k in used},
-                "ways": ways,
-            },
-            separators=(",", ":"),
-            ensure_ascii=False,
-        )
-    )

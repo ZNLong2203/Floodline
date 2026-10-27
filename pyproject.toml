@@ -36,6 +36,7 @@ target-version = "py312"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "B", "UP", "SIM", "RUF"]
+ignore = ["B008"]  # FastAPI declares parameters with File() and Form() defaults
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
