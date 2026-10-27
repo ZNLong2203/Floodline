@@ -1,0 +1,127 @@
+{
+ "request": {
+  "messages": [
+   {
+    "content": "You are an object grounding expert helping flood rescue teams read photos.",
+    "role": "system"
+   },
+   {
+    "content": [
+     {
+      "image_url": {
+       "url": "data:image/jpeg;sha256,00e1623d5c7d0771a55c753534866496f96c8ce32ae1f6216dee546dcbc90eea"
+      },
+      "type": "image_url"
+     },
+     {
+      "image_url": {
+       "url": "data:image/jpeg;sha256,32e69fd1cc44ad251b65cca7ef18ea33fb85d7aee152c5668dd8821fc7add38e"
+      },
+      "type": "image_url"
+     },
+     {
+      "image_url": {
+       "url": "data:image/jpeg;sha256,093fb95ddf6a038c16f4e1f15279154ee54f95014496ff7a37f8fcc765bf7fbd"
+      },
+      "type": "image_url"
+     },
+     {
+      "image_url": {
+       "url": "data:image/jpeg;sha256,3af4aaeba363fd3b13c51f8fa387357964beaa06ddba6923fefb9f9686d8a876"
+      },
+      "type": "image_url"
+     },
+     {
+      "image_url": {
+       "url": "data:image/jpeg;sha256,1caa5136b8757b73203e1ec3fde09ad091435332f65b7b6163dcfb6c0158089f"
+      },
+      "type": "image_url"
+     },
+     {
+      "text": "These are close-up crops, numbered from 1 in the order given, of objects standing in\nfloodwater. Crop 1 is a person; 2 is a bicycle; 3 is a person; 4 is a bicycle; 5 is a truck.\n\nFor each crop, look at where the water surface meets the object.\n- waterline_landmark: the part of the object at the water surface (scooter: below_wheel_hub,\n  wheel_hub, footboard, seat, above_seat; car: below_wheel_hub, wheel_hub, sill, door_handle,\n  bonnet, roof; person: ankle, knee, thigh, waist, chest, shoulder; bus: wheel_hub, door_step,\n  window_bottom; bicycle: below_wheel_hub, wheel_hub, seat). unclear if you can't see it.\n- submerged_fraction: share of the object's full height under water, 0 to 1.\n- base_hidden_by_water: true if the object's base is under the water.\n- confidence: how clearly the crop shows the waterline.\nJudge each crop on its own; do not guess from the other crops.",
+      "type": "text"
+     }
+    ],
+    "role": "user"
+   }
+  ],
+  "model": "muse-spark-1.3",
+  "reasoning_effort": "medium",
+  "response_format": {
+   "json_schema": {
+    "name": "flood_closeup",
+    "schema": {
+     "additionalProperties": false,
+     "properties": {
+      "objects": {
+       "items": {
+        "additionalProperties": false,
+        "properties": {
+         "base_hidden_by_water": {
+          "type": "boolean"
+         },
+         "confidence": {
+          "enum": [
+           "low",
+           "medium",
+           "high"
+          ],
+          "type": "string"
+         },
+         "crop": {
+          "type": "integer"
+         },
+         "submerged_fraction": {
+          "type": "number"
+         },
+         "waterline_landmark": {
+          "enum": [
+           "below_wheel_hub",
+           "wheel_hub",
+           "footboard",
+           "seat",
+           "above_seat",
+           "sill",
+           "door_handle",
+           "bonnet",
+           "roof",
+           "ankle",
+           "knee",
+           "thigh",
+           "waist",
+           "chest",
+           "shoulder",
+           "door_step",
+           "window_bottom",
+           "unclear"
+          ],
+          "type": "string"
+         }
+        },
+        "required": [
+         "crop",
+         "waterline_landmark",
+         "submerged_fraction",
+         "base_hidden_by_water",
+         "confidence"
+        ],
+        "type": "object"
+       },
+       "type": "array"
+      }
+     },
+     "required": [
+      "objects"
+     ],
+     "type": "object"
+    },
+    "strict": true
+   },
+   "type": "json_schema"
+  }
+ },
+ "response": {
+  "content": "{\"objects\": [{\"base_hidden_by_water\": true, \"confidence\": \"medium\", \"crop\": 1, \"submerged_fraction\": 0.06, \"waterline_landmark\": \"ankle\"}, {\"base_hidden_by_water\": true, \"confidence\": \"medium\", \"crop\": 2, \"submerged_fraction\": 0.15, \"waterline_landmark\": \"below_wheel_hub\"}, {\"base_hidden_by_water\": true, \"confidence\": \"medium\", \"crop\": 3, \"submerged_fraction\": 0.07, \"waterline_landmark\": \"ankle\"}, {\"base_hidden_by_water\": true, \"confidence\": \"medium\", \"crop\": 4, \"submerged_fraction\": 0.12, \"waterline_landmark\": \"below_wheel_hub\"}, {\"base_hidden_by_water\": true, \"confidence\": \"low\", \"crop\": 5, \"submerged_fraction\": 0.2, \"waterline_landmark\": \"below_wheel_hub\"}]}",
+  "model": "muse-spark-1.3"
+ }
+}

@@ -1,0 +1,28 @@
+{
+ "request": {
+  "input": [
+   {
+    "content": [
+     {
+      "text": "<0f>1<|box;x1=179;y1=254;x2=431;y2=348;w=588;h=390|>,2<|box;x1=215;y1=147;x2=359;y2=347;w=588;h=390|>,3<|box;x1=79;y1=62;x2=135;y2=226;w=588;h=390|>,4<|box;x1=108;y1=39;x2=205;y2=229;w=588;h=390|>,5<|box;x1=468;y1=33;x2=546;y2=230;w=588;h=390|>",
+      "type": "input_text"
+     },
+     {
+      "image_url": "data:image/jpeg;sha256,74e8506fff189dbd30e7178d023746f1ae0f950e866e76f534f5641163f54273",
+      "type": "input_image"
+     }
+    ],
+    "role": "user",
+    "type": "message"
+   }
+  ],
+  "metadata": {
+   "include_confidence": "true",
+   "mask_encoding": "one_bit"
+  },
+  "model": "sam-3.1"
+ },
+ "response": {
+  "text": "<0f>1<|box;x1=178;y1=253;x2=401;y2=349;w=588;h=390;c=0.7421875|><|mask;x=0;y=0;c=0.7421875;data=97,224,!!!!$[C)dJe)2Z9?w4M.x5^MNif[nd*Nte]GZ@gNt7.5q2.2lkMlpb-qP?vh(Vfyd4]@AnGbMbLBWzvP(cj&p+5']M6ecQJ$B{L&NNc/8+[+ayIFw1SQs43myNGrusa551HI]Mu'HLhnT6B^G3-h#EC1vblyKVV^VWyKV04HP#{rF1dyqI8/SJzHrU4ik3K%GEaz'*ZFg3-CgxDOb*X(%mv3YhM*H@V-LNf8'FeC'w#0=.Ht2+{!qc-!mko]QE*1i]:qex*O9)7KJKA3_k9--uZr#!!!!|>,2<|box;x1=232;y1=154;x2=358;y2=348;w=588;h=390;c=0.91796875|><|mask;x=0;y=0;c=0.91796875;data=195,127,!!!!$7CQ_H`k7@'LJUs{6]+i%qy-@emm`T8#m-)/P+=84cw9=3dqIQrR&'hY%_NV36c:0?JV{X*KGhz`d?m7HP^A[yJA{:AHN(+Yj7YmKF^i1C)u5@mvlo6R3s'ZFuW^{=cUgQ)hj[v.SU/Y1whu?i:&^?h.(p0qEo?zvaxOay&oLK7@PIY1Iedj2VBx]l9eT[abhw97SqXLVhU-WR{3$XQ7Y%2$pnqX!fWFr9%VbCFT(GcR!0PG|>,3<|box;x1=77;y1=61;x2=141;y2=227;w=588;h=390;c=0.90625|><|mask;x=0;y=0;c=0.90625;data=167,65,!!!!#?Dpu`9gAP$%wp=p@[b`sJr(j0auQ#K&HU8(5)_0.h*T.z{BPJi2.&s@#g.xlC-Kb.PRyDMcK])f0DE7{FixMCT9L#0(sahi$E](=Toxntf48dX]/2V-`-d%M^L8E6b8:{czU3eQU9iK|>,4<|box;x1=105;y1=35;x2=195;y2=231;w=588;h=390;c=0.91796875|><|mask;x=0;y=0;c=0.91796875;data=197,91,!!!!$/D!K@_nOg7VdZMxhZSj(QiPZt'8S0I.I![2#CDx+kgGMXh_#tU18L)xLbA0(b2kF?&L`/N$keE?WClMgAxp17LNsgR%C5+-r5S'Pa9fcat.0j*Og@3QvVCbB&HPlVBE%3HXL#xIgIm*vk+CP=5A(G@9kdarca-D@nsq!ffDdQrPvqce(lLX_^$+Owb.h-{HFsCldKI0DFG&a#eqnWN##Tevsp)K8ojC(4[5xl|>,5<|box;x1=470;y1=32;x2=535;y2=231;w=588;h=390;c=0.9453125|><|mask;x=0;y=0;c=0.9453125;data=200,66,!!!!#ED{BCpO_=4r2K?`KnIr(vbF@5PX)%7_l+knDC1TxZ]dp8R3[@4FI?p&^3SJVHxIEak.HS+s$V_!juRdnbqwNRl^*Kf]HSfc.quT-PeFO'!MZrrix+zZ{bn:R-::vqI/7r#C4Gb%-8RwVu9LT4{|>"
+ }
+}

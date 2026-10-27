@@ -1,0 +1,28 @@
+{
+ "request": {
+  "input": [
+   {
+    "content": [
+     {
+      "text": "<0f>1<|box;x1=0;y1=176;x2=204;y2=363;w=650;h=488|>,2<|box;x1=79;y1=63;x2=388;y2=245;w=650;h=488|>,3<|box;x1=386;y1=50;x2=568;y2=228;w=650;h=488|>,4<|box;x1=459;y1=140;x2=503;y2=299;w=650;h=488|>,5<|box;x1=541;y1=151;x2=597;y2=297;w=650;h=488|>",
+      "type": "input_text"
+     },
+     {
+      "image_url": "data:image/jpeg;sha256,bcb396664673b3d529ed9b53d814059e488282328f1dcc6b64be790fb978ffa7",
+      "type": "input_image"
+     }
+    ],
+    "role": "user",
+    "type": "message"
+   }
+  ],
+  "metadata": {
+   "include_confidence": "true",
+   "mask_encoding": "one_bit"
+  },
+  "model": "sam-3.1"
+ },
+ "response": {
+  "text": "<0f>1<|box;x1=0;y1=176;x2=224;y2=332;w=650;h=488;c=0.67578125|><|mask;x=0;y=0;c=0.67578125;data=157,225,!!!!%9B/opT&E.eV@cA:5ma1&RZ_kW@HhSEuo?p'k1Z.qN07h.MfL=qG1J%VYQ1psZ3c'X&1/(e+h7aSI3!*TTuQg!m-K$^*0sU*6oudQneI.r:pBW5`O:T'iIin0s-DnnB9#NXMYp(vr=J*HVGS]m5-r5Id/LRX)H9-2`0OSa#0S`hCRX!{^XjrK`lO*:dkI'DPDH*:zwrukJ8?W6pX{BZl%OSANt5v(ItH{eJczG52270ViR'-PAuv-A/HrI1d/yM5Nkj#hHR+/wV44Jo`7II.E!TI%)dBQ0{@u14/vBmN5.CKi`7+WMK+C`RjrXx=ePrb[l1DibZ41K1gb@v.3Qmx@2iTWa8uf|>,2<|box;x1=80;y1=64;x2=388;y2=244;w=650;h=488;c=0.95703125|><|mask;x=0;y=0;c=0.95703125;data=181,309,!!!!$=CEp!4c&A4MbcFPrS#(Fb@[VWlvuYW?y6WO`lQBu`@e%2hp%:0N/T`Y[DDR/RMSh.y!k$zVL'pJMDLs!-^i^@cI+5R2Q8SnEOyxIC&QO9L)RKdSty:)wYzBbNmuT'8C{3+c3M!^VSi'()77vO`I!V{g%1B-OV^w1l[bN'E6lwnLlF-CTd{&M_)^CxP[F`C)1@`$l2w4Zzru#U{'-!/8F1xHtmlt(5Ur(j!EA+qWmlKqiTKZFX!AA|>,3<|box;x1=388;y1=48;x2=559;y2=214;w=650;h=488;c=0.8671875|><|mask;x=0;y=0;c=0.8671875;data=167,172,!!!!$TBBy3KWPzXxcjGlekc)Km9_F7.'O32[C&V`kbC=OI]!L+r@mclL2lvb!gk@jRK:?V(9wKol'((O[AlPcz[x5k?1s2h@Q53lzJO!n$v@{/G(DU3uk`[U@tQ0*#&Kc_qak8[+Pnx_a'c)g66c.h'a`?51x-@$w%IT6qA`jRQKLT24#L(M7wCaqJhwIa3Zp/cOUm%jKwOuMR-nQrqNVD#[Vat2bGq:OJg$=)PNmamlF.kZ[?6U`'66)kY@XUbh1UxOCNAEUm8Hs8:!cck/|>,4<|box;x1=461;y1=141;x2=499;y2=244;w=650;h=488;c=0.87109375|><|mask;x=0;y=0;c=0.87109375;data=104,39,!!!!!WFQKt)F?{Z?y8&pb2Y-Y1-q&E[LhDKeFAQ'@or6ftE/Ycs@%BX!l5`WajfT%C!!|>,5<|box;x1=544;y1=144;x2=597;y2=243;w=650;h=488;c=0.890625|><|mask;x=0;y=0;c=0.890625;data=100,54,!!!!!nE_@4hO95Cyl&?i)qM:'fa-TC61aWc*3DKz4'b)FXFO2U'hVe1G47]3'uBoair_`Q5HoYl3-H7KNF%d$*DMm$:Cr^p|>"
+ }
+}

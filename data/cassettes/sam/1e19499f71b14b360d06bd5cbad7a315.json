@@ -1,0 +1,28 @@
+{
+ "request": {
+  "input": [
+   {
+    "content": [
+     {
+      "text": "<0f>1<|box;x1=183;y1=106;x2=253;y2=161;w=620;h=376|>,2<|box;x1=222;y1=136;x2=245;y2=155;w=620;h=376|>",
+      "type": "input_text"
+     },
+     {
+      "image_url": "data:image/jpeg;sha256,b464a6cfc85bfce9aaba9124473aca6bc7c9bbb392a472920a02b4d268d93a6b",
+      "type": "input_image"
+     }
+    ],
+    "role": "user",
+    "type": "message"
+   }
+  ],
+  "metadata": {
+   "include_confidence": "true",
+   "mask_encoding": "one_bit"
+  },
+  "model": "sam-3.1"
+ },
+ "response": {
+  "text": "<0f>1<|box;x1=182;y1=118;x2=253;y2=164;w=620;h=376;c=0.89453125|><|mask;x=0;y=0;c=0.89453125;data=47,72,!!!!!cI64bungR9Of^rTGL3vR9o&@bg7tnK7dKnP4aU/.kXHEYE/9z4p0vRX)Hs!hKT1I`9d0-=WWQQUH|>"
+ }
+}

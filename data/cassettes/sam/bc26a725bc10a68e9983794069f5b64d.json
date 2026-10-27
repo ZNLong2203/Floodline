@@ -1,0 +1,28 @@
+{
+ "request": {
+  "input": [
+   {
+    "content": [
+     {
+      "text": "<0f>1<|box;x1=193;y1=81;x2=227;y2=170;w=595;h=394|>,2<|box;x1=361;y1=109;x2=385;y2=134;w=595;h=394|>,3<|box;x1=362;y1=92;x2=384;y2=126;w=595;h=394|>,4<|box;x1=333;y1=93;x2=345;y2=123;w=595;h=394|>,5<|box;x1=349;y1=93;x2=362;y2=123;w=595;h=394|>",
+      "type": "input_text"
+     },
+     {
+      "image_url": "data:image/jpeg;sha256,3dd8f196a2281128608390b8cef244d56f35f4cf91907ee5d34d3b5eb9ab7327",
+      "type": "input_image"
+     }
+    ],
+    "role": "user",
+    "type": "message"
+   }
+  ],
+  "metadata": {
+   "include_confidence": "true",
+   "mask_encoding": "one_bit"
+  },
+  "model": "sam-3.1"
+ },
+ "response": {
+  "text": "<0f>1<|box;x1=193;y1=78;x2=225;y2=167;w=595;h=394;c=0.9140625|><|mask;x=0;y=0;c=0.9140625;data=90,33,!!!!!YG+%/WU1yI7$31b'#:Q)As@Hp0r%4['QxG(5+yy-QYJgXY=(Jpu#4B[4EnzxiQ55N|>,2<|box;x1=361;y1=113;x2=385;y2=135;w=595;h=394;c=0.64453125|><|mask;x=0;y=0;c=0.64453125;data=23,25,!!!!!GIa#hvP-C`j:d91UvH.Wjq94Qm?)@3VQlF[vv-j2`!!|>,3<|box;x1=362;y1=94;x2=385;y2=129;w=595;h=394;c=0.78125|><|mask;x=0;y=0;c=0.78125;data=36,24,!!!!!EGNESfbFO$Nt65P!gkh&glLyF&7Nc:`d-+7!^:d%|>,4<|box;x1=333;y1=95;x2=345;y2=120;w=595;h=394;c=0.8046875|><|mask;x=0;y=0;c=0.8046875;data=26,13,!!!!!5IVN(fN8kfp_^eX3){-hu^V=|>,5<|box;x1=349;y1=94;x2=361;y2=122;w=595;h=394;c=0.84765625|><|mask;x=0;y=0;c=0.84765625;data=29,13,!!!!!8J:b:sXx3l:KK#cu@VQDpX$@gr!!|>"
+ }
+}

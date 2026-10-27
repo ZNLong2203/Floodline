@@ -1,0 +1,28 @@
+{
+ "request": {
+  "input": [
+   {
+    "content": [
+     {
+      "text": "<0f>1<|box;x1=180;y1=199;x2=434;y2=295;w=800;h=542|>,2<|box;x1=486;y1=233;x2=575;y2=412;w=800;h=542|>,3<|box;x1=34;y1=211;x2=157;y2=248;w=800;h=542|>,4<|box;x1=278;y1=196;x2=386;y2=217;w=800;h=542|>,5<|box;x1=474;y1=222;x2=591;y2=261;w=800;h=542|>,6<|box;x1=638;y1=224;x2=798;y2=270;w=800;h=542|>",
+      "type": "input_text"
+     },
+     {
+      "image_url": "data:image/jpeg;sha256,4da323e0fcb7a02dccacdb051910a4c3648a5d2c8f6a5f84677bdc18fba81c6f",
+      "type": "input_image"
+     }
+    ],
+    "role": "user",
+    "type": "message"
+   }
+  ],
+  "metadata": {
+   "include_confidence": "true",
+   "mask_encoding": "one_bit"
+  },
+  "model": "sam-3.1"
+ },
+ "response": {
+  "text": "<0f>1<|box;x1=172;y1=213;x2=391;y2=274;w=800;h=542;c=0.1923828125|><|mask;x=0;y=0;c=0.1923828125;data=62,220,!!!!$4GJ.M&(xQxF]cNO=)`mwu/kFTL/Qc9wS0%Pb-c5LcIo%sSc`1iY$7!Xl^ccyBB0D._Q&/=RpGig3F4$Co8Prw*8g&l8g&CKdEfaBLZuo?y8XKm4$*HIo=Jp=ajA0Geck{SYr[t+A#u]j0]b9yfo9:VvfJ#0AhAWD]=1+vqWBOsrYtTN!Y]Ic'pI%M*NwrJ:8B(Y)?dy^)OGy+1f+j`Tq[5:dVzb.%gM5+:-AoL#i`Tg|>,2<|box;x1=487;y1=236;x2=545;y2=408;w=800;h=542;c=0.921875|><|mask;x=0;y=0;c=0.921875;data=173,59,!!!!#4Dg/FVMWu=7F)^62lAE`btV8?3[J59sCgYHM@l]$Ya/6XIoQKi8TcyWr-:iIC]FJ1+8CSk0QUVj[n=oAC&(KPb)2Q)Ds`{`XXC9)S#6:$%Dzi*A(shC9R6==6pG5P9!!!|>,3<|box;x1=44;y1=212;x2=165;y2=249;w=800;h=542;c=0.87890625|><|mask;x=0;y=0;c=0.87890625;data=38,122,!!!!!eE3ZQ_T]t5#8Ql81qif&jX]r$?7RV.ye)Zk(pMucsC&g&y.r87-.%a[7IlO^-qzytONvkn2&*wb`KqV|>,4<|box;x1=283;y1=195;x2=377;y2=218;w=800;h=542;c=0.60546875|><|mask;x=0;y=0;c=0.60546875;data=24,95,!!!!#!Gu2u0[.Fi=)Ue4skG^cQ%]T]z]Z5scfmV+UJyDHynoc#Iv*33lSJ-GNNUYvznwN%UABTDzK=rmruaS5(aBzKtd'fW)q`WM/0)mIm!+2r'Lr|>,5<|box;x1=473;y1=223;x2=596;y2=260;w=800;h=542;c=0.85546875|><|mask;x=0;y=0;c=0.85546875;data=38,124,!!!!#1Cy8cCar&hlwF)BI1c({OpAK8&c#:=933O)'PC*Ie3M)'LV6uL(ejwoc-k):dN:7{M'OK$SJ104U6?70)@#irMI-b-eQauYGwW9MOY#9q'j`W3m`1.Uzgy&E12[:B|>,6<|box;x1=638;y1=223;x2=799;y2=277;w=800;h=542;c=0.96875|><|mask;x=0;y=0;c=0.96875;data=55,162,!!!!!eC'-Uz^(da2YGO{D1CJ4{B3wIB_kB?L2KO%'=mhN]8C$c8v1`zE%tA..1IgQmkWE%Jx&im5i8un5k.Y|>"
+ }
+}

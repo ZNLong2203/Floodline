@@ -1,0 +1,104 @@
+{
+ "request": {
+  "messages": [
+   {
+    "content": "You extract facts from flood help requests in Vietnam for rescue coordinators. Report only what the resident said or the photo facts show; never invent people or needs.",
+    "role": "system"
+   },
+   {
+    "content": [
+     {
+      "text": "Resident's message (may be empty):\nTrần Hưng Đạo đoạn gần cầu Phú Xuân nước chảy mạnh, không ai dám đi\n\nWhat the photo showed: {'people_in_photo': {'children_or_elderly': False, 'count': 3, 'on_roof_or_upper_floor': False, 'signalling_for_help': False}, 'depth_m': [0.0, 1.06], 'photo_summary': 'Phố ngập sâu khoảng đến đầu gối-đùi, nước chảy chậm, cửa hàng đóng cửa và có vài người đang lội nước ở xa.'}\n\nExtract the facts. summary_vi: one line for the coordinator. dispatch_vi: a short message a coordinator could send to a rescue team, including the depth range.",
+      "type": "text"
+     }
+    ],
+    "role": "user"
+   }
+  ],
+  "model": "muse-spark-1.3",
+  "reasoning_effort": "low",
+  "response_format": {
+   "json_schema": {
+    "name": "flood_triage",
+    "schema": {
+     "additionalProperties": false,
+     "properties": {
+      "address_hint": {
+       "type": "string"
+      },
+      "dispatch_vi": {
+       "type": "string"
+      },
+      "injury_or_medical": {
+       "type": "boolean"
+      },
+      "needs": {
+       "items": {
+        "enum": [
+         "evacuation",
+         "boat",
+         "medical",
+         "food",
+         "water",
+         "power",
+         "info"
+        ],
+        "type": "string"
+       },
+       "type": "array"
+      },
+      "people_count": {
+       "type": "integer"
+      },
+      "summary_vi": {
+       "type": "string"
+      },
+      "trapped": {
+       "type": "boolean"
+      },
+      "vulnerable": {
+       "items": {
+        "enum": [
+         "elderly",
+         "child",
+         "infant",
+         "pregnant",
+         "disabled",
+         "sick"
+        ],
+        "type": "string"
+       },
+       "type": "array"
+      },
+      "water_rising": {
+       "enum": [
+        "yes",
+        "no",
+        "unknown"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "people_count",
+      "vulnerable",
+      "injury_or_medical",
+      "water_rising",
+      "trapped",
+      "needs",
+      "address_hint",
+      "summary_vi",
+      "dispatch_vi"
+     ],
+     "type": "object"
+    },
+    "strict": true
+   },
+   "type": "json_schema"
+  }
+ },
+ "response": {
+  "content": "{\"address_hint\": \"Trần Hưng Đạo đoạn gần cầu Phú Xuân\", \"dispatch_vi\": \"Kiểm tra Trần Hưng Đạo đoạn gần cầu Phú Xuân: ngập sâu 0.0-1.06m, nước chảy mạnh không ai dám đi, có 3 người lội nước ở xa, chưa ghi nhận mắc kẹt.\", \"injury_or_medical\": false, \"needs\": [], \"people_count\": 3, \"summary_vi\": \"Trần Hưng Đạo gần cầu Phú Xuân ngập tới đầu gối-đùi, nước chảy mạnh không ai dám đi, có 3 người lội nước.\", \"trapped\": false, \"vulnerable\": [], \"water_rising\": \"unknown\"}",
+  "model": "muse-spark-1.3"
+ }
+}

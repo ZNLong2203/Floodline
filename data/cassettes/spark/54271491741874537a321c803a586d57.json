@@ -1,0 +1,81 @@
+{
+ "request": {
+  "messages": [
+   {
+    "content": "You help flood rescue teams in Vietnam read residents' clips.",
+    "role": "system"
+   },
+   {
+    "content": [
+     {
+      "type": "video_url",
+      "video_url": {
+       "url": "data:video/mp4;sha256,c4fca186b95cf2ad68468a677e75899e3d815add804ffc68a4858bee41d429dc"
+      }
+     },
+     {
+      "text": "A resident filmed this clip in a flooded street. Estimate the water depth range in metres where people and vehicles are, say whether the water flows, describe in one Vietnamese sentence what happens, and transcribe in Vietnamese anything said on the audio (empty if nothing).",
+      "type": "text"
+     }
+    ],
+    "role": "user"
+   }
+  ],
+  "model": "muse-spark-1.3",
+  "reasoning_effort": "low",
+  "response_format": {
+   "json_schema": {
+    "name": "flood_clip",
+    "schema": {
+     "additionalProperties": false,
+     "properties": {
+      "depth_m": {
+       "additionalProperties": false,
+       "properties": {
+        "high": {
+         "type": "number"
+        },
+        "low": {
+         "type": "number"
+        }
+       },
+       "required": [
+        "low",
+        "high"
+       ],
+       "type": "object"
+      },
+      "speech_vi": {
+       "type": "string"
+      },
+      "water_flow": {
+       "enum": [
+        "still",
+        "slow",
+        "fast",
+        "unclear"
+       ],
+       "type": "string"
+      },
+      "what_happens_vi": {
+       "type": "string"
+      }
+     },
+     "required": [
+      "depth_m",
+      "water_flow",
+      "what_happens_vi",
+      "speech_vi"
+     ],
+     "type": "object"
+    },
+    "strict": true
+   },
+   "type": "json_schema"
+  }
+ },
+ "response": {
+  "content": "{\"depth_m\": {\"high\": 0.4, \"low\": 0.1}, \"speech_vi\": \"\", \"water_flow\": \"slow\", \"what_happens_vi\": \"Xe qu\\u00e2n s\\u1ef1 ch\\u1edf xu\\u1ed3ng c\\u1ee9u h\\u1ed9 l\\u1ed9i qua tuy\\u1ebfn \\u0111\\u01b0\\u1eddng ng\\u1eadp n\\u1eb7ng trong khi ng\\u01b0\\u1eddi d\\u00e2n \\u0111i b\\u1ed9 v\\u00e0 \\u0111i xe m\\u00e1y di chuy\\u1ec3n xung quanh.\"}",
+  "model": "muse-spark-1.3"
+ }
+}

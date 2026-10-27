@@ -1,0 +1,28 @@
+{
+ "request": {
+  "input": [
+   {
+    "content": [
+     {
+      "text": "<0f>1<|box;x1=78;y1=2;x2=178;y2=253;w=370;h=400|>,2<|box;x1=85;y1=109;x2=184;y2=285;w=370;h=400|>,3<|box;x1=210;y1=41;x2=326;y2=352;w=370;h=400|>,4<|box;x1=222;y1=140;x2=338;y2=370;w=370;h=400|>",
+      "type": "input_text"
+     },
+     {
+      "image_url": "data:image/jpeg;sha256,5bc4351b6f30f1522c13f7c7077cae27dfb0d870b43bc5260f4acf72cdd4e6fb",
+      "type": "input_image"
+     }
+    ],
+    "role": "user",
+    "type": "message"
+   }
+  ],
+  "metadata": {
+   "include_confidence": "true",
+   "mask_encoding": "one_bit"
+  },
+  "model": "sam-3.1"
+ },
+ "response": {
+  "text": "<0f>1<|box;x1=84;y1=6;x2=185;y2=241;w=370;h=400;c=0.85546875|><|mask;x=0;y=0;c=0.85546875;data=236,102,!!!!#uD%ncSp`U/ZfX'nCxHfi:HH2qAmuC5S5bLti`Ns3']rFZa7K7QIpvXHu_=xgZn'Y/lYcb*z'puoN6hpEQe1ju&6-g?pU9..Ky*fN?$kCLa.7y]4b%t]!I]h8oE9/XZ[V(*pF'.U514-nu:LF30H*B#z10:9aE@m-B_!/pe6X)D6gw[vf`bN@k9G0Ty7?jrqEiN?J3%)/n3LOq|>,2<|box;x1=95;y1=97;x2=188;y2=250;w=370;h=400;c=0.8046875|><|mask;x=0;y=0;c=0.8046875;data=154,94,!!!!#xGp=^oe9DE'-DG(TxlU3F@hK.vkOBW%=.4_=/jmSJwhDig$(xR1nLC8&L=xNQP:]hcfe5L/b1L8A?!+6C2PtGDSFtQLJG0&Lk=3^PnNV*`-ku6PZ^%H(2n6g2Y(yTpvK!kKAq?3PA'uhBuL7_Uc/K=SN*.*XFs0MWb[pIh$k(UU3]LjA2KN[Ec5eo{V5h//X*=k0[KV8LreBAyax@|>,3<|box;x1=210;y1=39;x2=325;y2=345;w=370;h=400;c=0.8984375|><|mask;x=0;y=0;c=0.8984375;data=307,116,!!!!$EE3Pe1hP{cRcn'IS(vgBDIPStOB@.q`y.e%qN*.?Wv#R#TFMrHz+$*5JGzAkhZ!^uKagtnNhlHWN-$@+2DH#TSHm:O))Fn_5r=bu+41ath&dt17L/ccfR2a$q3AkZ`:9Lo.CNoS5SN*xV00U#.Exz_OxmwDQ3YUSB+-Z4Ra2iohK*W((0@+brVAi#`Wz{mB+Yy'q0.#kNRq0?`vA@NQt5&1Of3M1bbHtx!4FDj2F@QJK:S`#lA'PB-0:14R6=|>,4<|box;x1=223;y1=144;x2=330;y2=366;w=370;h=400;c=0.87109375|><|mask;x=0;y=0;c=0.87109375;data=223,108,!!!!$VBqEXRRbVIXWo60s%Fzhc3=&5C6w$4$8gtXo#JLpK3fe_H'C4M7?R$%IEtX=8iF=#0Uvrp)pA{T1]0Cp0Ow2$Xai2'Z/5G27/9E`96bx33ESyt-9BhkL_(J`4E.)8z60q/hA+VCg-Wm8e)xn4yuo(Fj?pq{e(zCjO.bs^sH$G{'^NaQw4bOioUeqX4U%uW5W%5(B&5fOmq:l4u:/4/?nh$6&Fe`vu:-KT3tfHoFZgVA/nVa.[9V9xbG^!l9#_uvDOf.ViKXg]:(SQ!8X8C|>"
+ }
+}

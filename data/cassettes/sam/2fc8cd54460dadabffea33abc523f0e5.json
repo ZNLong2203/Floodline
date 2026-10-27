@@ -1,0 +1,28 @@
+{
+ "request": {
+  "input": [
+   {
+    "content": [
+     {
+      "text": "<0f>1<|box;x1=104;y1=201;x2=787;y2=593;w=800;h=600|>",
+      "type": "input_text"
+     },
+     {
+      "image_url": "data:image/jpeg;sha256,25885946efdf7c4514500c39776e761864db7d25bd9d09cd4c01bd86b770be10",
+      "type": "input_image"
+     }
+    ],
+    "role": "user",
+    "type": "message"
+   }
+  ],
+  "metadata": {
+   "include_confidence": "true",
+   "mask_encoding": "one_bit"
+  },
+  "model": "sam-3.1"
+ },
+ "response": {
+  "text": "<0f>1<|box;x1=102;y1=186;x2=799;y2=597;w=800;h=600;c=0.93359375|><|mask;x=0;y=0;c=0.93359375;data=412,698,!!!!0X@lx3$4%.aBy3_XL3xw7#G%Lc$EL?!=%Qj8TE?BNO5ByPJM30OFKW&$QNEGz^[&O_[eZ-W6?VzV6G8#W(FO7wLC)Fp$bQkAG*WY7srDr76o#$bAGfLf2$=*^71NAdQ./N$i7``THgkTALs]3sQwf_%FlrZSKUQ!@hAg]e+@TAKQw.(VXvK3pFY3S_Cg]#DwVTSeN&9{Zl..'URH==h!n)-'Xv1H$)/NB5cFU$rOEL.t{V^pcnl27h/({*pnh%xh&&0W-5e2F3@br#7eHy#-]pejECu*h/cxR*3GIY4MNJKQ#JcQ/j_[E0l2G-/Im]wxCoJbdkofezQUpb$R#uR&YE5B?'_*2t)1lh1Z'OAogz7#du4-yr#vr`.7{LI)gq]n^fxo'[+4eChM62@^z{dp)&qr$Erl7-SvE]Hxm!syvN0=w]D5S$FMCu0Sj-.pO/Spoj%a@ft[b3`IA=jp*PV]auB]&[pL%%a2Oklr/y1crpdFCiSs!p**m@M*f@g`*GY*^9keMQ4sJn:b-[nvB%Deu{MrPlnQ=pETtA$9q8hfvk?BJ#/pVy/'3(B6-SMStNfgK'xw`X8@nf`Uiy.v9B{LQcli/Gau-$3ZfEXqxnj4_dqZsX4307/Ij2`(OxW]xpDXGDYkXHcIHBKVw$8^$.z@03Sq6iHqe^z8*QLp#@qXUtbsiY!]g^Rjx^GBEd&OXikmfU1Q^bHzn[90sk)8a`aGORW)+9?`I)h]&Ns-.+@X6G?joDyMLQLrZ'3`EVKjQs8s85b5tuCuwxdn&hFJM{4=R7ZsH=GplT9Ji%wkkS_^n/6PPh1ki55S4_tBZp60gh'*[T''mhl?n`F$2YS*S):@ZB#zm(`u3JC(v6y0UbrU@X3.4EaDgsod^08aSAsmn?0c[?fQAU&+xe1[s%A^?ShXz#/=+oH8b9yVfkUIMdI7:KQP$%l]7g(=:?Yc0_%J?pT-ry+jT$odI?WaqgipSx+A@X#PZ/sMpmf1[)qgJ/U'ZTR?_^m(#T`X`bylD9yhY@WX!6ixokc2Hjd!2-bRE.1Jytz6Wl$DcT3ixAJ`MBr(&.aP(@#vt(U=?Buxp[Ml0lm6-XNBo!qNuH1@tAMLJnN^mT8VJuN&n'RO!6Fn:2xaL-b1(Tyf)x#d6%%SqU(#R%qKw&XF/xU:jP]n6=-X=tMWh`weC=Ae7ps?&Ly'L/6n0u26a:B3yn.V*E.#U%k+3mS&m_wm`7wuz8=.ZP-lWC0n=Ykb{*I@Zgt9HlU7S_!jZ9gFK.U1--{2hv%^=]scJ(zasH%LyiO*{XeiL5a3'4hCs+2!JdfZ-AoC`2%oPR'Ld$`7zMgv%1L?KnMbro6Q2.ek@XZ@Yf4+f^dRn'g0.Z'{SL35m$EvO%EGbqovF_pk68vk1W[D*o{lOsldC=qf)rg@YA)C:p`ijc*^+{1jZsw6!t_LQhfdKgF3%kC?L)|>"
+ }
+}

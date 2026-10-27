@@ -1,0 +1,28 @@
+{
+ "request": {
+  "input": [
+   {
+    "content": [
+     {
+      "text": "<0f>1<|box;x1=923;y1=239;x2=1442;y2=1089;w=1600;h=1200|>,2<|box;x1=35;y1=355;x2=373;y2=611;w=1600;h=1200|>,3<|box;x1=330;y1=458;x2=412;y2=571;w=1600;h=1200|>,4<|box;x1=496;y1=466;x2=535;y2=552;w=1600;h=1200|>",
+      "type": "input_text"
+     },
+     {
+      "image_url": "data:image/jpeg;sha256,db8aae970f7a3c87dfee1373130fb309ba5a89e094f61f3d36d8a9477f183b57",
+      "type": "input_image"
+     }
+    ],
+    "role": "user",
+    "type": "message"
+   }
+  ],
+  "metadata": {
+   "include_confidence": "true",
+   "mask_encoding": "one_bit"
+  },
+  "model": "sam-3.1"
+ },
+ "response": {
+  "text": "<0f>1<|box;x1=927;y1=226;x2=1441;y2=1101;w=1600;h=1200;c=0.97265625|><|mask;x=0;y=0;c=0.97265625;data=876,515,!!!!'oA(o-D+Oh%YD)SSdYEhgjpTOYIJIHWK2VA-G=B&IEhBlZ.#WNKB@U+o`D436Za?@]!ce3TEG-t27V^@yrlQpW-.O&-6th@x$wc^G:'l^oW/I8[jxlE'/(MNfOn#ugXxwoO_w72{_*ZuF=mY!arJUmOl]wAM]vd@3't]BSC5y50q9cf_%CB7`'`fSz'3OJ$qsnDBU#yr.=d4d^lqItDdPX-Hmc]SDdQa_#/Q#)ilGF^]:n$$4k?v$IA!a.qN/=TspkMaX#4G6CsA21twAg?nFnJCZsggeQDYf/j4u*O^FQaNsWQKMM{=S$VS4kEr?+{]Hh6Dv&CPPF[EJL::(o&j-%aslQ9#[NWPIo92):7:'@VIj.G9Xl3UOh!Z[IuRIIRsDR'0e0f0_o&(+u]!J%wX]@q%4Dj:(56mmf)Vy:*-AA0)t@XL)+YgGk-xDF)t[4bU/rIwV7)l4K97KgaVaUb`PU/):.]Chy6i]GubMaIoA.Z`LGv{3p:x&Gv^fyfF9DCmaa`/B'N*bm6iCN$mjmqRm+VQg?H#MhtGf{PfRmnGcdgMwHb5lp&3(=Sp][&Ur@UGas)nM#NIAwn2lq74Wh)Edr6NCzkW%:Q)aLO]a{p6Oh*^'I!!|>,2<|box;x1=38;y1=339;x2=359;y2=573;w=1600;h=1200;c=0.95703125|><|mask;x=0;y=0;c=0.95703125;data=235,322,!!!!#nBu7O+Vs9gu&@ELgrTPmil_Q@%vcEAq6?ec##ODC*Sjzp&vRTGnKAzJTf0R0h6e&dtHzZE+x*dKjpZ!]8#:pCI#-.Bq6v]@So?I$d&4lBW`x+TYAk:'9qCp3wYE''TEwrJ79YtMSu@plW/Fp/ju93/lMwjJmO-rCdJyX$d.JdifCkzo{I^=wX(6aeDb77-heV+hB|>,3<|box;x1=339;y1=458;x2=408;y2=569;w=1600;h=1200;c=0.8359375|><|mask;x=0;y=0;c=0.8359375;data=112,70,!!!!!yFwGPM!^J]*QLD'enP-+27.'kO]3FI5aNb_Z6xn/h*pyitLL*ZO4j=0mIrul?-.vRlFtHz/oRb=G3i'U7I_&]2E7AN3Xyi03Hf%tdm?9|>,4<|box;x1=501;y1=462;x2=531;y2=524;w=1600;h=1200;c=0.69921875|><|mask;x=0;y=0;c=0.69921875;data=63,31,!!!!!MHmAc6E'PqNTHA`j?Abnzhn?A6Lr2b%JEZFS.:'SV9#j9Etde-|>"
+ }
+}

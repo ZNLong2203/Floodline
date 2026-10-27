@@ -1,0 +1,28 @@
+{
+ "request": {
+  "input": [
+   {
+    "content": [
+     {
+      "text": "<0f>1<|box;x1=499;y1=485;x2=1598;y2=967;w=1600;h=1200|>,2<|box;x1=362;y1=414;x2=535;y2=653;w=1600;h=1200|>,3<|box;x1=563;y1=404;x2=690;y2=647;w=1600;h=1200|>",
+      "type": "input_text"
+     },
+     {
+      "image_url": "data:image/jpeg;sha256,86d91c1371a64a67a326b94da9e708cc1a9e8118524a88173dd73e5cdc0f867f",
+      "type": "input_image"
+     }
+    ],
+    "role": "user",
+    "type": "message"
+   }
+  ],
+  "metadata": {
+   "include_confidence": "true",
+   "mask_encoding": "one_bit"
+  },
+  "model": "sam-3.1"
+ },
+ "response": {
+  "text": "<0f>1<|box;x1=535;y1=486;x2=1599;y2=894;w=1600;h=1200;c=0.98046875|><|mask;x=0;y=0;c=0.98046875;data=393,1024,!!!!'*=/DC]Xt)MSw1JekaWt@qF$`l{npXvGx$g!h167E%CP0Y33)UVUFK]s*SMjEriY'vJilob()$A7reCHtQVi4WGp-gkGq4Ty%sa{&D'1:VIk@LRm.4q'H4G4:6y(NM1R?VD_%H1UO7RJ5uRrdI_mqS0EdGjmUM7B4MgpQL[b[5@PVqI_QRmgW3[VJxE`C?#_%o0abBYB2j^O2poY'%Z%^Jrm7&d14E1!xKA-vSH=eV(n_Da%MXE`2`:deB8:UT&yi9[?fbN.M{bMu6(_Nd9:znBe7Yl(fT?$:qw1apQO{DGuYkum')[$L1]s!qWUY5xMjKHImvMC]2huEN`MNe6tS8&l$y]mFX=MMQ3*gN2Q=cw!6w0nm?*NqHr(uaA9aUJL`VGLy{6#*j/H{fPALZNW0zblO`Q%h`e{zVut_DFQ*F!w]!-)_eIUBX#bKol#Pq79g=K!'wplo3Nc97OU1`c+_g=YfqvMlCOe//j'#?9kAEeM!Hti1Y%:qnWHEQ`_-{iX7TvYc(+wb@#8aPKN&Xvb`=2@%?#hni!!|>,2<|box;x1=362;y1=387;x2=527;y2=644;w=1600;h=1200;c=0.87109375|><|mask;x=0;y=0;c=0.87109375;data=258,166,!!!!$aC9FT2PXJ.AD(JwfhV/Q)1cIJ{B`#LgvddxN0@rO7TKMgn*=m!AR5TO3kAjPExq#`(gDj7jY9E)!SJ8E+tfNT`p?MPD)lw)n0]V!iBfxU-[!:9sS]oelu[z$-C'8wm'%$?9%jn5qSuIPT#UQiVUcKg:!T]Xv_$:duZ'GCM*3)W'b%a6.YoQrA%Xs$n8b3j1VAD4B?oPElV3lqA%+wkn1=iz%%Eln]_=.9_k)pBa3vTRlN6O=vO%x@5v])/ulpGtJ_hA`(r8N!Xl`03Y^[%JnEi+[@XPca!|>,3<|box;x1=564;y1=376;x2=689;y2=606;w=1600;h=1200;c=0.8828125|><|mask;x=0;y=0;c=0.8828125;data=231,126,!!!!$8Cfb!lGsWxowz-3IMJxlp0=M5pF:a5Bma1*w[/{qSguY`.YCEggAG6dv#&t-HvaGpw`+Y$weILn1M[xHM:IHX^l1JvA2'q6jM7Vm-%-sIgE=DVArqa`3s`W2Ba(#pWWpiw=K)&S6$=^$BU_]AWJ?/VX##aS]`&-9BUid@^Z.!AMp@@i-P`u!HwQHs5!PiD(_$1!*#%Y$3aT)vKe-i(iy&UWjAGDs@HUVV!7aM[HgKUt?vT5*|>"
+ }
+}

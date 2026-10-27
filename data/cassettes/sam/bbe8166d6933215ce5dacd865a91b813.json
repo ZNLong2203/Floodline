@@ -1,0 +1,28 @@
+{
+ "request": {
+  "input": [
+   {
+    "content": [
+     {
+      "text": "<0f>1<|box;x1=161;y1=93;x2=467;y2=252;w=620;h=465|>",
+      "type": "input_text"
+     },
+     {
+      "image_url": "data:image/jpeg;sha256,c66fd1a94fc66c439bb1b986c5b089d5e9ee7c2d2f0521c1a04dab91553b72dc",
+      "type": "input_image"
+     }
+    ],
+    "role": "user",
+    "type": "message"
+   }
+  ],
+  "metadata": {
+   "include_confidence": "true",
+   "mask_encoding": "one_bit"
+  },
+  "model": "sam-3.1"
+ },
+ "response": {
+  "text": "<0f>1<|box;x1=163;y1=95;x2=467;y2=250;w=620;h=465;c=0.9609375|><|mask;x=0;y=0;c=0.9609375;data=156,305,!!!!$8Akb[fsS^-K4M'Bzr)JFI-5ugl(o(=qZxlm45N$V55z#w2E[O(p@WayDMvdFV[0b{#KgAPx5Pe3zM/6qWE{blo4#$!tvMI7%f(2-k&wr5EJ2&e/7R5$TlXiX.j:wY`Ih6vnsx[MP&tjjTmk_zHr0&Yt&i5vlq[Ocm={eFDFv/Ti`:g6v#)4+2Mo'm?72geL!r%+J046AsjX+*c_`YYcs[TqUT@L.N0U+#E(ie[kQGyx!+v!F|>"
+ }
+}
