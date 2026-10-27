@@ -11,6 +11,7 @@ passability -> per vehicle: passable, risky or impassable, with a probability
 from __future__ import annotations
 
 import time
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -106,8 +107,13 @@ def analyse(
     cat = catalog_mod.default()
     warnings: list[str] = []
 
-    seen = perceive(client, image)
-    water = segment_water(client, image, size) if seen.get("water_visible") else None
+    # The water mask does not depend on what Spark finds, so both run at once.
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        water_job = pool.submit(segment_water, client, image, size)
+        seen = perceive(client, image)
+        water = water_job.result()
+    if not seen.get("water_visible") and not water.any():
+        water = None
     if water is None or not water.any():
         warnings.append("no water found in the photo")
 
@@ -158,7 +164,7 @@ def analyse(
 
     estimate = combine(readings)
     if flowing is None:
-        flowing = seen.get("water_flow") in ("slow", "fast")
+        flowing = seen.get("water_flow") == "fast"
     verdicts = assess(estimate, cat.vehicles, flowing=flowing) if estimate else []
     if seen.get("quality_flags"):
         warnings.extend(f"photo: {f.replace('_', ' ')}" for f in seen["quality_flags"])

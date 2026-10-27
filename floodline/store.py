@@ -40,7 +40,7 @@ class StoredReport:
         est = self.estimate
         if est is None:
             return None
-        flowing = self.analysis.get("perception", {}).get("water_flow") in ("slow", "fast")
+        flowing = self.analysis.get("perception", {}).get("water_flow") == "fast"
         return Report(self.id, self.lat, self.lon, self.at, est, flowing)
 
     def public(self) -> dict[str, Any]:
