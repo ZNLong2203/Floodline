@@ -1,0 +1,25 @@
+# A city Floodline serves: its streets, its residents' language, its demo.
+id: hue
+name: Huế
+country: Vietnam
+language: Vietnamese          # residents' language: voice bias, local summaries
+center: [16.467, 107.585]     # lat, lon
+zoom: 14
+roads: hue_roads.json         # scripts/build_roads.py from an OSM extract
+scenario: scenario-hue.json
+story: >-
+  Central Vietnam floods every October-November. In 2025, 32 of Huế's 40 communes were under
+  1-2 m of water; in October 2026 the city took more than 800 mm of rain in three days.
+presets:
+  - name: Central Hospital → Citadel (north)
+    name_local: BV Trung ương Huế → Thành nội (Bắc)
+    from: [16.4628, 107.5888]
+    to: [16.4760, 107.5790]
+  - name: Central Hospital → Đông Ba market
+    name_local: BV Trung ương Huế → Chợ Đông Ba
+    from: [16.4628, 107.5888]
+    to: [16.4729, 107.5880]
+  - name: Huế station → Ngọ Môn gate
+    name_local: Ga Huế → Ngọ Môn
+    from: [16.4570, 107.5781]
+    to: [16.4685, 107.5785]

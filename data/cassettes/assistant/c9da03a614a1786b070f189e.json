@@ -1,0 +1,805 @@
+{
+ "city": "hue",
+ "question": "Can a rescue truck get from the Central Hospital to the people trapped in the Chi Lăng lanes? What should I send?",
+ "answer": {
+  "answer": "No — truck cannot get through from Central Hospital to Chi Lăng lanes.\n\n* Route: ~2.7 km shortest. **No safe road for truck** — 14 impassable segments.\n* Chi Lăng: 5/5 segments impassable for **all vehicles: pedestrian, scooter, car, suv, truck**. Depth about 0.0-4.1 m.\n\nPeople waiting:\n\n1. House No. 12, Kiet Chi Lang — 3 trapped (2 elderly + 1 heart patient). Depth about 0.0-3.4 m. Resident: *\"Chi Lang alley is flooded over head height, the whole hamlet has to go by boat. House No. 12 has 2 elderly people and 1 heart patient who have not been able to get out yet.\"*\n2. kiệt 45 Chi Lăng — 5 on attic, incl. 2 small children, 1st floor flooded, phone low battery. Depth about 0.0-3.4 m. Resident: *\"We are on the attic of a house in kiệt 45 Chi Lăng, five people, with two small children. Water has flooded the entire first floor. The phone is about to run out of battery.\"*\n\nSend:\n\n**Do not send truck / car / SUV — send boat + medical to both Chi Lăng points.** Prioritize No.12 first (medical), then kiệt 45 (children, low battery).\nTruck can stage at nearest passable edge only, then transfer by boat.\n",
+  "steps": [
+   {
+    "tool": "list_reports",
+    "args": {
+     "limit": 10
+    },
+    "result": {
+     "count": 18,
+     "reports": [
+      {
+       "id": "20261028-010159-46b0",
+       "street": "Chi Lăng",
+       "lat": 16.483,
+       "lon": 107.5902,
+       "minutes_ago": 66,
+       "depth_m": [
+        0.0,
+        3.4
+       ],
+       "priority": 85,
+       "people": 3,
+       "vulnerable": [
+        "elderly",
+        "sick"
+       ],
+       "summary": "3 trapped at House No. 12, Kiet Chi Lang (2 elderly, 1 heart patient), water over head-deep, need boat evacuation; photo shows 5 people in life jackets boating relief supplies through deep flooded fields (0.0-3.4m), no urgent entrapment visible.",
+       "message_en": "Chi Lang alley is flooded over head height, the whole hamlet has to go by boat. House No. 12 has 2 elderly people and 1 heart patient who have not been able to get out yet.",
+       "status": "new"
+      },
+      {
+       "id": "20261028-010406-7ccd",
+       "street": "",
+       "lat": 16.4815,
+       "lon": 107.5925,
+       "minutes_ago": 21,
+       "depth_m": [
+        0.0,
+        3.4
+       ],
+       "priority": 55,
+       "people": 5,
+       "vulnerable": [
+        "child"
+       ],
+       "summary": "5 people incl. 2 young children on house attic in kiệt 45 Chi Lăng, first floor flooded, phone low battery; photo shows 6 people moving by boat in widespread deep flood.",
+       "message_en": "We are on the attic of a house in kiệt 45 Chi Lăng, five people, with two small children. Water has flooded the entire first floor. The phone is about to run out of battery.",
+       "status": "new"
+      },
+      {
+       "id": "20261028-010322-90ed",
+       "street": "Trần Huy Liệu",
+       "lat": 16.4712,
+       "lon": 107.5866,
+       "minutes_ago": 36,
+       "depth_m": [
+        0.062,
+        0.718
+       ],
+       "priority": 35,
+       "people": 4,
+       "vulnerable": [
+        "elderly",
+        "child",
+        "disabled"
+       ],
+       "summary": "House on Tran Hung Dao near Dong Ba market flooded to thigh level and still rising, with 82yo with mobility difficulty and 3yo child; photo shows knee-to-thigh yard flooding with 4 people wading, no urgent distress signal.",
+       "message_en": "Hello, my house is on Tran Hung Dao near Dong Ba market, water has entered the house up to thigh level. In the house there is my 82-year-old mother who has difficulty walking and a 3-year-old child. The water is still rising. Hope the rescue team comes soon.",
+       "status": "new"
+      },
+      {
+       "id": "20261028-010257-1bbb",
+       "street": "Cầu Cửa Thượng Tứ",
+       "lat": 16.4697,
+       "lon": 107.5842,
+       "minutes_ago": 41,
+       "depth_m": [
+        0.0,
+        0.787
+       ],
+       "priority": 25,
+       "people": 9,
+       "vulnerable": [
+        "elderly",
+        "child"
+       ],
+       "summary": "9 people (including children/elderly) wading in knee-deep water at Đinh Tiên Hoàng in the Citadel; no entrapment.",
+       "message_en": "Dinh Tien Hoang inside the Citadel, water up to the knees",
+       "status": "new"
+      },
+      {
+       "id": "20261028-010355-3a96",
+       "street": "Đống Đa",
+       "lat": 16.4602,
+       "lon": 107.5917,
+       "minutes_ago": 26,
+       "depth_m": [
+        0.0,
+        0.216
+       ],
+       "priority": 20,
+       "people": 11,
+       "vulnerable": [
+        "child"
+       ],
+       "summary": "11 people including children at Dong Da, water 0-22cm at doorsteps, standing at shop entrance, not signalling for urgent rescue.",
+       "message_en": "In Dong Da, water is right at the doorsteps of houses",
+       "status": "new"
+      },
+      {
+       "id": "20261028-010339-a24a",
+       "street": "Mai Thúc Loan",
+       "lat": 16.478,
+       "lon": 107.5844,
+       "minutes_ago": 31,
+       "depth_m": [
+        0.0,
+        1.066
+       ],
+       "priority": 20,
+       "people": 14,
+       "vulnerable": [],
+       "summary": "Car stuck mid-road on Mai Thúc Loan; ~14 people wading through 0.4-0.8m fast-flowing street flood.",
+       "message_en": "Mai Thúc Loan, car stuck in the middle of the road",
+       "status": "new"
+      },
+      {
+       "id": "20261028-010236-a31e",
+       "street": "Nguyễn Trãi",
+       "lat": 16.4679,
+       "lon": 107.5724,
+       "minutes_ago": 51,
+       "depth_m": [
+        0.0,
+        0.663
+       ],
+       "priority": 15,
+       "people": 8,
+       "vulnerable": [],
+       "summary": "Nguyen Trai flooded 0.0-0.66m, water rising fast in last 30 minutes, 8 people seen, motorbikes still passable, no urgent rescue needed.",
+       "message_en": "Nguyen Trai water has risen fast in the past 30 minutes",
+       "status": "new"
+      },
+      {
+       "id": "20261028-010702-ebd7",
+       "street": "Cầu Phú Xuân",
+       "lat": 16.4652,
+       "lon": 107.5853,
+       "minutes_ago": 11,
+       "depth_m": [
+        0.0,
+        0.503
+       ],
+       "priority": 5,
+       "people": 6,
+       "vulnerable": [],
+       "summary": "Knee-deep street flooding 0.0-0.5m at Phu Xuan bridgehead Le Loi side, 6 people wading, motorbikes stalling but cars still passing, not trapped.",
+       "message_en": "Clip at Phu Xuan bridgehead on the Le Loi side: motorbikes stalled and had to be pushed, cars still trying to get through",
+       "status": "new"
+      },
+      {
+       "id": "20261028-010525-e964",
+       "street": "Phan Đình Phùng",
+       "lat": 16.4566,
+       "lon": 107.5921,
+       "minutes_ago": 16,
+       "depth_m": [
+        0.0,
+        0.268
+       ],
+       "priority": 5,
+       "people": 12,
+       "vulnerable": [],
+       "summary": "Lý Thường Kiệt flooded to mid-motorbike-wheel, depth 0.0-0.27m, motorbikes still moving, 12 people in photo with no distress signal.",
+       "message_en": "Lý Thường Kiệt is flooded up to the middle of motorbike wheels.",
+       "status": "new"
+      },
+      {
+       "id": "20261028-010515-1792",
+       "street": "",
+       "lat": 16.4593,
+       "lon": 107.5944,
+       "minutes_ago": 18,
+       "depth_m": [
+        0.0,
+        0.134
+       ],
+       "priority": 5,
+       "people": 5,
+       "vulnerable": [],
+       "summary": "5 people seen on Hùng Vương near ngã sáu with ankle-deep water (0.0-0.13m) at road edge, moving normally, no rescue needed.",
+       "message_en": "Filmed a clip of the Hùng Vương section near ngã sáu, shallow water at the edge of the road",
+       "status": "new"
+      }
+     ]
+    }
+   },
+   {
+    "tool": "find_place",
+    "args": {
+     "query": "Central Hospital"
+    },
+    "result": {
+     "matches": [
+      {
+       "kind": "landmark",
+       "name": "Central Hospital",
+       "lat": 16.4628,
+       "lon": 107.5888
+      }
+     ]
+    }
+   },
+   {
+    "tool": "find_place",
+    "args": {
+     "query": "Chi Lăng"
+    },
+    "result": {
+     "matches": [
+      {
+       "kind": "street",
+       "name": "Chi Lăng",
+       "lat": 16.48300225,
+       "lon": 107.59024155
+      }
+     ]
+    }
+   },
+   {
+    "tool": "street_status",
+    "args": {
+     "street": "Chi Lăng"
+    },
+    "result": {
+     "street": [
+      "Chi Lăng"
+     ],
+     "segments_with_reports": 5,
+     "depth_m_range": [
+      0.0,
+      4.14
+     ],
+     "segments_by_status_per_vehicle": {
+      "pedestrian": {
+       "impassable": 5
+      },
+      "scooter": {
+       "impassable": 5
+      },
+      "car": {
+       "impassable": 5
+      },
+      "suv": {
+       "impassable": 5
+      },
+      "truck": {
+       "impassable": 5
+      }
+     },
+     "reports": [
+      "20261028-010159-46b0"
+     ]
+    }
+   },
+   {
+    "tool": "report_detail",
+    "args": {
+     "report_id": "20261028-010159-46b0"
+    },
+    "result": {
+     "id": "20261028-010159-46b0",
+     "street": "Chi Lăng",
+     "lat": 16.483,
+     "lon": 107.5902,
+     "minutes_ago": 66,
+     "depth_m": [
+      0.0,
+      3.4
+     ],
+     "priority": 85,
+     "people": 3,
+     "vulnerable": [
+      "elderly",
+      "sick"
+     ],
+     "summary": "3 trapped at House No. 12, Kiet Chi Lang (2 elderly, 1 heart patient), water over head-deep, need boat evacuation; photo shows 5 people in life jackets boating relief supplies through deep flooded fields (0.0-3.4m), no urgent entrapment visible.",
+     "message_en": "Chi Lang alley is flooded over head height, the whole hamlet has to go by boat. House No. 12 has 2 elderly people and 1 heart patient who have not been able to get out yet.",
+     "status": "new",
+     "verdicts": {
+      "pedestrian": "impassable",
+      "scooter": "impassable",
+      "car": "impassable",
+      "suv": "impassable",
+      "truck": "impassable"
+     },
+     "objects_measured": [
+      "person",
+      "person",
+      "person",
+      "person",
+      "person"
+     ],
+     "readings_used": 1,
+     "facts": {
+      "address_hint": "Kiệt Chi Lăng, Nhà số 12",
+      "dispatch_en": "Rescue House No.12, Kiet Chi Lang: evacuate 3 (2 elderly, 1 heart patient) by boat. Water over head-deep, depth 0.0-3.4m.",
+      "dispatch_local": "Cứu hộ Nhà số 12, Kiệt Chi Lăng: sơ tán 3 người (2 cụ già, 1 người bệnh tim) bằng thuyền. Nước ngập quá đầu người, độ sâu 0,0-3,4m.",
+      "injury_or_medical": true,
+      "language": "vi",
+      "message_en": "Chi Lang alley is flooded over head height, the whole hamlet has to go by boat. House No. 12 has 2 elderly people and 1 heart patient who have not been able to get out yet.",
+      "needs": [
+       "evacuation",
+       "boat",
+       "medical"
+      ],
+      "people_count": 3,
+      "summary_en": "3 trapped at House No. 12, Kiet Chi Lang (2 elderly, 1 heart patient), water over head-deep, need boat evacuation; photo shows 5 people in life jackets boating relief supplies through deep flooded fields (0.0-3.4m), no urgent entrapment visible.",
+      "summary_local": "3 người mắc kẹt tại Nhà số 12, Kiệt Chi Lăng (2 cụ già, 1 người bệnh tim), ngập quá đầu người, cần thuyền sơ tán; ảnh cho thấy 5 người mặc áo phao chèo thuyền chở hàng cứu trợ qua đồng ruộng ngập sâu (0,0-3,4m), không thấy mắc kẹt khẩn.",
+      "trapped": true,
+      "vulnerable": [
+       "elderly",
+       "sick"
+      ],
+      "water_rising": "unknown"
+     },
+     "priority_reasons": [
+      "injury or medical need",
+      "vulnerable: elderly, sick",
+      "trapped",
+      "depth 1.3 m"
+     ]
+    }
+   },
+   {
+    "tool": "report_detail",
+    "args": {
+     "report_id": "20261028-010406-7ccd"
+    },
+    "result": {
+     "id": "20261028-010406-7ccd",
+     "street": "",
+     "lat": 16.4815,
+     "lon": 107.5925,
+     "minutes_ago": 21,
+     "depth_m": [
+      0.0,
+      3.4
+     ],
+     "priority": 55,
+     "people": 5,
+     "vulnerable": [
+      "child"
+     ],
+     "summary": "5 people incl. 2 young children on house attic in kiệt 45 Chi Lăng, first floor flooded, phone low battery; photo shows 6 people moving by boat in widespread deep flood.",
+     "message_en": "We are on the attic of a house in kiệt 45 Chi Lăng, five people, with two small children. Water has flooded the entire first floor. The phone is about to run out of battery.",
+     "status": "new",
+     "verdicts": {
+      "pedestrian": "impassable",
+      "scooter": "impassable",
+      "car": "impassable",
+      "suv": "impassable",
+      "truck": "impassable"
+     },
+     "objects_measured": [
+      "person",
+      "person",
+      "person",
+      "person",
+      "person",
+      "person"
+     ],
+     "readings_used": 1,
+     "facts": {
+      "address_hint": "kiệt 45 Chi Lăng",
+      "dispatch_en": "Rescue to attic in kiệt 45 Chi Lăng: 5 people incl. 2 small children, first floor flooded, phone low battery. Area flood depth 0.0-3.4m.",
+      "dispatch_local": "Cứu hộ đến gác nhà trong kiệt 45 Chi Lăng: 5 người gồm 2 trẻ nhỏ, tầng một ngập hết, điện thoại sắp hết pin. Độ sâu ngập khu vực 0,0-3,4m.",
+      "injury_or_medical": false,
+      "language": "Vietnamese",
+      "message_en": "We are on the attic of a house in kiệt 45 Chi Lăng, five people, with two small children. Water has flooded the entire first floor. The phone is about to run out of battery.",
+      "needs": [
+       "evacuation"
+      ],
+      "people_count": 5,
+      "summary_en": "5 people incl. 2 young children on house attic in kiệt 45 Chi Lăng, first floor flooded, phone low battery; photo shows 6 people moving by boat in widespread deep flood.",
+      "summary_local": "5 người gồm 2 trẻ nhỏ ở trên gác nhà trong kiệt 45 Chi Lăng, tầng một ngập hết, điện thoại sắp hết pin; ảnh cho thấy 6 người đang di chuyển bằng thuyền trong vùng ngập sâu trên diện rộng.",
+      "trapped": true,
+      "vulnerable": [
+       "child"
+      ],
+      "water_rising": "unknown"
+     },
+     "priority_reasons": [
+      "vulnerable: child",
+      "trapped",
+      "depth 1.3 m",
+      "5 people"
+     ]
+    }
+   },
+   {
+    "tool": "plan_route",
+    "args": {
+     "from_lat": 16.4628,
+     "from_lon": 107.5888,
+     "to_lat": 16.483,
+     "to_lon": 107.5902,
+     "vehicle": "truck"
+    },
+    "result": {
+     "vehicle": "truck",
+     "safe_route_m": null,
+     "risky_segments_on_route": null,
+     "shortest_route_m": 2712.8,
+     "impassable_segments_on_shortest": 14,
+     "no_safe_road": true
+    }
+   }
+  ],
+  "route": {
+   "vehicle": "truck",
+   "route": null,
+   "naive": {
+    "coordinates": [
+     [
+      107.5884452,
+      16.4627776
+     ],
+     [
+      107.5883494,
+      16.462901
+     ],
+     [
+      107.5879206,
+      16.4634504
+     ],
+     [
+      107.5877568,
+      16.4637133
+     ],
+     [
+      107.5877434,
+      16.463756
+     ],
+     [
+      107.5868684,
+      16.4637944
+     ],
+     [
+      107.5867701,
+      16.4638003
+     ],
+     [
+      107.5866524,
+      16.4639209
+     ],
+     [
+      107.58657,
+      16.4640024
+     ],
+     [
+      107.586548,
+      16.4640232
+     ],
+     [
+      107.5863225,
+      16.4642468
+     ],
+     [
+      107.5838604,
+      16.4670029
+     ],
+     [
+      107.5838445,
+      16.4670206
+     ],
+     [
+      107.5837928,
+      16.467081
+     ],
+     [
+      107.5836706,
+      16.4672235
+     ],
+     [
+      107.5838913,
+      16.4673891
+     ],
+     [
+      107.5839289,
+      16.4674173
+     ],
+     [
+      107.5852347,
+      16.4684213
+     ],
+     [
+      107.5854339,
+      16.4685818
+     ],
+     [
+      107.5856592,
+      16.4687954
+     ],
+     [
+      107.5858939,
+      16.4690735
+     ],
+     [
+      107.586124,
+      16.469388
+     ],
+     [
+      107.5864284,
+      16.4698446
+     ],
+     [
+      107.5865614,
+      16.4700759
+     ],
+     [
+      107.5866993,
+      16.4703225
+     ],
+     [
+      107.5867458,
+      16.4704057
+     ],
+     [
+      107.5868205,
+      16.4704992
+     ],
+     [
+      107.5869245,
+      16.4706016
+     ],
+     [
+      107.5869919,
+      16.4706677
+     ],
+     [
+      107.5870789,
+      16.4707625
+     ],
+     [
+      107.5871457,
+      16.4708588
+     ],
+     [
+      107.5874693,
+      16.4714705
+     ],
+     [
+      107.5875228,
+      16.471572
+     ],
+     [
+      107.5877327,
+      16.4719543
+     ],
+     [
+      107.5884879,
+      16.4733601
+     ],
+     [
+      107.5885892,
+      16.4735424
+     ],
+     [
+      107.5886719,
+      16.4736471
+     ],
+     [
+      107.5887616,
+      16.4737361
+     ],
+     [
+      107.589221,
+      16.4741154
+     ],
+     [
+      107.5892608,
+      16.4741566
+     ],
+     [
+      107.5892878,
+      16.4742022
+     ],
+     [
+      107.5892948,
+      16.4742537
+     ],
+     [
+      107.5892594,
+      16.4743871
+     ],
+     [
+      107.589243,
+      16.4744706
+     ],
+     [
+      107.5892279,
+      16.4745492
+     ],
+     [
+      107.5892308,
+      16.4746169
+     ],
+     [
+      107.5892899,
+      16.474882
+     ],
+     [
+      107.5893709,
+      16.4753672
+     ],
+     [
+      107.589406,
+      16.4756505
+     ],
+     [
+      107.5894336,
+      16.4758544
+     ],
+     [
+      107.5894564,
+      16.4760384
+     ],
+     [
+      107.5894852,
+      16.4762307
+     ],
+     [
+      107.5895409,
+      16.4766214
+     ],
+     [
+      107.5895645,
+      16.4767749
+     ],
+     [
+      107.5896423,
+      16.4772828
+     ],
+     [
+      107.5896635,
+      16.4774596
+     ],
+     [
+      107.5897083,
+      16.4779276
+     ],
+     [
+      107.5897602,
+      16.4784764
+     ],
+     [
+      107.5897906,
+      16.4789215
+     ],
+     [
+      107.5898094,
+      16.4791592
+     ],
+     [
+      107.5898584,
+      16.47971
+     ],
+     [
+      107.5898929,
+      16.4801396
+     ],
+     [
+      107.5899303,
+      16.480468
+     ],
+     [
+      107.5900295,
+      16.4812772
+     ],
+     [
+      107.5900534,
+      16.481516
+     ],
+     [
+      107.5900887,
+      16.4818217
+     ],
+     [
+      107.5901136,
+      16.4820086
+     ],
+     [
+      107.5902281,
+      16.4829174
+     ]
+    ],
+    "segments": [
+     "472091899-472092048",
+     "472091899-472092430",
+     "472092430-10965285223",
+     "10873164016-10965285223",
+     "10873164016-10873391411",
+     "10873164021-10873391411",
+     "10873164021-10873164037",
+     "10873164037-10873164039",
+     "10873164039-10873391431",
+     "10857753427-10873391431",
+     "10792854724-10857753427",
+     "472102829-10792854724",
+     "472102829-10857881671",
+     "10792731760-10857881671",
+     "10792731760-10862672659",
+     "1854268485-10862672659",
+     "1854268485-10792827699",
+     "10792827699-13245914933",
+     "10792827694-13245914933",
+     "4438132914-10792827694",
+     "4438132914-10792827695",
+     "4438073316-10792827695",
+     "4438073316-10862672667",
+     "10792827701-10862672667",
+     "10792827701-10862672668",
+     "10862672668-13245878275",
+     "5966327835-13245878275",
+     "5966327835-10862672562",
+     "10792854720-10862672562",
+     "10792854720-10862672580",
+     "472140059-10862672580",
+     "472140059-7199653204",
+     "7199653198-7199653204",
+     "5966327860-7199653198",
+     "5966327858-5966327860",
+     "5966327858-13155012844",
+     "5966327849-13155012844",
+     "5966327849-5966327850",
+     "5966327850-13155012845",
+     "5966327851-13155012845",
+     "5966327851-5966327852",
+     "472084587-5966327852",
+     "472084587-5966327840",
+     "5966327839-5966327840",
+     "3633843524-5966327839",
+     "472139959-3633843524",
+     "472139952-472139959",
+     "472139766-472139952",
+     "472139764-472139766",
+     "472139657-472139764",
+     "472139657-472196063",
+     "472187290-472196063",
+     "472185781-472187290",
+     "472185478-472185781",
+     "472185478-472196225",
+     "472185425-472196225",
+     "472185425-3633843565",
+     "472180377-3633843565",
+     "472178405-472180377",
+     "472178405-472178868",
+     "472178868-472183442",
+     "472183442-472193804",
+     "472181516-472193804",
+     "472181516-472181622",
+     "472181622-472181854",
+     "472181854-472193782",
+     "472181433-472193782"
+    ],
+    "length_m": 2712.8,
+    "risky_segments": []
+   },
+   "naive_blocked": [
+    "10792827699-13245914933",
+    "10792827694-13245914933",
+    "4438132914-10792827694",
+    "4438132914-10792827695",
+    "4438073316-10792827695",
+    "10792827701-10862672667",
+    "472140059-7199653204",
+    "7199653198-7199653204",
+    "5966327850-13155012845",
+    "5966327851-13155012845",
+    "5966327851-5966327852",
+    "472084587-5966327852",
+    "472181854-472193782",
+    "472181433-472193782"
+   ],
+   "reason": "every way is blocked for this vehicle"
+  },
+  "reports": [
+   "20261028-010159-46b0",
+   "20261028-010406-7ccd",
+   "20261028-010322-90ed",
+   "20261028-010257-1bbb",
+   "20261028-010355-3a96",
+   "20261028-010339-a24a",
+   "20261028-010236-a31e",
+   "20261028-010702-ebd7",
+   "20261028-010525-e964",
+   "20261028-010515-1792"
+  ]
+ }
+}

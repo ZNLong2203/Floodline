@@ -26,6 +26,7 @@ class StoredReport:
     transcript: str | None = None
     source: str = "web"
     status: str = "new"  # new | acknowledged | dispatched | closed
+    city: str = "hue"
     extra: dict[str, Any] = field(default_factory=dict)
 
     @property
@@ -55,6 +56,7 @@ class StoredReport:
             "note": self.note,
             "source": self.source,
             "status": self.status,
+            "city": self.city,
             "transcript": self.transcript,
             "triage": self.triage,
             "analysis": self.analysis,
@@ -103,13 +105,15 @@ class Store:
         path = self.root / report_id / name
         return path if report_id in self.reports and path.exists() else None
 
-    def all(self) -> list[StoredReport]:
-        return sorted(self.reports.values(), key=lambda r: r.at, reverse=True)
+    def all(self, city: str | None = None) -> list[StoredReport]:
+        reports = [r for r in self.reports.values() if city is None or r.city == city]
+        return sorted(reports, key=lambda r: r.at, reverse=True)
 
-    def clear(self) -> None:
+    def clear(self, city: str | None = None) -> None:
         import shutil
 
         with self._lock:
-            for rid in list(self.reports):
-                shutil.rmtree(self.root / rid, ignore_errors=True)
-            self.reports.clear()
+            for rid, r in list(self.reports.items()):
+                if city is None or r.city == city:
+                    shutil.rmtree(self.root / rid, ignore_errors=True)
+                    del self.reports[rid]

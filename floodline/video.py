@@ -58,10 +58,19 @@ VIDEO_SCHEMA: dict[str, Any] = {
             "additionalProperties": False,
         },
         "water_flow": {"type": "string", "enum": ["still", "slow", "fast", "unclear"]},
-        "what_happens_vi": {"type": "string"},
-        "speech_vi": {"type": "string"},
+        "what_happens_en": {"type": "string"},
+        "what_happens_local": {"type": "string"},
+        "speech": {"type": "string"},
+        "speech_en": {"type": "string"},
     },
-    "required": ["depth_m", "water_flow", "what_happens_vi", "speech_vi"],
+    "required": [
+        "depth_m",
+        "water_flow",
+        "what_happens_en",
+        "what_happens_local",
+        "speech",
+        "speech_en",
+    ],
     "additionalProperties": False,
 }
 
@@ -230,9 +239,16 @@ def by_frame(text: str) -> dict[int, str]:
     return out
 
 
-def analyse_clip(client: ModelClient, data: bytes, *, render: bool = True) -> ClipAnalysis:
+def analyse_clip(
+    client: ModelClient,
+    data: bytes,
+    *,
+    render: bool = True,
+    catalog: catalog_mod.Catalog | None = None,
+    local_language: str = "Vietnamese",
+) -> ClipAnalysis:
     started = time.monotonic()
-    cat = catalog_mod.default()
+    cat = catalog or catalog_mod.default()
     cal = calibration_mod.default()
     with tempfile.TemporaryDirectory() as tmp:
         workdir = Path(tmp)
@@ -259,12 +275,14 @@ def analyse_clip(client: ModelClient, data: bytes, *, render: bool = True) -> Cl
             prompt = sam.box_prompt((w, h), boxes).replace("<0f>", f"<{key}f>", 1)
             objects_text = client.sam(prompt=prompt, video=clip)
         spark_video = client.spark_json(
-            system="You help flood rescue teams in Vietnam read residents' clips.",
+            system="You help flood rescue teams read residents' clips.",
             text=(
                 "A resident filmed this clip in a flooded street. Estimate the water depth range "
-                "in metres where people and vehicles are, say whether the water flows, describe "
-                "in one Vietnamese sentence what happens, and transcribe in Vietnamese anything "
-                "said on the audio (empty if nothing)."
+                "in metres where people and vehicles are, and say whether the water flows. "
+                "Describe in one sentence what happens, in English (what_happens_en) and in "
+                f"{local_language} (what_happens_local). Transcribe anything said on the audio "
+                "in its own language (speech) and translate it to English (speech_en); both "
+                "empty if nothing is said."
             ),
             videos=[clip],
             schema_name="flood_clip",

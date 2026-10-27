@@ -107,11 +107,12 @@ def analyse(
     flowing: bool | None = None,
     calibration: calibration_mod.Calibration | None = None,
     draw: bool = True,
+    catalog: catalog_mod.Catalog | None = None,
 ) -> PhotoAnalysis:
     started = time.monotonic()
     image, img = normalise(photo)
     size = img.size
-    cat = catalog_mod.default()
+    cat = catalog or catalog_mod.default()
     cal = calibration if calibration is not None else calibration_mod.default()
     warnings: list[str] = []
 

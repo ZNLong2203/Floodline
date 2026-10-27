@@ -38,21 +38,22 @@ def _analyse(args: argparse.Namespace) -> int:
 
 
 def _seed(args: argparse.Namespace) -> int:
-    from floodline import scenario
+    from floodline import cities, scenario
     from floodline.config import settings
     from floodline.meta.client import ModelClient
     from floodline.store import Store
 
+    city = cities.get(args.city)
     store = Store(settings().state_dir / "reports")
     if not args.keep:
-        store.clear()
+        store.clear(city.id)
     client = ModelClient()
-    for r in scenario.seed(store, client):
+    for r in scenario.seed(store, client, city=city):
         est = r.analysis.get("estimate") or {}
-        pri = (r.triage or {}).get("priority")
-        words = r.note or r.transcript or ""
+        tri = r.triage or {}
+        summary = (tri.get("facts") or {}).get("summary_en", "")
         depth = f"{est.get('low_m', '-')}-{est.get('high_m', '-')} m"
-        print(f"{r.id}  {depth}  priority={pri}  {words[:70]}")
+        print(f"{r.id}  {depth}  priority={tri.get('priority')}  {summary[:80]}")
     print(f"calls={client.stats.calls} replayed={client.stats.replayed}", file=sys.stderr)
     return 0
 
@@ -73,7 +74,8 @@ def main(argv: list[str] | None = None) -> int:
     a.add_argument("--out", default="var/analyses")
     a.set_defaults(func=_analyse)
 
-    d = sub.add_parser("seed", help="load the Huế demo scenario into the local store")
+    d = sub.add_parser("seed", help="load a city's demo scenario into the local store")
+    d.add_argument("--city", default=None, help="city id (default: hue)")
     d.add_argument("--keep", action="store_true", help="keep existing reports")
     d.set_defaults(func=_seed)
 

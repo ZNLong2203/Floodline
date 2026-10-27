@@ -37,6 +37,6 @@ def to_wav(data: bytes) -> bytes:
         return dst.read_bytes()
 
 
-def transcribe_upload(client: ModelClient, data: bytes) -> str:
-    result = client.transcribe(Media(to_wav(data), "audio/wav"), ["Vietnamese"])
+def transcribe_upload(client: ModelClient, data: bytes, language: str = "Vietnamese") -> str:
+    result = client.transcribe(Media(to_wav(data), "audio/wav"), [language])
     return result.get("transcript", "").strip()
