@@ -74,8 +74,9 @@ class Store:
     def new_id(self) -> str:
         return time.strftime("%Y%m%d-%H%M%S-") + secrets.token_hex(2)
 
-    def save(self, report: StoredReport, image: bytes | None = None,
-             overlay: bytes | None = None) -> None:
+    def save(
+        self, report: StoredReport, image: bytes | None = None, overlay: bytes | None = None
+    ) -> None:
         folder = self.root / report.id
         folder.mkdir(parents=True, exist_ok=True)
         if image is not None:

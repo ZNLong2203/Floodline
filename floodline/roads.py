@@ -23,8 +23,14 @@ EARTH_M = 6_371_000.0
 
 # Default speeds, km/h, by OSM highway class; used only to rank routes.
 SPEEDS = {
-    "trunk": 50, "primary": 45, "secondary": 40, "tertiary": 35, "unclassified": 25,
-    "residential": 20, "living_street": 10, "service": 10,
+    "trunk": 50,
+    "primary": 45,
+    "secondary": 40,
+    "tertiary": 35,
+    "unclassified": 25,
+    "residential": 20,
+    "living_street": 10,
+    "service": 10,
 }
 
 
@@ -72,14 +78,18 @@ class Roads:
         ids = list(self.segments)
         self._seg_ids = ids
         mids = np.array(
-            [[(s.coords[0][1] + s.coords[1][1]) / 2, (s.coords[0][0] + s.coords[1][0]) / 2]
-             for s in (self.segments[i] for i in ids)]
+            [
+                [(s.coords[0][1] + s.coords[1][1]) / 2, (s.coords[0][0] + s.coords[1][0]) / 2]
+                for s in (self.segments[i] for i in ids)
+            ]
         )
         self._mid = mids
-        self._a = np.array([[self.segments[i].coords[0][1], self.segments[i].coords[0][0]]
-                            for i in ids])
-        self._b = np.array([[self.segments[i].coords[1][1], self.segments[i].coords[1][0]]
-                            for i in ids])
+        self._a = np.array(
+            [[self.segments[i].coords[0][1], self.segments[i].coords[0][0]] for i in ids]
+        )
+        self._b = np.array(
+            [[self.segments[i].coords[1][1], self.segments[i].coords[1][0]] for i in ids]
+        )
         node_ids = list(self.graph.nodes)
         self._node_ids = node_ids
         self._node_xy = np.array([nodes[n] for n in node_ids])
@@ -96,8 +106,10 @@ class Roads:
         """Equirectangular metres around (lat, lon); fine at street scale."""
         k = math.cos(math.radians(lat))
         return np.stack(
-            [(pts[:, 1] - lon) * k * EARTH_M * math.pi / 180,
-             (pts[:, 0] - lat) * EARTH_M * math.pi / 180],
+            [
+                (pts[:, 1] - lon) * k * EARTH_M * math.pi / 180,
+                (pts[:, 0] - lat) * EARTH_M * math.pi / 180,
+            ],
             axis=1,
         )
 
@@ -162,8 +174,11 @@ class Roads:
                         "type": "LineString",
                         "coordinates": [list(c) for c in self.segments[sid].coords],
                     },
-                    "properties": {"id": sid, "name": self.segments[sid].name,
-                                   **properties.get(sid, {})},
+                    "properties": {
+                        "id": sid,
+                        "name": self.segments[sid].name,
+                        **properties.get(sid, {}),
+                    },
                 }
                 for sid in segment_ids
             ],
@@ -173,4 +188,3 @@ class Roads:
 @lru_cache
 def default() -> Roads:
     return Roads.load()
-

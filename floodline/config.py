@@ -19,9 +19,7 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=ROOT / ".env", extra="ignore")
 
     model_api_key: str = Field("", validation_alias=_env("MODEL_API_KEY"))
-    model_base_url: str = Field(
-        "https://api.meta.ai/v1", validation_alias=_env("MODEL_BASE_URL")
-    )
+    model_base_url: str = Field("https://api.meta.ai/v1", validation_alias=_env("MODEL_BASE_URL"))
 
     spark_model: str = Field("muse-spark-1.3", validation_alias=_env("FLOODLINE_SPARK_MODEL"))
     sam_model: str = Field("sam-3.1", validation_alias=_env("FLOODLINE_SAM_MODEL"))

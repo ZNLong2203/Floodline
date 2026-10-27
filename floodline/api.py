@@ -1,10 +1,10 @@
 """HTTP API and the web app.
 
-    POST /api/reports        photo (+ optional voice note) and a location -> analysis
-    GET  /api/reports        newest first, with triage
-    GET  /api/segments       street segments with depth and status per vehicle (GeoJSON)
-    GET  /api/route          a route for one vehicle class that avoids the water
-    GET  /api/events         server-sent events: report.created, report.updated
+POST /api/reports        photo (+ optional voice note) and a location -> analysis
+GET  /api/reports        newest first, with triage
+GET  /api/segments       street segments with depth and status per vehicle (GeoJSON)
+GET  /api/route          a route for one vehicle class that avoids the water
+GET  /api/events         server-sent events: report.created, report.updated
 """
 
 from __future__ import annotations
@@ -161,8 +161,12 @@ def route(
     found = r.route(a, b, blocked=blocked, risky=risky)
     naive = r.route(a, b)
     if found is None:
-        return {"vehicle": vehicle, "route": None, "naive": naive,
-                "reason": "every way is blocked for this vehicle"}
+        return {
+            "vehicle": vehicle,
+            "route": None,
+            "naive": naive,
+            "reason": "every way is blocked for this vehicle",
+        }
     crossed = [sid for sid in (naive or {}).get("segments", []) if sid in blocked]
     return {"vehicle": vehicle, "route": found, "naive": naive, "naive_blocked": crossed}
 
@@ -180,8 +184,12 @@ def catalog() -> dict[str, Any]:
 @app.get("/api/health")
 def health() -> dict[str, Any]:
     cfg = settings()
-    return {"ok": True, "mode": cfg.model_mode, "has_key": bool(cfg.model_api_key),
-            "reports": len(store.reports)}
+    return {
+        "ok": True,
+        "mode": cfg.model_mode,
+        "has_key": bool(cfg.model_api_key),
+        "reports": len(store.reports),
+    }
 
 
 @app.get("/api/events")

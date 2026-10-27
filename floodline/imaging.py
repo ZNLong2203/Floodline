@@ -80,8 +80,13 @@ def overlay(
             y = obj["waterline_y"]
             draw.line([(x0 - 6, y), (x1 + 6, y)], fill=(255, 255, 255, 255), width=5)
             draw.line([(x0 - 6, y), (x1 + 6, y)], fill=(*colour, 255), width=3)
-        draw.text((x0 + 4, int(ys.min()) + 4), f"{obj['index'] + 1} {obj['label']}",
-                  fill=(255, 255, 255, 255), stroke_width=2, stroke_fill=(0, 0, 0, 255))
+        draw.text(
+            (x0 + 4, int(ys.min()) + 4),
+            f"{obj['index'] + 1} {obj['label']}",
+            fill=(255, 255, 255, 255),
+            stroke_width=2,
+            stroke_fill=(0, 0, 0, 255),
+        )
     buf = io.BytesIO()
     out.convert("RGB").save(buf, format="JPEG", quality=85)
     return buf.getvalue()

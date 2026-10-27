@@ -101,8 +101,12 @@ SCHEMA: dict[str, Any] = {
                 "on_roof_or_upper_floor": {"type": "boolean"},
                 "signalling_for_help": {"type": "boolean"},
             },
-            "required": ["count", "children_or_elderly", "on_roof_or_upper_floor",
-                         "signalling_for_help"],
+            "required": [
+                "count",
+                "children_or_elderly",
+                "on_roof_or_upper_floor",
+                "signalling_for_help",
+            ],
             "additionalProperties": False,
         },
         "holistic_depth_m": {

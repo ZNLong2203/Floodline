@@ -1,11 +1,11 @@
 """Photo in, depth and passability out.
 
-    Muse Spark  -> which reference objects, where, facing which way, water at which part
-    SAM 3.1     -> the water, and a mask for every object Spark boxed
-    geometry    -> the waterline on each object, in pixels
-    catalog     -> pixels to metres, landmarks to metres
-    estimate    -> one depth with an interval, outliers named
-    passability -> per vehicle: passable, risky or impassable, with a probability
+Muse Spark  -> which reference objects, where, facing which way, water at which part
+SAM 3.1     -> the water, and a mask for every object Spark boxed
+geometry    -> the waterline on each object, in pixels
+catalog     -> pixels to metres, landmarks to metres
+estimate    -> one depth with an interval, outliers named
+passability -> per vehicle: passable, risky or impassable, with a probability
 """
 
 from __future__ import annotations

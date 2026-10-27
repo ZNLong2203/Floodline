@@ -15,8 +15,23 @@ def to_wav(data: bytes) -> bytes:
         src, dst = Path(tmp) / "in", Path(tmp) / "out.wav"
         src.write_bytes(data)
         subprocess.run(
-            ["ffmpeg", "-loglevel", "error", "-y", "-i", str(src), "-ac", "1", "-ar", "24000",
-             "-c:a", "pcm_s16le", "-map_metadata", "-1", str(dst)],
+            [
+                "ffmpeg",
+                "-loglevel",
+                "error",
+                "-y",
+                "-i",
+                str(src),
+                "-ac",
+                "1",
+                "-ar",
+                "24000",
+                "-c:a",
+                "pcm_s16le",
+                "-map_metadata",
+                "-1",
+                str(dst),
+            ],
             check=True,
         )
         return dst.read_bytes()

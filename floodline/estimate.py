@@ -88,5 +88,6 @@ def combine(readings: list[Reading], *, mad_k: float = 3.0) -> DepthEstimate | N
             sum(w * (r.mean - mean) ** 2 for w, r in zip(weights, used, strict=True)) / total
         )
         sigma = max(sigma, spread)
-    return DepthEstimate(mean_m=max(0.0, mean), sigma_m=max(sigma, MIN_SIGMA_M), used=used,
-                         rejected=rejected)
+    return DepthEstimate(
+        mean_m=max(0.0, mean), sigma_m=max(sigma, MIN_SIGMA_M), used=used, rejected=rejected
+    )

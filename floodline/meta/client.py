@@ -214,8 +214,10 @@ class ModelClient:
             "audioEncoding": "WAV",
             "languageBias": languages or ["Vietnamese"],
         }
-        request = {"request": settings_part, "audio": f"data:{wav.mime};base64,"
-                   + base64.b64encode(wav.data).decode()}
+        request = {
+            "request": settings_part,
+            "audio": f"data:{wav.mime};base64," + base64.b64encode(wav.data).decode(),
+        }
 
         def call() -> dict[str, Any]:
             url = self.cfg.model_base_url.rstrip("/") + "/asr/transcribe"
