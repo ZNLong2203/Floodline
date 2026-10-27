@@ -18,6 +18,7 @@ from meta_sam_parser import (
     image_segmentation_format,
     video_segmentation_format,
 )
+from PIL import Image
 
 
 @dataclass(frozen=True)
@@ -33,6 +34,24 @@ class Segment:
     @property
     def area(self) -> int:
         return int(self.mask.sum())
+
+
+def place(full: np.ndarray, local: np.ndarray, bounds: tuple[float, float, float, float]) -> None:
+    """Paste a box-local mask into a full-frame mask, in place.
+
+    `bounds` is half-open (left, top, right, bottom). Large masks arrive at a lower
+    resolution than their box, so the raster is scaled to the box before pasting.
+    """
+    height, width = full.shape
+    left, top = max(0, round(bounds[0])), max(0, round(bounds[1]))
+    right, bottom = min(width, round(bounds[2])), min(height, round(bounds[3]))
+    if right <= left or bottom <= top:
+        return
+    if local.shape != (bottom - top, right - left):
+        local = np.asarray(
+            Image.fromarray(local).resize((right - left, bottom - top), Image.Resampling.NEAREST)
+        )
+    full[top:bottom, left:right] |= local
 
 
 def parse(text: str, size: tuple[int, int], *, video: bool = False) -> list[Segment]:
@@ -62,10 +81,7 @@ def parse(text: str, size: tuple[int, int], *, video: bool = False) -> list[Segm
             raster = np.frombuffer(decode_mask_to_raster(m), dtype=np.uint8)
             local = raster.reshape(m.height, m.width).astype(bool)
             b = mask_record.bounds
-            left, top = round(b.left), round(b.top)
-            right = min(width, left + m.width)
-            bottom = min(height, top + m.height)
-            full[top:bottom, left:right] = local[: bottom - top, : right - left]
+            place(full, local, (b.left, b.top, b.right, b.bottom))
         segments.append(
             Segment(
                 object_id=box.object_id,

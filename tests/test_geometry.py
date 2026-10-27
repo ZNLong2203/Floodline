@@ -110,3 +110,13 @@ def test_passability_uses_probability_not_mean():
     assert by_id["truck"].status == "passable"
     flowing = {v.vehicle.id: v for v in assess(est, vehicles, flowing=True)}
     assert flowing["truck"].limit_m == 0.45
+
+
+def test_low_resolution_mask_is_scaled_to_its_box():
+    from floodline.meta.sam import place
+
+    full = np.zeros((1200, 1600), dtype=bool)
+    local = np.ones((50, 100), dtype=bool)  # a 100x50 raster for a 1600x800 box
+    place(full, local, (0, 400, 1600, 1200))
+    assert full[400:, :].all()
+    assert not full[:400].any()
