@@ -50,6 +50,10 @@ queue ordered by a published formula.
 7. **Works for any city**: a city is an OpenStreetMap extract, its residents' language and its
    people's heights ([data/cities/](data/cities/)). Huế and Valencia ship with the demo.
 
+![Valencia, October 2024: a rescue truck routed from Alfafar town hall to Doctor Peset hospital around seven flooded segments](docs/images/valencia.png)
+
+![A resident's voice note in Spanish, with Muse Spark's English translation beside it](docs/images/translation.png)
+
 ## How it uses Meta's models
 
 | | What it does in Floodline |
@@ -104,8 +108,8 @@ FLOODLINE_MODEL_MODE=replay uv run floodline serve                  # http://127
 ```
 
 Open the console at `/`, choose **Xe tải cứu hộ** (rescue truck), and plan the route
-*BV Trung ương Huế → Thành nội*: the shortest way crosses four segments a truck can't, so the route
-goes round. *→ Chợ Đông Ba* has no safe road left. Click the red Chi Lăng report for the evidence,
+*Central Hospital → Citadel (north)*: the fastest way, ignoring the water, crosses four segments a
+truck can't, so the route goes round. *→ Chợ Đông Ba* has no safe road left. Click the red Chi Lăng report for the evidence,
 open **Ask** and try an example question, or switch the city to Valencia.
 
 With a key from [dev.meta.ai](https://dev.meta.ai) in `.env` (`MODEL_API_KEY=…`), new photos are

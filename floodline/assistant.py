@@ -80,7 +80,8 @@ TOOLS: list[dict[str, Any]] = [
         "type": "function",
         "name": "plan_route",
         "description": "The fastest route for one vehicle class that avoids impassable streets, "
-        "compared with the shortest route. Returns null route when no safe road exists.",
+        "compared with the fastest route ignoring the water. Returns null route when no safe "
+        "road exists.",
         "parameters": {
             "type": "object",
             "properties": {
@@ -141,7 +142,7 @@ class Tools:
             "street": self._street_of(r.lat, r.lon),
             "lat": round(r.lat, 5),
             "lon": round(r.lon, 5),
-            "minutes_ago": round((time.time() - r.at) / 60),
+            "minutes_ago": round((time.time() - r.effective_at) / 60),
             "depth_m": [est.get("low_m"), est.get("high_m")] if est else None,
             "priority": (r.triage or {}).get("priority"),
             "people": facts.get("people_count"),
@@ -245,8 +246,8 @@ class Tools:
             "vehicle": vehicle,
             "safe_route_m": r["length_m"] if r else None,
             "risky_segments_on_route": len(r["risky_segments"]) if r else None,
-            "shortest_route_m": naive["length_m"] if naive else None,
-            "impassable_segments_on_shortest": len(res.get("naive_blocked", [])),
+            "fastest_ignoring_water_m": naive["length_m"] if naive else None,
+            "impassable_segments_on_fastest_ignoring_water": len(res.get("naive_blocked", [])),
             "no_safe_road": r is None,
         }
 

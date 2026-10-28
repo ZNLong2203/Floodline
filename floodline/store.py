@@ -30,6 +30,13 @@ class StoredReport:
     extra: dict[str, Any] = field(default_factory=dict)
 
     @property
+    def effective_at(self) -> float:
+        """When the report was sent. A scenario report keeps its age in the story (say, 30 minutes
+        ago) however long the demo server has been up, so a replayed night never goes stale."""
+        minutes = self.extra.get("minutes_ago")
+        return time.time() - 60 * minutes if minutes is not None else self.at
+
+    @property
     def estimate(self) -> DepthEstimate | None:
         e = self.analysis.get("estimate")
         if not e:
@@ -45,14 +52,14 @@ class StoredReport:
         if est is None:
             return None
         flowing = self.analysis.get("perception", {}).get("water_flow") == "fast"
-        return Report(self.id, self.lat, self.lon, self.at, est, flowing)
+        return Report(self.id, self.lat, self.lon, self.effective_at, est, flowing)
 
     def public(self) -> dict[str, Any]:
         return {
             "id": self.id,
             "lat": self.lat,
             "lon": self.lon,
-            "at": self.at,
+            "at": self.effective_at,
             "note": self.note,
             "source": self.source,
             "status": self.status,

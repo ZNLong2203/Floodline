@@ -78,6 +78,7 @@ def seed(
             city=city.id,
             extra={
                 "scenario": scenario["name"],
+                "minutes_ago": item["minutes_ago"],
                 "photo_credit": item.get("photo") or item["clip"],
             },
         )
