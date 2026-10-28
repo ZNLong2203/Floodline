@@ -245,6 +245,8 @@ async def ask(body: dict[str, Any]) -> dict[str, Any]:
     if not question:
         raise HTTPException(400, "ask a question")
     rec = _recording(place.id, question)
+    if settings().model_mode == "record" and rec.exists():
+        return {**json.loads(rec.read_text())["answer"], "recorded": True}
     if settings().model_mode == "replay":
         if not rec.exists():
             raise HTTPException(

@@ -2,7 +2,7 @@
  "city": "valencia",
  "question": "¿Quién está en mayor peligro ahora mismo y qué hay que enviar?",
  "answer": {
-  "answer": "En Catarroja / Alfafar, 3 rescates urgentes:\n\n**1. Mayor peligro inmediato: Avinguda dels Reis Catòlics, Alfafar - 2 personas atrapadas en coche**\n- Qué pasa: \"agua a las ventanillas, no pueden abrir las puertas\" en Avinguda dels Reis Catòlics. Mujer gritando.\n- Profundidad: unos 0.0-3.8 m.\n- Transitable: intransitable para peatón, scooter, car, suv y truck. **No hay vía segura por carretera.**\n- Enviar: **lancha / rescate de emergencias inmediato**, no vehículo terrestre.\n\n**2. Carrer de les Germanies - 8 personas en garaje, con niña de 5 años**\n- Qué pasa: \"garaje del bloque en calle de les Germanies - 8 personas incluida niña de 5 años, agua hasta la cintura y sigue subiendo, sin luz\".\n- Profundidad: unos 0.0-1.5 m.\n- Transitable: intransitable para todos, incluido truck. **No hay vía segura por carretera.**\n- Enviar: **lancha / equipo de evacuación a pie con apoyo**, no intentar con car/suv/truck.\n\n**3. Plaça Major, Catarroja - anciano 86 años solo, necesita medicación**\n- Qué pasa: \"persona de 86 años sola en el segundo piso, no puede caminar sin andador, necesita medicación, atrapados con el agua subiendo por la escalera\".\n- Profundidad: unos 0.0-0.18 m.\n- Transitable: transitable para peatón, scooter, car, suv y truck.\n- Enviar: **car / suv con equipo médico + evacuación** a Plaça Major ahora.",
+  "answer": "Mayor peligro ahora mismo, por orden:\n\n**1. Avinguda dels Reis Catòlics, Alfafar — 2 personas atrapadas en coche — PELIGRO INMEDIATO**\n- En calle: unos 0,0-3,8 m, intransitable para todos: pedestrian, scooter, car, suv, truck.\n- Reporte (hace 34 min): *\"estoy en un balcón en Alfafar y abajo, en la calle, hay un coche atrapado con dos personas dentro. El agua ya llega a las ventanillas y no pueden abrir las puertas.\"*\n- **Enviar: rescate de emergencia en barca. No existe acceso seguro por carretera.**\n\n**2. Carrer de les Germanies — 8 personas en garaje, incluida niña de 5 años**\n- En calle: unos 0,0-1,47 m, intransitable para todos los vehículos. En garaje: unos 0,0-1,35 m, subiendo.\n- Reporte (hace 14 min): *\"Estamos en el garaje de mi bloque, calle de les Germanies. El agua nos llega a la cintura y sigue subiendo. Tengo a mi hija de cinco años en brazos y no hay luz.\"*\n- **Enviar: equipo de evacuación en barca. No entrar con car/suv/truck.**\n\n**3. Plaça Major, Catarroja — anciano 86 años solo, 2º piso**\n- En calle: unos 0,0-0,18 m, transitable para pedestrian, scooter, car, suv, truck.\n- Reporte (hace 25 min): *\"cerca de la plaza Mayor. El garaje se ha llenado y el agua ya sube por las escaleras de entrada. Mi padre tiene ochenta y seis años, está solo en el segundo piso, no puede caminar sin andador y necesita su medicación.\"*\n- Vulnerable: anciano, discapacitado, enfermo + necesidad médica.\n- **Enviar: car/suv con equipo médico + evacuación asistida (andador). Acceso por carretera despejado.**\n",
   "steps": [
    {
     "tool": "list_reports",
@@ -17,7 +17,7 @@
        "street": "Plaça Major",
        "lat": 39.40271,
        "lon": -0.40414,
-       "minutes_ago": 29,
+       "minutes_ago": 25,
        "depth_m": [
         0.0,
         0.13
@@ -38,7 +38,7 @@
        "street": "Carrer de les Germanies",
        "lat": 39.40454,
        "lon": -0.39776,
-       "minutes_ago": 18,
+       "minutes_ago": 14,
        "depth_m": [
         0.0,
         1.346
@@ -57,7 +57,7 @@
        "street": "Avinguda dels Reis Catòlics",
        "lat": 39.41911,
        "lon": -0.3918,
-       "minutes_ago": 38,
+       "minutes_ago": 34,
        "depth_m": [
         0.0,
         3.4
@@ -74,7 +74,7 @@
        "street": "Carrer de Sant Antoni",
        "lat": 39.40406,
        "lon": -0.40313,
-       "minutes_ago": 48,
+       "minutes_ago": 44,
        "depth_m": [
         0.0,
         0.226
@@ -94,7 +94,7 @@
        "street": "Carrer de Vicent Lladró Sena",
        "lat": 39.46803,
        "lon": -0.42486,
-       "minutes_ago": 122,
+       "minutes_ago": 118,
        "depth_m": [
         0.0,
         0.335
@@ -113,7 +113,7 @@
        "street": "Carrer de Vicent Lladró Sena",
        "lat": 39.46809,
        "lon": -0.42498,
-       "minutes_ago": 101,
+       "minutes_ago": 97,
        "depth_m": [
         0.0,
         0.213
@@ -130,7 +130,7 @@
        "street": "Carrer de Joaquim Olmos",
        "lat": 39.40301,
        "lon": -0.40227,
-       "minutes_ago": 71,
+       "minutes_ago": 67,
        "depth_m": [
         0.0,
         0.901
@@ -147,7 +147,7 @@
        "street": "Carrer Major",
        "lat": 39.4581,
        "lon": -0.4578,
-       "minutes_ago": 93,
+       "minutes_ago": 89,
        "depth_m": [
         0.0,
         0.133
@@ -164,7 +164,7 @@
        "street": "Carrer de Vicent Lladró Sena",
        "lat": 39.46814,
        "lon": -0.42489,
-       "minutes_ago": 110,
+       "minutes_ago": 106,
        "depth_m": [
         0.0,
         0.479
@@ -181,7 +181,7 @@
        "street": "Carrer de l'Alqueria de Raga",
        "lat": 39.43738,
        "lon": -0.42941,
-       "minutes_ago": 10,
+       "minutes_ago": 6,
        "depth_m": [
         0.0,
         0.175
@@ -206,7 +206,7 @@
      "street": "Plaça Major",
      "lat": 39.40271,
      "lon": -0.40414,
-     "minutes_ago": 29,
+     "minutes_ago": 25,
      "depth_m": [
       0.0,
       0.13
@@ -276,7 +276,7 @@
      "street": "Carrer de les Germanies",
      "lat": 39.40454,
      "lon": -0.39776,
-     "minutes_ago": 18,
+     "minutes_ago": 14,
      "depth_m": [
       0.0,
       1.346
@@ -343,7 +343,7 @@
      "street": "Avinguda dels Reis Catòlics",
      "lat": 39.41911,
      "lon": -0.3918,
-     "minutes_ago": 38,
+     "minutes_ago": 34,
      "depth_m": [
       0.0,
       3.4
@@ -443,7 +443,7 @@
      "segments_with_reports": 4,
      "depth_m_range": [
       0.0,
-      1.49
+      1.47
      ],
      "segments_by_status_per_vehicle": {
       "pedestrian": {
@@ -479,7 +479,7 @@
      "segments_with_reports": 31,
      "depth_m_range": [
       0.0,
-      3.84
+      3.8
      ],
      "segments_by_status_per_vehicle": {
       "pedestrian": {
