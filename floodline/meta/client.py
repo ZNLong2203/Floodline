@@ -12,6 +12,7 @@ from __future__ import annotations
 import base64
 import hashlib
 import json
+import os
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -129,9 +130,12 @@ class ModelClient:
         if mode in ("replay", "record", "migrate") and path.exists():
             self.stats.replayed += 1
             self.used.add(path)
-            if mode == "migrate":
-                with (self.cfg.state_dir / "cassettes-used.txt").open("a") as log:
-                    log.write(f"{path}\n")
+            log = os.environ.get("FLOODLINE_CASSETTE_LOG") or (
+                str(self.cfg.state_dir / "cassettes-used.txt") if mode == "migrate" else None
+            )
+            if log:
+                with open(log, "a") as f:
+                    f.write(f"{path}\n")
             return json.loads(path.read_text())["response"]
         if mode in ("replay", "migrate"):
             raise CassetteMissingError(f"no recorded {kind} answer at {path.name}")
