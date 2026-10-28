@@ -18,7 +18,7 @@ import time
 from pathlib import Path
 from typing import Any
 
-from fastapi import FastAPI, File, Form, HTTPException, Query, UploadFile
+from fastapi import FastAPI, File, Form, HTTPException, Query, Request, UploadFile
 from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 
@@ -295,6 +295,59 @@ def ask_examples(city: str | None = None) -> list[str]:
         if d.get("city") == place.id:
             out.append(d["question"])
     return out
+
+
+# -- WhatsApp -----------------------------------------------------------------------
+
+_whatsapp = None
+
+
+def whatsapp():
+    """The WhatsApp channel, created on first use so the web demo never needs its settings."""
+    global _whatsapp
+    if _whatsapp is None:
+        from floodline.whatsapp import WhatsApp
+
+        loop = asyncio.get_event_loop()
+
+        def publish(kind: str, payload: dict[str, Any]) -> None:
+            loop.call_soon_threadsafe(_publish, kind, payload)
+
+        _whatsapp = WhatsApp(settings(), store, publish)
+    return _whatsapp
+
+
+@app.get("/api/whatsapp/webhook")
+def whatsapp_verify(
+    mode: str = Query("", alias="hub.mode"),
+    token: str = Query("", alias="hub.verify_token"),
+    challenge: str = Query("", alias="hub.challenge"),
+) -> Any:
+    """Meta's one-time check that this URL belongs to the app."""
+    from fastapi.responses import PlainTextResponse
+
+    expected = settings().whatsapp_verify_token
+    if mode == "subscribe" and expected and token == expected:
+        return PlainTextResponse(challenge)
+    raise HTTPException(403, "verification failed")
+
+
+@app.post("/api/whatsapp/webhook")
+async def whatsapp_message(request: Request) -> dict[str, Any]:
+    from floodline.whatsapp import verify_signature
+
+    body = await request.body()
+    if not verify_signature(
+        settings().whatsapp_app_secret, body, request.headers.get("x-hub-signature-256")
+    ):
+        raise HTTPException(401, "bad signature")
+    channel = whatsapp()
+    if not channel.configured:
+        raise HTTPException(503, "WhatsApp is not configured on this server")
+    # Answer within the request: Meta retries a slow webhook, and retries of a message
+    # already seen are dropped, so each photo is measured once.
+    handled = await asyncio.to_thread(channel.handle_payload, json.loads(body or b"{}"))
+    return {"handled": handled}
 
 
 # -- demo ---------------------------------------------------------------------------

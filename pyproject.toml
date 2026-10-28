@@ -38,6 +38,10 @@ target-version = "py312"
 select = ["E", "F", "I", "B", "UP", "SIM", "RUF"]
 ignore = ["B008"]  # FastAPI declares parameters with File() and Form() defaults
 
+[tool.ruff.lint.per-file-ignores]
+# Reply texts residents read: real typography (en dashes) and full sentences per line.
+"floodline/whatsapp.py" = ["RUF001", "E501"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 asyncio_mode = "auto"

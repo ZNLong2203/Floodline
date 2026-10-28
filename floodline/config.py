@@ -38,6 +38,19 @@ class Settings(BaseSettings):
     # so one visitor can't empty the map for the next.
     demo_lock: bool = Field(False, validation_alias=_env("FLOODLINE_DEMO_LOCK"))
 
+    # WhatsApp intake (Cloud API). The channel analyses live, recording its answers, even when the
+    # web demo replays, so the server needs MODEL_API_KEY for it.
+    whatsapp_token: str = Field("", validation_alias=_env("WHATSAPP_TOKEN"))
+    whatsapp_app_secret: str = Field("", validation_alias=_env("WHATSAPP_APP_SECRET"))
+    whatsapp_phone_number_id: str = Field("", validation_alias=_env("WHATSAPP_PHONE_NUMBER_ID"))
+    whatsapp_verify_token: str = Field("", validation_alias=_env("WHATSAPP_VERIFY_TOKEN"))
+    whatsapp_graph_version: str = Field("v23.0", validation_alias=_env("WHATSAPP_GRAPH_VERSION"))
+    whatsapp_allowed: str = Field("", validation_alias=_env("WHATSAPP_ALLOWED"))  # comma-separated
+    whatsapp_hourly_limit: int = Field(30, validation_alias=_env("WHATSAPP_HOURLY_LIMIT"))
+    whatsapp_model_mode: Literal["live", "record", "replay"] = Field(
+        "record", validation_alias=_env("WHATSAPP_MODEL_MODE")
+    )
+
 
 @lru_cache
 def settings() -> Settings:
