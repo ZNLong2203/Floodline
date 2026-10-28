@@ -51,6 +51,18 @@ class Settings(BaseSettings):
         "record", validation_alias=_env("WHATSAPP_MODEL_MODE")
     )
 
+    # Telegram intake: a public bot anyone can try, analysing live within hourly and daily caps.
+    telegram_bot_token: str = Field("", validation_alias=_env("TELEGRAM_BOT_TOKEN"))
+    telegram_webhook_secret: str = Field("", validation_alias=_env("TELEGRAM_WEBHOOK_SECRET"))
+    telegram_allowed: str = Field(
+        "", validation_alias=_env("TELEGRAM_ALLOWED")
+    )  # chat ids; empty = all
+    telegram_hourly_limit: int = Field(20, validation_alias=_env("TELEGRAM_HOURLY_LIMIT"))
+    telegram_daily_limit: int = Field(150, validation_alias=_env("TELEGRAM_DAILY_LIMIT"))
+    telegram_model_mode: Literal["live", "record", "replay"] = Field(
+        "live", validation_alias=_env("TELEGRAM_MODEL_MODE")
+    )
+
 
 @lru_cache
 def settings() -> Settings:

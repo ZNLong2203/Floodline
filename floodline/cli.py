@@ -58,6 +58,18 @@ def _seed(args: argparse.Namespace) -> int:
     return 0
 
 
+def _telegram_webhook(args: argparse.Namespace) -> int:
+    from floodline.config import settings
+    from floodline.store import Store
+    from floodline.telegram import Telegram
+
+    cfg = settings()
+    bot = Telegram(cfg, Store(cfg.state_dir / "reports"), lambda *_: None)
+    ok = bot.set_webhook(args.url.rstrip("/") + "/api/telegram/webhook")
+    print("webhook set" if ok else "setWebhook refused (see the log line above)")
+    return 0 if ok else 1
+
+
 def _serve(args: argparse.Namespace) -> int:
     import uvicorn
 
@@ -78,6 +90,10 @@ def main(argv: list[str] | None = None) -> int:
     d.add_argument("--city", default=None, help="city id (default: hue)")
     d.add_argument("--keep", action="store_true", help="keep existing reports")
     d.set_defaults(func=_seed)
+
+    t = sub.add_parser("telegram-webhook", help="point the Telegram bot at a deployed server")
+    t.add_argument("url", help="base URL of the deployed server")
+    t.set_defaults(func=_telegram_webhook)
 
     s = sub.add_parser("serve", help="run the API and the web app")
     s.add_argument("--host", default="127.0.0.1")

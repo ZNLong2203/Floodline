@@ -352,6 +352,42 @@ async def whatsapp_message(request: Request) -> dict[str, Any]:
     return {"handled": handled}
 
 
+# -- Telegram -----------------------------------------------------------------------
+
+_telegram = None
+
+
+def telegram():
+    global _telegram
+    if _telegram is None:
+        from floodline.telegram import Telegram
+
+        loop = asyncio.get_event_loop()
+
+        def publish(kind: str, payload: dict[str, Any]) -> None:
+            loop.call_soon_threadsafe(_publish, kind, payload)
+
+        _telegram = Telegram(settings(), store, publish)
+    return _telegram
+
+
+@app.post("/api/telegram/webhook")
+async def telegram_update(request: Request) -> dict[str, Any]:
+    from floodline.telegram import check_secret
+
+    if not check_secret(
+        settings().telegram_webhook_secret,
+        request.headers.get("x-telegram-bot-api-secret-token"),
+    ):
+        raise HTTPException(401, "bad secret")
+    bot = telegram()
+    if not bot.configured:
+        raise HTTPException(503, "Telegram is not configured on this server")
+    # Handled within the request; Telegram retries a slow webhook and repeats are dropped.
+    handled = await asyncio.to_thread(bot.handle_update, await request.json())
+    return {"handled": handled}
+
+
 # -- demo ---------------------------------------------------------------------------
 
 _seeding = asyncio.Lock()
@@ -464,6 +500,7 @@ def health() -> dict[str, Any]:
         "has_key": bool(cfg.model_api_key) and cfg.model_mode != "replay",
         "demo_lock": cfg.demo_lock,
         "whatsapp": bool(cfg.whatsapp_token and cfg.whatsapp_phone_number_id),
+        "telegram": bool(cfg.telegram_bot_token),
         "reports": len(store.reports),
         "cities": list(cities.all_cities()),
     }

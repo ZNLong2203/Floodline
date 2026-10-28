@@ -87,7 +87,7 @@ def test_retries_and_strangers_are_ignored(tmp_path):
 
 def test_hourly_cap(tmp_path):
     wa, graph, _ = channel(tmp_path)
-    wa.cfg = wa.cfg.model_copy(update={"whatsapp_hourly_limit": 0})
+    wa.hourly_limit = 0
     wa.handle(message("w1", "image", {"id": "m1"}))
     assert "quá tải" in graph.sent[-1][2]
 
