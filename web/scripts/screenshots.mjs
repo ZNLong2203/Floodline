@@ -323,35 +323,98 @@ if (only?.includes("real")) {
   await ctx.close();
 }
 
-// ------------------------------------------------------------- assistant only (ONLY=realask): one POST /api/ask
-if (only?.includes("realask")) {
-  const ctx = await browser.newContext({ viewport: { width: 1280, height: 720 }, locale: "en-US" });
-  const page = await ctx.newPage();
-  page.on("pageerror", (e) => console.error("pageerror:", e.message));
+// Guard for the seeded backend: GET only, plus at most one POST /api/ask whose question
+// is one of the recorded examples (those replay from recordings and cost nothing).
+async function guard(page, examples = []) {
   let asks = 0;
   await page.route("**/api/**", (route) => {
     const req = route.request();
-    const ask = req.method() === "POST" && new URL(req.url()).pathname === "/api/ask";
-    if (req.method() !== "GET" && !(ask && asks++ < 1)) {
-      console.error(`blocked ${req.method()} ${req.url()}`);
-      return route.abort();
+    if (req.method() === "GET") return route.continue();
+    const isAsk = req.method() === "POST" && new URL(req.url()).pathname === "/api/ask";
+    let q = "";
+    try {
+      q = JSON.parse(req.postData() ?? "{}").question ?? "";
+    } catch {
+      /* not JSON */
     }
-    return route.continue();
+    if (isAsk && asks < 1 && examples.includes(q)) {
+      asks++;
+      return route.continue();
+    }
+    console.error(`blocked ${req.method()} ${req.url()} ${q}`);
+    return route.abort();
   });
-  await page.goto(`${base}/`);
+}
+
+async function examplesFor(city) {
+  const res = await fetch(`${base}/api/ask/examples?city=${city}`);
+  return res.ok ? res.json() : [];
+}
+
+// ------------------------------------------------------------- assistant (ONLY=realask): one recorded example
+//   ASK_CITY=hue ASK_MATCH="Chi Lăng" ASK_LANG=en ASK_NAME=real-assistant
+if (only?.includes("realask")) {
+  const city = process.env.ASK_CITY ?? "hue";
+  const match = process.env.ASK_MATCH ?? "Chi Lăng";
+  const lang = process.env.ASK_LANG ?? "en";
+  const name = process.env.ASK_NAME ?? "real-assistant";
+  const examples = await examplesFor(city);
+  const question = examples.find((q) => q.includes(match));
+  if (!question) throw new Error(`no recorded example matching ${match} for ${city}`);
+  const ctx = await browser.newContext({ viewport: { width: 1280, height: 720 }, locale: lang === "en" ? "en-US" : lang });
+  const page = await ctx.newPage();
+  page.on("pageerror", (e) => console.error("pageerror:", e.message));
+  await guard(page, examples);
+  await page.goto(`${base}/?city=${city}&lang=${lang}`);
   await page.waitForSelector(".mk", { timeout: 20000 });
-  await wait(3000);
+  await wait(4000);
   await page.click(".askbtn");
   await page.waitForSelector(".ask__example", { timeout: 15000 });
-  await page.click('.ask__example:has-text("Chi Lăng")');
+  await page.click(`.ask__example:has-text(${JSON.stringify(match)})`);
   await page.waitForSelector(".ask__a, .ask__err", { timeout: 150000 });
-  await wait(4000);
-  await shot(page, "real-assistant");
+  await wait(4500);
+  await shot(page, name);
   await page.click(".ask__how summary").catch(() => {});
   await wait(400);
   await page.evaluate(() => document.querySelector(".ask__scroll")?.scrollTo({ top: 99999 }));
   await wait(600);
-  await shot(page, "real-assistant-steps");
+  await shot(page, `${name}-steps`);
+  await ctx.close();
+}
+
+// ------------------------------------------------------------- Valencia (ONLY=valencia): read-only
+if (only?.includes("valencia")) {
+  const ctx = await browser.newContext({ viewport: { width: 1280, height: 720 }, locale: "en-US" });
+  const page = await ctx.newPage();
+  page.on("pageerror", (e) => console.error("pageerror:", e.message));
+  await guard(page);
+  await page.goto(`${base}/`);
+  await page.waitForSelector(".mk", { timeout: 20000 });
+  await wait(2500);
+  // switch city from the top-bar menu
+  await page.click(".citymenu__btn");
+  await page.click('.citymenu__list button:has-text("Valencia")');
+  await page.waitForSelector('.card:has(.langtag:text-is("ES"))', { timeout: 20000 });
+  await wait(4500);
+  await shot(page, "valencia-console");
+  await page.click(".routebtn");
+  await page.click('.preset:has-text("Alfafar")');
+  await page.waitForSelector(".routecard__result", { timeout: 15000 });
+  await wait(3000);
+  await shot(page, "valencia-route");
+  await page.click('button[aria-label="Close route planner"]');
+  await wait(800);
+  await page.click(".card >> nth=0");
+  await page.waitForSelector(".detail");
+  await wait(3000);
+  await shot(page, "valencia-drawer");
+  await page.evaluate(() => {
+    const s = document.querySelector(".detail__scroll");
+    const w = document.querySelector(".words");
+    if (s && w) s.scrollTop = w.offsetTop - 170;
+  });
+  await wait(700);
+  await shot(page, "valencia-drawer-translation");
   await ctx.close();
 }
 

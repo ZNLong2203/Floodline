@@ -121,6 +121,30 @@ function Thinking({ started }: { started: number }) {
   );
 }
 
+/** The tool calls in order, consecutive repeats folded: list_reports → find_place ×2 → plan_route. */
+function ToolChain({ steps }: { steps: AskStep[] }) {
+  const { tn } = useI18n();
+  if (!steps.length) return null;
+  const runs: { tool: string; n: number }[] = [];
+  for (const s of steps) {
+    const last = runs[runs.length - 1];
+    if (last && last.tool === s.tool) last.n++;
+    else runs.push({ tool: s.tool, n: 1 });
+  }
+  return (
+    <div className="ask__chain" aria-label={tn("ask.how", steps.length)}>
+      <span className="ask__chainn num">{steps.length}</span>
+      {runs.map((r, i) => (
+        <span key={i} className="ask__chainstep">
+          {i > 0 && <span className="ask__arrow">→</span>}
+          <code>{r.tool}</code>
+          {r.n > 1 && <span className="ask__times">×{r.n}</span>}
+        </span>
+      ))}
+    </div>
+  );
+}
+
 function Steps({ steps }: { steps: AskStep[] }) {
   const { tn, t } = useI18n();
   const [openStep, setOpenStep] = useState<number | null>(null);
@@ -275,6 +299,7 @@ export function AskPanel({ city, reports, hidden, onRoute, onHighlight, onOpenRe
                   <b>Muse Spark</b>
                   {turn.res.recorded && <span className="ask__rec">{t("ask.recorded")}</span>}
                 </div>
+                <ToolChain steps={turn.res.steps ?? []} />
                 <Markdown text={turn.res.answer} />
                 {turn.res.route && (
                   <button type="button" className={`ask__route ${turn.res.route.route ? "" : "is-blocked"}`} onClick={() => onRoute(turn.res!.route)}>

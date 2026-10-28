@@ -93,6 +93,8 @@ interface Props {
   city: City;
   /** Reports the assistant used: drawn with a ring. */
   highlight: Set<string>;
+  /** Fit the view to these points (lat, lon) when the key changes, e.g. a city's reports. */
+  fit?: { points: [number, number][]; key: string } | null;
   vehicle: string;
   vehicles: Vehicle[];
   reports: Report[];
@@ -330,6 +332,22 @@ export function MapView(props: Props) {
     cityRef.current = props.city.id;
     map.flyTo({ center: [props.city.center[1], props.city.center[0]], zoom: props.city.zoom ?? 14, duration: 1600, essential: true });
   }, [props.city]);
+
+  // Frame a city's reports once they load: its street network can be larger than one zoom level shows.
+  const fitKey = useRef<string | null>(null);
+  useEffect(() => {
+    const map = mapRef.current;
+    const f = props.fit;
+    if (!map || !f || !f.points.length || fitKey.current === f.key) return;
+    fitKey.current = f.key;
+    const b = new LngLatBounds([f.points[0][1], f.points[0][0]], [f.points[0][1], f.points[0][0]]);
+    f.points.forEach(([lat, lon]) => b.extend([lon, lat]));
+    map.fitBounds(b, {
+      padding: { top: 70, bottom: 60, left: 60, right: 60 },
+      maxZoom: Math.max(props.city.zoom ?? 14, 14),
+      duration: 1200,
+    });
+  }, [props.fit, props.city.zoom]);
 
   // Swap the basemap with the theme; style.load re-installs our layers.
   const themeRef = useRef(props.theme);

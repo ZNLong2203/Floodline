@@ -185,6 +185,11 @@ export default function Console() {
       : { a: null, b: null };
 
   const side = selected ? "detail" : askOpen ? "ask" : "queue";
+  // Frame the city's reports when they arrive (the key changes per city, so it fits once each).
+  const fit = useMemo(() => {
+    const pts = data.reports.filter((r) => !r.city || r.city === city.id).map((r) => [r.lat, r.lon] as [number, number]);
+    return pts.length ? { points: pts, key: `${city.id}:${data.loading ? "loading" : "ready"}` } : null;
+  }, [data.reports, data.loading, city.id]);
 
   return (
     <div className={`console side--${side}`}>
@@ -222,6 +227,7 @@ export default function Console() {
             selectedId={selectedId}
             fresh={data.fresh}
             highlight={highlight}
+            fit={fit}
             focus={focus}
             onSelect={select}
             route={shownRoute ? { safe: shownRoute.route, naive: shownRoute.naive, blocked: !shownRoute.route } : null}
