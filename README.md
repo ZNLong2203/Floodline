@@ -10,6 +10,10 @@
 recorded model answers, so it needs no key: explore Huế and Valencia, plan routes, try the example
 questions in **Ask**, and send a sample photo from `/report`.
 
+**Telegram bot: [@floodline_flood_bot](https://t.me/floodline_flood_bot)** — send it a flood photo or
+a short clip. It calls the models live, replies with the overlay and a verdict per vehicle, and puts
+the report on the map ([how it works](docs/telegram.md)).
+
 When a city floods, residents send photos, clips and voice calls for help by the thousand, in their
 own language. Rescue coordinators read them one by one, and still can't answer the question that
 decides who gets reached tonight: *which streets can a scooter, a car or a rescue truck still get
