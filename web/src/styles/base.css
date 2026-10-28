@@ -172,6 +172,17 @@ small {
   border-color: transparent;
 }
 
+.btn--accent {
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+  background: var(--accent-soft);
+}
+
+.btn--accent:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--accent) 16%, var(--surface));
+  border-color: var(--accent);
+}
+
 .btn--ok {
   color: var(--ok);
   border-color: var(--ok-line);

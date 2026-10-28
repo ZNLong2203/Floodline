@@ -1,62 +1,64 @@
 import { useEffect, useMemo, useState } from "react";
 import { Icon, Logo } from "./components/Icon";
 import { api, href } from "./lib/api";
+import { FALLBACK_CITIES } from "./lib/cities";
 import { LangToggle, useI18n } from "./lib/i18n";
-import type { AttributionData, MediaCredit, Report } from "./lib/types";
+import type { AttributionData, City, MediaCredit, Report } from "./lib/types";
 
-/** Commons serves a scaled thumbnail of any file (also a poster frame for videos). */
-function commonsThumb(m: MediaCredit, width = 240): string | null {
-  const title = m.commons_title?.replace(/^File:/, "");
-  return title ? `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(title)}?width=${width}` : null;
-}
+/** Credits from both photos.json files: Valencia's use `place` and `description`. */
+type Credit = MediaCredit & { city?: string; place?: string | null; description?: string | null; kind?: string };
 
 const decode = (s?: string | null) => (s ?? "").replace(/&amp;/g, "&");
+const isVideo = (m: Credit) => m.kind === "clip" || /\.(mp4|webm)$/i.test(m.file) || m.file.includes("videos/");
 
-function shortDate(m: MediaCredit): string {
+function thumb(m: Credit): string | null {
+  if (!isVideo(m)) return `/api/demo-media/${m.file}`;
+  const title = m.commons_title?.replace(/^File:/, "");
+  return title ? `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(title)}?width=240` : null;
+}
+
+function shortDate(m: Credit): string {
   const d = m.date ?? "";
   const iso = /^(\d{4}-\d{2}-\d{2})/.exec(d);
   return iso ? iso[1] : d.replace(/\s*\(.*\)\s*$/, "") || "–";
 }
 
-function Thumb({ m, local }: { m: MediaCredit; local?: string }) {
+function Thumb({ m }: { m: Credit }) {
   const [failed, setFailed] = useState(false);
-  const src = local ?? commonsThumb(m);
-  const video = m.file.startsWith("videos/");
+  const src = thumb(m);
   if (!src || failed)
     return (
       <div className="attr__thumb attr__thumb--none" aria-hidden="true">
-        <Icon name={video ? "play" : "image"} size={20} />
+        <Icon name={isVideo(m) ? "video" : "image"} size={20} />
       </div>
     );
   return (
     <div className="attr__thumb">
       <img src={src} alt="" loading="lazy" onError={() => setFailed(true)} />
-      {video && (
+      {isVideo(m) && (
         <span className="attr__play" aria-hidden="true">
-          <Icon name="play" size={14} />
+          <Icon name="play" size={13} />
         </span>
       )}
     </div>
   );
 }
 
-function CreditRow({ m, uses, local }: { m: MediaCredit; uses: number; local?: string }) {
+function Row({ m, uses, cityName }: { m: Credit; uses: number; cityName?: string }) {
   const { t } = useI18n();
   const unreviewed = m.license_review?.includes("unreviewed");
+  const place = m.location || m.place;
   return (
     <tr>
       <td className="attr__c-thumb">
-        <Thumb m={m} local={local} />
+        <Thumb m={m} />
       </td>
       <td className="attr__c-what">
-        <div className="attr__visible">{m.visible || m.file}</div>
+        <div className="attr__visible">{m.visible || m.description || m.file}</div>
         <div className="attr__file">
+          {cityName && <span className="attr__city">{cityName}</span>}
+          {uses > 0 && <span className="attr__inuse">{t("attr.inScenario", { n: uses })}</span>}
           <code>{m.file}</code>
-          {uses > 0 && (
-            <span className="attr__inuse" title={t("attr.inScenario", { n: uses })}>
-              {t("attr.inScenario", { n: uses })}
-            </span>
-          )}
         </div>
       </td>
       <td data-label={t("attr.author")}>
@@ -89,21 +91,21 @@ function CreditRow({ m, uses, local }: { m: MediaCredit; uses: number; local?: s
         )}
       </td>
       <td data-label={t("attr.place")}>
-        {m.location || "–"}
+        {place || "–"}
         {m.lat != null && m.lon != null && (
           <div className="attr__coords num">
             {m.lat.toFixed(4)}, {m.lon.toFixed(4)}
           </div>
         )}
       </td>
-      <td data-label={t("attr.date")} className="num" title={m.date_note ?? m.date ?? undefined}>
+      <td data-label={t("attr.date")} className="num attr__date" title={m.date_note ?? m.date ?? undefined}>
         {shortDate(m)}
       </td>
     </tr>
   );
 }
 
-function CreditTable({ items, uses, local }: { items: MediaCredit[]; uses: Map<string, number>; local: Map<string, string> }) {
+function Table({ items, uses, cityNames }: { items: Credit[]; uses: Map<string, number>; cityNames: Map<string, string> }) {
   const { t } = useI18n();
   return (
     <div className="attr__tablewrap">
@@ -123,7 +125,7 @@ function CreditTable({ items, uses, local }: { items: MediaCredit[]; uses: Map<s
         </thead>
         <tbody>
           {items.map((m) => (
-            <CreditRow key={m.file} m={m} uses={uses.get(m.file) ?? 0} local={local.get(m.file)} />
+            <Row key={m.file} m={m} uses={uses.get(m.file) ?? 0} cityName={m.city ? cityNames.get(m.city) : undefined} />
           ))}
         </tbody>
       </table>
@@ -131,57 +133,81 @@ function CreditTable({ items, uses, local }: { items: MediaCredit[]; uses: Map<s
   );
 }
 
-/** /attribution: credits for the real photos used by the demo scenario. */
+/** /attribution: credits for the real photos and clips used by the demo scenarios. */
 export default function AttributionPage() {
   const { t } = useI18n();
   const [data, setData] = useState<AttributionData | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [cities, setCities] = useState<City[]>(FALLBACK_CITIES);
   const [reports, setReports] = useState<Report[]>([]);
+  const [filter, setFilter] = useState<string>(() => new URLSearchParams(window.location.search).get("city") ?? "all");
 
   useEffect(() => {
     document.title = `${t("attr.pageTitle")} · Floodline`;
+  }, [t]);
+
+  useEffect(() => {
     api
       .attribution()
       .then(setData)
       .catch((e: Error) => setError(e.message || t("attr.unavailable")));
-    api.reports().then(setReports).catch(() => setReports([]));
+    api
+      .cities()
+      .then((cs) => {
+        if (!Array.isArray(cs) || !cs.length) return;
+        setCities(cs);
+        Promise.all(cs.map((c) => api.reports(c.id).catch(() => [] as Report[]))).then((rs) => setReports(rs.flat()));
+      })
+      .catch(() => undefined);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Prefer the server's own copy of a photo for the thumbnail when a scenario report uses it.
-  const { uses, local } = useMemo(() => {
-    const uses = new Map<string, number>();
-    const local = new Map<string, string>();
-    for (const r of reports) {
-      if (!r.photo_credit) continue;
-      uses.set(r.photo_credit, (uses.get(r.photo_credit) ?? 0) + 1);
-      if (!local.has(r.photo_credit)) local.set(r.photo_credit, r.image_url);
-    }
-    return { uses, local };
+  const uses = useMemo(() => {
+    const m = new Map<string, number>();
+    for (const r of reports) if (r.photo_credit) m.set(r.photo_credit, (m.get(r.photo_credit) ?? 0) + 1);
+    return m;
   }, [reports]);
-
-  const photos = data?.photos ?? [];
-  const videos = data?.videos ?? [];
+  const cityNames = useMemo(() => new Map(cities.map((c) => [c.id, c.name])), [cities]);
+  const photos = (data?.photos ?? []) as Credit[];
+  const videos = (data?.videos ?? []) as Credit[];
+  const all = [...photos, ...videos];
+  const keep = (m: Credit) => filter === "all" || m.city === filter;
+  const shownPhotos = photos.filter(keep);
+  const shownVideos = videos.filter(keep);
+  const tagged = cities.filter((c) => all.some((m) => m.city === c.id));
 
   return (
     <div className="attr">
       <header className="rp__bar">
         <a href={href("/")} className="rp__brand">
-          <Logo size={28} />
+          <Logo size={26} />
           <span className="wordmark">Floodline</span>
         </a>
-        <span className="attr__barright">
-          <span className="muted">{t("attr.pageTitle")}</span>
-          <LangToggle />
-        </span>
+        <LangToggle />
       </header>
       <main className="attr__main">
-        <h1>{t("attr.title")}</h1>
-        <p>{t("attr.p1")}</p>
-        {data?.retrieved && (
-          <p className="muted attr__meta">
-            {t("attr.retrieved", { source: data.source ?? "Wikimedia Commons", date: data.retrieved })} {data.note}
-          </p>
+        <div className="attr__header">
+          <div className="eyebrow">{t("attr.eyebrow")}</div>
+          <h1>{t("attr.title")}</h1>
+          <p>{t("attr.p1")}</p>
+          {data?.retrieved && (
+            <p className="attr__meta">
+              {t("attr.retrieved", { source: data.source ?? "Wikimedia Commons", date: data.retrieved })} {data.note}
+            </p>
+          )}
+        </div>
+
+        {tagged.length > 0 && (
+          <div className="attr__filters seg" role="tablist" aria-label={t("attr.filter")}>
+            <button type="button" role="tab" aria-selected={filter === "all"} className={filter === "all" ? "is-on" : ""} onClick={() => setFilter("all")}>
+              {t("attr.filterAll")} <span className="seg__n">{all.length}</span>
+            </button>
+            {tagged.map((c) => (
+              <button key={c.id} type="button" role="tab" aria-selected={filter === c.id} className={filter === c.id ? "is-on" : ""} onClick={() => setFilter(c.id)}>
+                {c.name} <span className="seg__n">{all.filter((m) => m.city === c.id).length}</span>
+              </button>
+            ))}
+          </div>
         )}
 
         {error && (
@@ -197,28 +223,26 @@ export default function AttributionPage() {
             <span className="spinner spinner--sm" /> {t("attr.loading")}
           </div>
         )}
-        {data && !photos.length && !videos.length && (
-          <p className="muted">{t("attr.none")}</p>
-        )}
+        {data && !all.length && <p className="muted">{t("attr.none")}</p>}
 
-        {photos.length > 0 && (
+        {shownPhotos.length > 0 && (
           <section>
             <h2>
-              {t("attr.photos")} <span className="muted">· {photos.length}</span>
+              {t("attr.photos")} <span className="muted">· {shownPhotos.length}</span>
             </h2>
-            <CreditTable items={photos} uses={uses} local={local} />
+            <Table items={shownPhotos} uses={uses} cityNames={cityNames} />
           </section>
         )}
-        {videos.length > 0 && (
+        {shownVideos.length > 0 && (
           <section>
             <h2>
-              {t("attr.videos")} <span className="muted">· {videos.length}</span>
+              {t("attr.videos")} <span className="muted">· {shownVideos.length}</span>
             </h2>
-            <CreditTable items={videos} uses={uses} local={local} />
+            <Table items={shownVideos} uses={uses} cityNames={cityNames} />
           </section>
         )}
 
-        <p className="muted attr__foot">{t("about.foot")}</p>
+        <p className="attr__foot">{t("about.foot")}</p>
       </main>
     </div>
   );

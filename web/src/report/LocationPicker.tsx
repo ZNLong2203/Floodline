@@ -17,13 +17,15 @@ interface Props {
   onCity(id: string): void;
   value: LatLon | null;
   onChange(p: LatLon): void;
+  /** On desktop the pin lives on the big map behind the form: offer to show it instead of a small map. */
+  onShowBigMap?(): void;
 }
 
 /**
  * A small map with a pin, which starts in the chosen city. "Use my location" moves it to the
  * device's position when that is inside a demo city; otherwise the pin stays in the city.
  */
-export function LocationPicker({ cities, city, onCity, value, onChange }: Props) {
+export function LocationPicker({ cities, city, onCity, value, onChange, onShowBigMap }: Props) {
   const { t } = useI18n();
   const [status, setStatus] = useState<Status>("idle");
 
@@ -69,12 +71,20 @@ export function LocationPicker({ cities, city, onCity, value, onChange }: Props)
           ? t("res.outside", { city: city.name })
           : status === "unavailable"
             ? t("res.noGps", { city: city.name })
-            : t("res.pinHint");
+            : onShowBigMap
+              ? t("res.pickHintWide")
+              : t("res.pinHint");
 
   return (
     <div className="loc">
-      {value && <MiniMap value={value} label={t("loc.mapAria")} onChange={onChange} />}
+      {value && !onShowBigMap && <MiniMap value={value} label={t("loc.mapAria")} onChange={onChange} />}
       <div className="loc__row">
+        {onShowBigMap && (
+          <button type="button" className="btn btn--sm btn--accent" onClick={onShowBigMap}>
+            <Icon name="pin" size={15} />
+            {t("res.pickOnMap")} →
+          </button>
+        )}
         <button type="button" className="btn btn--sm" onClick={useMine} disabled={status === "locating"}>
           {status === "locating" ? <span className="spinner spinner--sm" aria-hidden="true" /> : <Icon name="locate" size={15} />}
           {t("res.useMine")}

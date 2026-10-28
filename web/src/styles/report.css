@@ -90,6 +90,7 @@
 
 .rp__main {
   display: grid;
+  align-content: start;
   gap: var(--sp-6);
   padding: var(--sp-5) var(--sp-4) 0;
   min-width: 0;
@@ -1030,4 +1031,233 @@
   .rp__h1 {
     font-size: var(--fs-xl);
   }
+}
+
+/* ---------------------------------------------------------------- the city's map behind the form */
+
+.rpshell {
+  position: relative;
+  min-height: 100%;
+}
+
+.rpmap {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: var(--surface-3);
+}
+
+/* tablets: the live map, blurred and dimmed, as a quiet texture */
+.rpmap--live.is-picking {
+  cursor: crosshair;
+}
+
+.rpmap--still {
+  filter: blur(3px) saturate(0.7);
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.rpshell--still .rp {
+  position: relative;
+  z-index: 1;
+}
+
+.loc__row {
+  flex-wrap: wrap;
+}
+
+.loc__hint {
+  flex: 1 1 180px;
+}
+
+.pinmk--big {
+  z-index: 3;
+}
+
+.pinmk.is-calling::before {
+  animation: pincall 0.5s ease-in-out 3;
+}
+
+@keyframes pincall {
+  50% {
+    transform: rotate(-45deg) translate(4px, -4px) scale(1.12);
+  }
+}
+
+/* report markers behind the form: quieter, and not clickable */
+.mk.mk--quiet {
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+.mk.mk--quiet .mk__dot {
+  font-size: calc(var(--s) * 0.42);
+}
+
+.mk.mk--mine {
+  opacity: 1;
+  --mk: var(--accent);
+  z-index: 5;
+}
+
+.mk.mk--mine .mk__dot {
+  background: var(--accent);
+  box-shadow: 0 0 0 3px var(--surface), 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* desktop: the form docks on the left over the live map */
+@media (min-width: 1024px) {
+  .page-report body {
+    overflow: hidden;
+  }
+
+  .rpshell--live .rp {
+    position: fixed;
+    z-index: 2;
+    left: var(--sp-6);
+    top: var(--sp-6);
+    bottom: var(--sp-6);
+    width: var(--panel-w, 460px);
+    max-width: none;
+    min-height: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-3);
+  }
+
+  .rpshell--live .rp__bar {
+    flex: none;
+  }
+
+  .rpshell--live .rp__main {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  .rpshell--live .rp__result,
+  .rpshell--live .rp__progress {
+    padding-bottom: var(--sp-5);
+  }
+}
+
+.rp__aside {
+  position: fixed;
+  z-index: 2;
+  right: var(--sp-6);
+  bottom: 44px;
+  width: 300px;
+  display: grid;
+  gap: var(--sp-3);
+}
+
+
+
+.rp__aside .legend {
+  justify-self: end;
+}
+
+.rp__next {
+  padding: var(--sp-4);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  box-shadow: var(--shadow-2);
+}
+
+.rp__next summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-2);
+  list-style: none;
+  cursor: pointer;
+}
+
+.rp__next summary::-webkit-details-marker {
+  display: none;
+}
+
+.rp__next summary svg {
+  color: var(--text-3);
+  transition: transform 0.15s;
+}
+
+.rp__next[open] summary svg {
+  transform: rotate(180deg);
+}
+
+.rp__next[open] summary {
+  margin-bottom: var(--sp-2);
+}
+
+.rp__next h2 {
+  margin: 0;
+  font-size: var(--fs-md);
+  font-weight: 700;
+}
+
+/* narrow desktops: the card folds to one line so the map stays visible */
+.rp__aside--compact {
+  width: 240px;
+}
+
+.rp__aside--compact .rp__next {
+  padding: var(--sp-2) var(--sp-3);
+}
+
+.rp__next ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: next;
+  display: grid;
+  gap: var(--sp-2);
+}
+
+.rp__next li {
+  counter-increment: next;
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: var(--sp-2);
+  font-size: var(--fs-sm);
+  line-height: 1.45;
+  color: var(--text-2);
+}
+
+.rp__next li::before {
+  content: counter(next);
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.rp__nextsafety {
+  display: flex;
+  gap: var(--sp-2);
+  align-items: flex-start;
+  margin: var(--sp-3) 0 0;
+  padding-top: var(--sp-3);
+  border-top: 1px solid var(--border);
+  font-size: var(--fs-xs);
+  line-height: 1.45;
+  color: var(--text-2);
+}
+
+.rp__nextsafety svg {
+  flex: none;
+  margin-top: 1px;
+  color: var(--warn);
 }

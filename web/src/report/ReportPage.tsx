@@ -1,13 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { Icon, Logo, VehicleIcon } from "../components/Icon";
+import { MapLegend } from "../components/MapLegend";
 import { StatusGlyph } from "../components/Status";
 import { api, ApiError, href, isMock } from "../lib/api";
 import { vehicleKind, vehicleName } from "../lib/catalog";
 import { emergencyNumber, FALLBACK_CITIES, saveCity, savedCity } from "../lib/cities";
 import { pct, reportLang, STATUS, summaryOf, warnT } from "../lib/format";
 import { type Key, type Lang, LANG_NAME, LANGS, useI18n } from "../lib/i18n";
-import type { City, Report, Sample, Verdict } from "../lib/types";
+import type { City, Report, Sample, Vehicle, Verdict } from "../lib/types";
 import { type LatLon, LocationPicker } from "./LocationPicker";
+import { ReportMap } from "./ReportMap";
 import { VoiceRecorder } from "./VoiceRecorder";
 
 // When each progress step starts, in seconds: photos take 10–20 s, clips 60–150 s.
@@ -16,6 +18,26 @@ const VIDEO_AT = [0, 15, 60, 110];
 
 type Phase = "form" | "sending" | "done" | "error";
 type Failure = { title: Key; body: Key; vars?: Record<string, string>; network?: boolean; detail?: string };
+
+/** "live": map behind a docked form (≥1024 px). "still": dimmed map behind the column (768–1023). */
+function useLayout(): { mode: "live" | "still" | "none"; panel: number; wide: boolean } {
+  const get = () => {
+    const w = window.innerWidth;
+    return {
+      mode: w >= 1024 ? ("live" as const) : w >= 768 ? ("still" as const) : ("none" as const),
+      panel: Math.round(Math.min(480, Math.max(440, w * 0.34))),
+      // From 1280 px the "What happens next" card fits beside the map; below, it folds to one line.
+      wide: w >= 1280,
+    };
+  };
+  const [v, setV] = useState(get);
+  useEffect(() => {
+    const on = () => setV(get());
+    window.addEventListener("resize", on);
+    return () => window.removeEventListener("resize", on);
+  }, []);
+  return v;
+}
 
 function useOnline(): boolean {
   const [online, setOnline] = useState(() => navigator.onLine);
@@ -61,6 +83,10 @@ export default function ReportPage() {
   const [sampleLoading, setSampleLoading] = useState<string | null>(null);
   const [sampleError, setSampleError] = useState(false);
   const wordsOff = replayOnly && Boolean(sample);
+  const layout = useLayout();
+  const [focusKey, setFocusKey] = useState(0);
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [mapVehicle, setMapVehicle] = useState<Vehicle | undefined>(undefined);
   // The pin follows the city (also once the city list loads) until the resident moves it.
   const pinTouched = useRef(false);
   const movePin = (p: LatLon) => {
@@ -197,6 +223,7 @@ export default function ReportPage() {
       );
       setResult(r);
       setPhase("done");
+      setRefreshKey((k) => k + 1);
     } catch (e) {
       const err = e as Error;
       if (err.name === "AbortError") {
@@ -240,7 +267,45 @@ export default function ReportPage() {
   const reason = !photo ? t("res.needMedia") : !where ? t("res.needPlace") : null;
 
   return (
-    <div className="rp">
+    <div className={`rpshell rpshell--${layout.mode}`}>
+      {layout.mode !== "none" && (
+        <ReportMap
+          key={layout.mode}
+          mode={layout.mode}
+          city={city}
+          where={where}
+          onPick={layout.mode === "live" && phase === "form" ? movePin : undefined}
+          padLeft={layout.mode === "live" ? layout.panel + 48 : 0}
+          padRight={layout.mode === "live" ? (layout.wide ? 340 : 0) : 0}
+          fresh={phase === "done" ? result : null}
+          focusKey={focusKey}
+          refreshKey={refreshKey}
+          onVehicle={setMapVehicle}
+        />
+      )}
+      {layout.mode === "live" && (
+        <aside className={`rp__aside ${layout.wide ? "" : "rp__aside--compact"}`}>
+          {mapVehicle && <MapLegend vehicleName={vehicleName(mapVehicle, lang)} limit={mapVehicle.max_depth_m} compact />}
+          <details className="rp__next" open={layout.wide} aria-labelledby="next-title">
+            <summary>
+              <h2 id="next-title">{t("res.next")}</h2>
+              <Icon name="down" size={15} />
+            </summary>
+            <ol>
+              <li>{t("res.next1")}</li>
+              <li>{t("res.next2")}</li>
+              <li>{t("res.next3")}</li>
+            </ol>
+            <p className="rp__nextsafety">
+              <Icon name="alert" size={15} />
+              <span>
+                {t("res.safety")} {t("res.emergency", { n: emergencyNumber(city) })}
+              </span>
+            </p>
+          </details>
+        </aside>
+      )}
+    <div className="rp" style={layout.mode === "live" ? ({ "--panel-w": `${layout.panel}px` } as React.CSSProperties) : undefined}>
       <header className="rp__bar">
         <a href={href("/report")} className="rp__brand" aria-label="Floodline">
           <Logo size={26} />
@@ -398,7 +463,14 @@ export default function ReportPage() {
               <h2 id="s2" className="rp__h2">
                 <span className="rp__n">2</span> {t("res.step2")}
               </h2>
-              <LocationPicker cities={cities} city={city} onCity={(id) => chooseCity(id, false)} value={where} onChange={movePin} />
+              <LocationPicker
+                cities={cities}
+                city={city}
+                onCity={(id) => chooseCity(id, false)}
+                value={where}
+                onChange={movePin}
+                onShowBigMap={layout.mode === "live" ? () => setFocusKey((k) => k + 1) : undefined}
+              />
             </section>
 
             <section className="rp__sec" aria-labelledby="s3">
@@ -459,6 +531,7 @@ export default function ReportPage() {
 
         {phase === "done" && result && <Result report={result} emergency={emergency} onAgain={reset} />}
       </main>
+    </div>
     </div>
   );
 }

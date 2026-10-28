@@ -11,7 +11,7 @@ import {
 } from "maplibre-gl";
 import { useEffect, useRef, useState } from "react";
 import { StatusGlyph } from "../components/Status";
-import { basemapStyle, localiseLabels } from "../lib/basemap";
+import { basemapStyle, collapseAttribution, localiseLabels } from "../lib/basemap";
 import { vehicleName } from "../lib/catalog";
 import { band, pct, range, STATUS, summaryOf } from "../lib/format";
 import { type Key, useI18n } from "../lib/i18n";
@@ -301,6 +301,10 @@ export function MapView(props: Props) {
     map.addControl(new AttributionControl({ compact: true }), "bottom-right");
     mapRef.current = map;
 
+    // Narrow maps: the attribution starts folded behind its (i) button.
+    map.once("load", () => {
+      if (box.current && box.current.clientWidth < 720) collapseAttribution(box.current);
+    });
     map.on("style.load", () => {
       localiseLabels(map);
       install(map);

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Icon } from "../components/Icon";
-import { StatusGlyph } from "../components/Status";
+import { MapLegend } from "../components/MapLegend";
 import { api, ApiError } from "../lib/api";
 import { defaultVehicle, vehicleName } from "../lib/catalog";
 import { cityLang, FALLBACK_CITIES, saveCity, savedCity } from "../lib/cities";
@@ -265,13 +265,8 @@ export default function Console() {
               {t("map.segErr", { msg: data.segmentsError })}
             </div>
           )}
-          {toast && (
-            <div className={`mapui mapui--bc toast toast--${toast.tone}`} role="status">
-              {toast.text}
-            </div>
-          )}
           <div className="mapui mapui--bl">
-            <Legend vehicleName={vehicleName(currentVehicle, lang) || vehicle} limit={currentVehicle?.max_depth_m} />
+            <MapLegend vehicleName={vehicleName(currentVehicle, lang) || vehicle} limit={currentVehicle?.max_depth_m} />
           </div>
         </div>
 
@@ -327,6 +322,11 @@ export default function Console() {
           )}
         </div>
       </main>
+      {toast && (
+        <div className={`toast toast--${toast.tone}`} role="status">
+          {toast.text}
+        </div>
+      )}
       <div className="viewtoggle seg" role="tablist" aria-label={t("view.aria")}>
         <button type="button" role="tab" aria-selected={view === "list"} className={view === "list" ? "is-on" : ""} onClick={() => setView("list")}>
           <Icon name="list" size={15} /> {t("view.list")}
@@ -336,36 +336,6 @@ export default function Console() {
         </button>
       </div>
       {about && <About catalog={data.catalog} health={data.health} city={city} onClose={() => setAbout(false)} />}
-    </div>
-  );
-}
-
-function Legend({ vehicleName, limit }: { vehicleName: string; limit?: number }) {
-  const { t } = useI18n();
-  return (
-    <div className="legend" aria-label={t("legend.aria")}>
-      <div className="legend__title">
-        <span>{vehicleName}</span>
-        {limit != null && <span className="muted num"> · {t("legend.limit", { m: limit.toFixed(2) })}</span>}
-      </div>
-      <ul>
-        <li>
-          <span className="legend__line legend__line--ok" />
-          <StatusGlyph status="passable" size={13} /> {t("status.passable")}
-        </li>
-        <li>
-          <span className="legend__line legend__line--warn" />
-          <StatusGlyph status="risky" size={13} /> {t("status.risky")}
-        </li>
-        <li>
-          <span className="legend__line legend__line--bad" />
-          <StatusGlyph status="impassable" size={13} /> {t("status.impassable")}
-        </li>
-        <li>
-          <span className="legend__dot" />
-          {t("legend.report")}
-        </li>
-      </ul>
     </div>
   );
 }
