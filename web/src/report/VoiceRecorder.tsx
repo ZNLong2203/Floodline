@@ -20,7 +20,16 @@ function mmss(s: number): string {
 type Phase = "idle" | "starting" | "recording" | "done" | "error";
 
 /** Tap to start and tap to stop, or hold to talk and release to stop. */
-export function VoiceRecorder({ value, onChange }: { value: Blob | null; onChange(b: Blob | null): void }) {
+export function VoiceRecorder({
+  value,
+  onChange,
+  compact = false,
+}: {
+  value: Blob | null;
+  onChange(b: Blob | null): void;
+  /** A small inline button ("Record voice") instead of the large tile. */
+  compact?: boolean;
+}) {
   const { t } = useI18n();
   const [phase, setPhase] = useState<Phase>(value ? "done" : "idle");
   const [error, setError] = useState<string | null>(null);
@@ -149,7 +158,7 @@ export function VoiceRecorder({ value, onChange }: { value: Blob | null; onChang
 
   if (phase === "done" && url)
     return (
-      <div className="voice voice--done">
+      <div className={`voice voice--done ${compact ? "voice--compact" : ""}`}>
         <button type="button" className="voice__play" onClick={toggle} aria-label={playing ? t("voice.pause") : t("voice.play")}>
           <Icon name={playing ? "pause" : "play"} size={18} />
         </button>
@@ -181,7 +190,7 @@ export function VoiceRecorder({ value, onChange }: { value: Blob | null; onChang
 
   const recording = phase === "recording" || phase === "starting";
   return (
-    <div className="voice">
+    <div className={`voice ${compact ? "voice--compact" : ""}`}>
       <button
         type="button"
         className={`voice__btn ${recording ? "is-rec" : ""}`}
@@ -204,8 +213,8 @@ export function VoiceRecorder({ value, onChange }: { value: Blob | null; onChang
             </>
           ) : (
             <>
-              <b>{t("voice.record")}</b>
-              <small>{t("voice.hint")}</small>
+              <b>{compact ? t("res.voice") : t("voice.record")}</b>
+              {!compact && <small>{t("voice.hint")}</small>}
             </>
           )}
         </span>

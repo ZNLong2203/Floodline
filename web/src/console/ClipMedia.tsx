@@ -114,7 +114,7 @@ export function ClipMedia({ report: r }: { report: Report }) {
       {primary && (
         <blockquote className="quote quote--spark">
           <span className="quote__label">
-            <Icon name="spark" size={13} /> {t("clip.spark")}
+            <Icon name="video" size={13} /> {t("clip.spark")}
           </span>
           <span lang={primary === english ? "en" : rl}>{primary}</span>
           {secondary && secondary !== primary && (

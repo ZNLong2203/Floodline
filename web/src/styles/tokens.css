@@ -45,9 +45,23 @@
   --k-report: #64748b;
   --k-other: #64748b;
 
-  --shadow-1: 0 1px 2px rgba(15, 26, 36, 0.06), 0 1px 1px rgba(15, 26, 36, 0.04);
-  --shadow-2: 0 4px 14px rgba(15, 26, 36, 0.1), 0 1px 3px rgba(15, 26, 36, 0.06);
-  --shadow-3: 0 18px 50px rgba(15, 26, 36, 0.22), 0 4px 12px rgba(15, 26, 36, 0.1);
+  --shadow-1: 0 1px 2px rgba(15, 26, 36, 0.06);
+  --shadow-2: 0 2px 8px rgba(15, 26, 36, 0.1), 0 1px 2px rgba(15, 26, 36, 0.05);
+  --shadow-3: 0 8px 24px rgba(15, 26, 36, 0.14), 0 2px 6px rgba(15, 26, 36, 0.06);
+  /* spacing and type scales */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+  --fs-xs: 12px;
+  --fs-sm: 13px;
+  --fs-md: 14px;
+  --fs-lg: 16px;
+  --fs-xl: 20px;
+  --fs-2xl: 24px;
   --radius: 10px;
   --radius-sm: 7px;
   --radius-lg: 14px;

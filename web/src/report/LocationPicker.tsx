@@ -9,166 +9,80 @@ import type { City } from "../lib/types";
 
 export type LatLon = [number, number];
 
-type Phase = "locating" | "ok" | "outside" | "denied" | "unsupported" | "manual";
+type Status = "idle" | "locating" | "mine" | "outside" | "unavailable";
 
 interface Props {
   cities: City[];
   city: City;
   onCity(id: string): void;
   value: LatLon | null;
-  onChange(p: LatLon | null): void;
+  onChange(p: LatLon): void;
 }
 
-/** GPS first; the nearest city with a street network wins. Otherwise the user picks on a map. */
+/**
+ * A small map with a pin, which starts in the chosen city. "Use my location" moves it to the
+ * device's position when that is inside a demo city; otherwise the pin stays in the city.
+ */
 export function LocationPicker({ cities, city, onCity, value, onChange }: Props) {
-  const { t, lang } = useI18n();
-  const [phase, setPhase] = useState<Phase>("locating");
-  const [accuracy, setAccuracy] = useState<number | null>(null);
-  const [away, setAway] = useState<{ city: City; km: number } | null>(null);
-  const [showMap, setShowMap] = useState(false);
-  // A location can also be set from outside (a sample photo): never wipe it from here.
-  const current = useRef(value);
-  current.current = value;
-  useEffect(() => {
-    if (value && phase !== "ok" && phase !== "manual") setPhase("manual");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value]);
+  const { t } = useI18n();
+  const [status, setStatus] = useState<Status>("idle");
 
-  const locate = () => {
+  // Picking another city in the header moves the pin there: forget the old status.
+  const cityRef = useRef(city.id);
+  useEffect(() => {
+    if (cityRef.current !== city.id) {
+      cityRef.current = city.id;
+      if (status !== "mine") setStatus("idle");
+    }
+  }, [city.id, status]);
+
+  const useMine = () => {
     if (!("geolocation" in navigator)) {
-      setPhase("unsupported");
+      setStatus("unavailable");
       return;
     }
-    setPhase("locating");
+    setStatus("locating");
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         const p: LatLon = [pos.coords.latitude, pos.coords.longitude];
-        setAccuracy(Math.round(pos.coords.accuracy));
         const near = nearestCity(cities, p);
         if (near && near.km <= CITY_RADIUS_KM) {
+          cityRef.current = near.city.id;
           onCity(near.city.id);
-          setPhase("ok");
           onChange(p);
+          setStatus("mine");
         } else {
-          setAway(near);
-          if (current.current) return;
-          if (near) onCity(near.city.id);
-          setPhase("outside");
-          onChange(null);
+          setStatus("outside");
         }
       },
-      () => {
-        if (current.current) return;
-        setPhase("denied");
-        onChange(null);
-      },
+      () => setStatus("unavailable"),
       { enableHighAccuracy: true, timeout: 12_000, maximumAge: 60_000 },
     );
   };
 
-  useEffect(locate, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const useSample = (c: City = city) => {
-    onCity(c.id);
-    setPhase("manual");
-    setShowMap(true);
-    onChange(c.center);
-  };
-
-  const cityPicker =
-    cities.length > 1 ? (
-      <label className="loc__city">
-        <span>{t("rp.city")}</span>
-        <select
-          value={city.id}
-          onChange={(e) => {
-            const c = cities.find((x) => x.id === e.target.value);
-            if (c) useSample(c);
-          }}
-        >
-          {cities.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}, {c.country}
-            </option>
-          ))}
-        </select>
-      </label>
-    ) : null;
+  const hint =
+    status === "locating"
+      ? t("res.locating")
+      : status === "mine"
+        ? t("res.usingMine")
+        : status === "outside"
+          ? t("res.outside", { city: city.name })
+          : status === "unavailable"
+            ? t("res.noGps", { city: city.name })
+            : t("res.pinHint");
 
   return (
     <div className="loc">
-      {phase === "locating" && (
-        <div className="loc__status">
-          <span className="spinner spinner--sm" aria-hidden="true" />
-          <span>{t("loc.locating")}</span>
-        </div>
-      )}
-      {phase === "ok" && value && (
-        <div className="loc__status loc__status--ok">
-          <Icon name="check" size={16} />
-          <span>
-            {t("loc.found")} · {city.name}
-            {accuracy != null && <small>{t("loc.accuracy", { m: accuracy })}</small>}
-          </span>
-          <button type="button" className="linkbtn" onClick={() => setShowMap((s) => !s)}>
-            {showMap ? t("loc.hide") : t("loc.adjust")}
-          </button>
-        </div>
-      )}
-      {phase === "manual" && value && (
-        <div className="loc__status loc__status--ok">
-          <Icon name="pin" size={16} />
-          <span>
-            {t("loc.chosen")} · {city.name}{" "}
-            <span className="num muted">
-              {value[0].toFixed(4)}, {value[1].toFixed(4)}
-            </span>
-            <small>{t("loc.tapMove")}</small>
-          </span>
-        </div>
-      )}
-      {phase === "outside" && (
-        <div className="loc__notice">
-          <div>
-            <b>{t("loc.outside", { km: Math.round(away?.km ?? 0).toLocaleString(lang), city: away?.city.name ?? city.name })}</b>
-            <span>{t("loc.outsideSub", { list: cities.map((c) => c.name).join(", ") })}</span>
-          </div>
-          {cityPicker}
-          <button type="button" className="btn btn--primary btn--block" onClick={() => useSample()}>
-            <Icon name="pin" size={16} /> {t("loc.useSample", { city: city.name })}
-          </button>
-        </div>
-      )}
-      {(phase === "denied" || phase === "unsupported") && (
-        <div className="loc__notice">
-          <div>
-            <b>{t("loc.denied")}</b>
-            <span>{t("loc.deniedSub")}</span>
-          </div>
-          {cityPicker}
-          <div className="loc__actions">
-            <button type="button" className="btn btn--primary" onClick={() => useSample()}>
-              <Icon name="pin" size={16} /> {t("loc.chooseMap")}
-            </button>
-            {phase === "denied" && (
-              <button type="button" className="btn" onClick={locate}>
-                <Icon name="locate" size={16} /> {t("common.retry")}
-              </button>
-            )}
-          </div>
-        </div>
-      )}
-      {phase === "manual" && cityPicker}
-      {showMap && value && (
-        <MiniMap
-          value={value}
-          label={t("loc.mapAria")}
-          onChange={(p) => {
-            setPhase("manual");
-            onChange(p);
-          }}
-        />
-      )}
+      {value && <MiniMap value={value} label={t("loc.mapAria")} onChange={onChange} />}
+      <div className="loc__row">
+        <button type="button" className="btn btn--sm" onClick={useMine} disabled={status === "locating"}>
+          {status === "locating" ? <span className="spinner spinner--sm" aria-hidden="true" /> : <Icon name="locate" size={15} />}
+          {t("res.useMine")}
+        </button>
+        <p className={`loc__hint ${status === "outside" || status === "unavailable" ? "is-note" : ""}`} role="status">
+          {hint}
+        </p>
+      </div>
     </div>
   );
 }
@@ -186,9 +100,10 @@ function MiniMap({ value, label, onChange }: { value: LatLon; label: string; onC
       container: box.current!,
       style: basemapStyle(theme),
       center: [value[1], value[0]],
-      zoom: 15.5,
+      zoom: 14.5,
       attributionControl: { compact: true },
       dragRotate: false,
+      cooperativeGestures: false,
     });
     map.current = m;
     m.touchZoomRotate.disableRotation();
@@ -205,14 +120,19 @@ function MiniMap({ value, label, onChange }: { value: LatLon; label: string; onC
       marker.current!.setLngLat(e.lngLat);
       cb.current([e.lngLat.lat, e.lngLat.lng]);
     });
-    return () => m.remove();
+    const ro = new ResizeObserver(() => m.resize());
+    ro.observe(box.current!);
+    return () => {
+      ro.disconnect();
+      m.remove();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     marker.current?.setLngLat([value[1], value[0]]);
     const m = map.current;
-    if (m && !m.getBounds().contains([value[1], value[0]])) m.easeTo({ center: [value[1], value[0]] });
+    if (m && !m.getBounds().contains([value[1], value[0]])) m.jumpTo({ center: [value[1], value[0]], zoom: 14.5 });
   }, [value]);
 
   return <div className="minimap" ref={box} role="application" aria-label={label} />;

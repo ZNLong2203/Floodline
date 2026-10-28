@@ -118,7 +118,7 @@ export function useConsoleData(city: string): ConsoleData {
         } else {
           setReports((rs) => rs.map((r) => (r.id === e.data.id ? e.data : r)));
         }
-        if (e.type !== "report.updated") loadSegments();
+        loadSegments();
       },
       (s) => setLive(s),
     );

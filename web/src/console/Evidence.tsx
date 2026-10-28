@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import { Icon } from "../components/Icon";
 import { humanise, OVERLAY_PALETTE, parseNote, parseSource, type ReadingKind } from "../lib/format";
 import { type Key, useI18n, type Vars } from "../lib/i18n";
 import type { Analysis, Reading } from "../lib/types";
@@ -169,7 +170,9 @@ export function Evidence({ analysis }: { analysis: Analysis }) {
                       {(g.index ?? 0) + 1}
                     </span>
                   ) : (
-                    <span className="ev__swatch ev__swatch--spark">✦</span>
+                    <span className="ev__swatch ev__swatch--spark" aria-hidden="true">
+                      <Icon name="image" size={11} strokeWidth={2.4} />
+                    </span>
                   )}
                   <span className="ev__gtitle">{g.title}</span>
                 </div>

@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { Icon } from "../components/Icon";
 import { PriorityBadge, ReportStatusTag, StatusGlyph } from "../components/Status";
 import { vehicleName } from "../lib/catalog";
-import { ageT, isClip, queueOrder, range, reportLang, STATUS, summaryOf, verdictFor } from "../lib/format";
+import { ageT, isClip, isWhatsApp, queueOrder, range, reportLang, STATUS, summaryOf, verdictFor } from "../lib/format";
 import { type Key, useI18n } from "../lib/i18n";
 import type { Report, Vehicle } from "../lib/types";
 
@@ -124,33 +124,55 @@ function ReportCard({
       <div className="card__body">
         <div className="card__top">
           <PriorityBadge priority={r.triage?.priority} size="sm" />
-          <span className="card__depth num">{est ? range(est.low_m, est.high_m) : t("card.noDepth")}</span>
           <span className="card__age">{ageT(r.at, now, t)}</span>
         </div>
         <p className="card__summary" lang={lang === rl ? rl : "en"}>
           {summary}
         </p>
         <div className="card__bottom">
+          <span className="card__depth num">{est ? range(est.low_m, est.high_m) : t("card.noDepth")}</span>
           {vehicle && (
-            <span className={`verdict-mini tone--${STATUS[status].tone}`}>
+            <span className={`verdict-mini tone--${STATUS[status].tone}`} title={`${vehicleName(vehicle, lang)}: ${t(`status.${status}` as Key)}`}>
               <StatusGlyph status={status} size={13} />
-              {vehicleName(vehicle, lang)}: {t(`status.${status}` as Key)}
+              <span className="verdict-mini__text">{t(`status.${status}` as Key)}</span>
             </span>
           )}
-          <ReportStatusTag status={r.status} />
-          {rl && rl !== "en" && (
-            <span className="langtag" title={t("words.original", { tag: rl.toUpperCase() })}>
-              {rl.toUpperCase()}
-            </span>
-          )}
-          {(r.transcript || r.source !== "web") && (
-            <span className="card__src" title={r.transcript ? t("card.voice") : t("card.source", { s: r.source })}>
-              {r.transcript ? <Icon name="mic" size={13} /> : null}
-              {r.source !== "web" ? r.source : null}
+          {r.transcript && (
+            <span className="card__src" title={t("card.voice")}>
+              <Icon name="mic" size={13} />
             </span>
           )}
         </div>
+        {(isWhatsApp(r) || r.location_pending || r.status !== "new") && (
+          <div className="card__meta">
+            {isWhatsApp(r) && <SourceLabel />}
+            {r.location_pending && <PendingChip />}
+            {r.status !== "new" && <ReportStatusTag status={r.status} />}
+          </div>
+        )}
       </div>
     </button>
+  );
+}
+
+/** A neutral label for reports that came in as WhatsApp messages. */
+export function SourceLabel() {
+  const { t } = useI18n();
+  return (
+    <span className="srclabel">
+      <Icon name="chat" size={12} />
+      {t("src.whatsapp")}
+    </span>
+  );
+}
+
+/** Shown until a WhatsApp sender shares a location. */
+export function PendingChip() {
+  const { t } = useI18n();
+  return (
+    <span className="pendchip" title={t("loc.pendingTitle")}>
+      <Icon name="pin" size={12} />
+      {t("loc.pending")}
+    </span>
   );
 }

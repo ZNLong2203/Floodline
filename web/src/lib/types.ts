@@ -162,6 +162,10 @@ export interface Report {
   seed?: { index: number; total: number };
   /** Server notes, e.g. "message not read: this demo replays recorded answers only". */
   warnings?: string[];
+  /** "whatsapp" for reports that arrived as WhatsApp messages. */
+  channel?: string;
+  /** True until a WhatsApp sender shares a location; the report sits at the city centre meanwhile. */
+  location_pending?: boolean;
 }
 
 export interface Vehicle {

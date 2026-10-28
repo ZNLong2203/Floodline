@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 import { Icon, Logo, VehicleIcon } from "../components/Icon";
 import { href, isMock, type LiveState } from "../lib/api";
 import { vehicleName } from "../lib/catalog";
 import { cityLabel } from "../lib/cities";
-import { LangToggle, useI18n } from "../lib/i18n";
+import { type Lang, LANG_NAME, LANGS, useI18n } from "../lib/i18n";
 import type { Theme } from "../lib/theme";
 import type { City, Vehicle } from "../lib/types";
 
@@ -35,228 +35,335 @@ interface Props {
   onClear(): void;
 }
 
-/** Closes a popover on outside click or Escape. */
-function usePopover(): [boolean, (v: boolean | ((o: boolean) => boolean)) => void, React.RefObject<HTMLDivElement>] {
+/** A button with a popover that closes on outside click or Escape. */
+function Popover({
+  label,
+  button,
+  className = "",
+  align = "left",
+  children,
+}: {
+  label: string;
+  button: ReactNode;
+  className?: string;
+  align?: "left" | "right";
+  children: (close: () => void) => ReactNode;
+}) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!open) return;
-    const close = (e: MouseEvent) => {
+    const outside = (e: MouseEvent) => {
       if (!ref.current?.contains(e.target as Node)) setOpen(false);
     };
     const esc = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
-    document.addEventListener("mousedown", close);
+    document.addEventListener("mousedown", outside);
     document.addEventListener("keydown", esc);
     return () => {
-      document.removeEventListener("mousedown", close);
+      document.removeEventListener("mousedown", outside);
       document.removeEventListener("keydown", esc);
     };
   }, [open]);
-  return [open, setOpen, ref];
+  return (
+    <div className={`pop ${className}`} ref={ref}>
+      <button
+        type="button"
+        className={`tbtn ${open ? "is-open" : ""}`}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        aria-label={label}
+        title={label}
+        onClick={() => setOpen((o) => !o)}
+      >
+        {button}
+      </button>
+      {open && (
+        <div className={`pop__menu pop__menu--${align}`} role="menu">
+          {children(() => setOpen(false))}
+        </div>
+      )}
+    </div>
+  );
 }
 
 export function TopBar(p: Props) {
   const { t, tn, lang } = useI18n();
+  const current = p.vehicles.find((v) => v.id === p.vehicle);
   const liveLabel = { live: t("top.live"), connecting: t("top.connecting"), offline: t("top.offline") }[p.live];
+
   return (
     <header className="topbar">
-      <div className="topbar__brand">
-        <Logo />
-        <span className="wordmark">Floodline</span>
-      </div>
+      <div className="topbar__left">
+        <a className="topbar__brand" href={href("/")} aria-label="Floodline">
+          <Logo size={26} />
+          <span className="wordmark">Floodline</span>
+        </a>
 
-      <CityMenu cities={p.cities} city={p.city} onCity={p.onCity} />
-
-      <div className={`live live--${p.live}`} role="status" aria-live="polite">
-        <span className="live__dot" aria-hidden="true" />
-        <span className="live__label">{liveLabel}</span>
-        <span className="live__count">
-          <b className="num">{p.count}</b> {tn("top.reports", p.count).replace(/^\s*\d+\s*/, "")}
-          {p.openCount !== p.count && <span className="muted"> · {t("top.open", { n: p.openCount })}</span>}
-        </span>
-        {isMock && (
-          <span className="mocktag" title={t("top.mock")}>
-            MOCK
+        {p.cities.length > 1 ? (
+          <Popover
+            label={`${t("top.city")}: ${cityLabel(p.city)}`}
+            className="citypop"
+            button={
+              <>
+                <Icon name="pin" size={15} />
+                <span className="tbtn__strong">{p.city.name}</span>
+                <span className="tbtn__muted citypop__country">{p.city.country}</span>
+                <Icon name="down" size={14} />
+              </>
+            }
+          >
+            {(close) =>
+              p.cities.map((c) => (
+                <button
+                  key={c.id}
+                  type="button"
+                  role="menuitemradio"
+                  aria-checked={c.id === p.city.id}
+                  className={`pop__item ${c.id === p.city.id ? "is-on" : ""}`}
+                  onClick={() => {
+                    p.onCity(c.id);
+                    close();
+                  }}
+                >
+                  <span className="pop__main">
+                    <b>{c.name}</b>
+                    <small>{c.country}</small>
+                  </span>
+                  {c.reports != null && <span className="pop__meta num">{tn("top.cityReports", c.reports)}</span>}
+                </button>
+              ))
+            }
+          </Popover>
+        ) : (
+          <span className="tbtn tbtn--static">
+            <Icon name="pin" size={15} />
+            <span className="tbtn__strong">{p.city.name}</span>
           </span>
         )}
+
+        <span className={`live live--${p.live}`} role="status" aria-live="polite" title={liveLabel}>
+          <span className="live__dot" aria-hidden="true" />
+          <span className="num">{p.count}</span>
+          <span className="live__word">{tn("top.reports", p.count).replace(/^\s*\d+\s*/, "")}</span>
+          {isMock && (
+            <span className="mocktag" title={t("top.mock")}>
+              MOCK
+            </span>
+          )}
+        </span>
       </div>
 
-      <nav className="vchips" aria-label={t("top.vehicles")}>
-        {p.vehicles.map((v) => {
-          const name = vehicleName(v, lang);
-          return (
+      <div className="topbar__center">
+        {/* Wide screens: a segmented control. Narrower: one dropdown. CSS picks which shows. */}
+        <nav className="vseg" aria-label={t("top.vehicles")}>
+          {p.vehicles.map((v) => (
             <button
               key={v.id}
               type="button"
-              className={`vchip ${p.vehicle === v.id ? "is-on" : ""}`}
+              className={p.vehicle === v.id ? "is-on" : ""}
               aria-pressed={p.vehicle === v.id}
               onClick={() => p.onVehicle(v.id)}
               title={
-                t("top.vehicleTitle", { name, limit: v.max_depth_m.toFixed(2) }) +
+                t("top.vehicleTitle", { name: vehicleName(v, lang), limit: v.max_depth_m.toFixed(2) }) +
                 (v.max_depth_flowing_m ? t("top.vehicleFlow", { limit: v.max_depth_flowing_m.toFixed(2) }) : "")
               }
             >
-              <VehicleIcon id={v.id} size={17} />
-              <span className="vchip__name">{name}</span>
-              <span className="vchip__lim num">{v.max_depth_m.toFixed(2)} m</span>
+              <VehicleIcon id={v.id} size={16} />
+              <span>{vehicleName(v, lang)}</span>
             </button>
-          );
-        })}
-      </nav>
-
-      <div className="topbar__actions">
-        <button
-          type="button"
-          className={`askbtn ${p.askOpen ? "is-on" : ""}`}
-          onClick={p.onAsk}
-          aria-pressed={p.askOpen}
-          title={t("top.askTitle")}
+          ))}
+        </nav>
+        <Popover
+          label={`${t("top.vehicle")}: ${vehicleName(current, lang)}`}
+          className="vpop"
+          button={
+            <>
+              <span className="tbtn__muted vpop__label">{t("top.vehicle")}:</span>
+              {current && <VehicleIcon id={current.id} size={16} />}
+              <span className="tbtn__strong">{vehicleName(current, lang)}</span>
+              <Icon name="down" size={14} />
+            </>
+          }
         >
-          <Icon name="spark" size={16} />
+          {(close) =>
+            p.vehicles.map((v) => (
+              <button
+                key={v.id}
+                type="button"
+                role="menuitemradio"
+                aria-checked={p.vehicle === v.id}
+                className={`pop__item ${p.vehicle === v.id ? "is-on" : ""}`}
+                onClick={() => {
+                  p.onVehicle(v.id);
+                  close();
+                }}
+              >
+                <VehicleIcon id={v.id} size={17} />
+                <span className="pop__main">
+                  <b>{vehicleName(v, lang)}</b>
+                </span>
+                <span className="pop__meta num">≤ {v.max_depth_m.toFixed(2)} m</span>
+              </button>
+            ))
+          }
+        </Popover>
+      </div>
+
+      <div className="topbar__right">
+        {p.seed.running && (
+          <span className="seedchip num" role="status">
+            <span className="spinner spinner--sm" aria-hidden="true" />
+            {p.seed.total ? t("top.replaying", { n: p.seed.received, total: p.seed.total }) : t("demo.received", { n: p.seed.received })}
+          </span>
+        )}
+        <button type="button" className={`tbtn ${p.askOpen ? "is-on" : ""}`} onClick={p.onAsk} aria-pressed={p.askOpen} title={t("ask.title")}>
+          <Icon name="chat" size={16} />
           <span>{t("top.ask")}</span>
         </button>
-        <DemoMenu seed={p.seed} city={p.city} onSeed={p.onSeed} onClear={p.onClear} />
-        <LangToggle langs={["en", "vi", "es"]} className="langtoggle--dark" />
-        <button type="button" className="iconbtn" onClick={p.onAbout} title={t("top.about")} aria-label={t("top.about")}>
-          <Icon name="info" />
-        </button>
-        <button
-          type="button"
-          className="iconbtn"
-          onClick={p.onTheme}
-          title={p.theme === "dark" ? t("top.light") : t("top.dark")}
-          aria-label={p.theme === "dark" ? t("top.light") : t("top.dark")}
+
+        <Popover
+          label={t("lang.label")}
+          className="langpop"
+          align="right"
+          button={
+            <>
+              <span className="tbtn__strong">{lang.toUpperCase()}</span>
+              <Icon name="down" size={14} />
+            </>
+          }
         >
-          <Icon name={p.theme === "dark" ? "sun" : "moon"} />
-        </button>
+          {(close) => <LangItems close={close} />}
+        </Popover>
+
+        <Popover label={t("top.more")} align="right" className="morepop" button={<Icon name="more" size={18} strokeWidth={2.6} />}>
+          {(close) => <MoreMenu {...p} close={close} />}
+        </Popover>
       </div>
     </header>
   );
 }
 
-function CityMenu({ cities, city, onCity }: { cities: City[]; city: City; onCity(id: string): void }) {
-  const { t, tn } = useI18n();
-  const [open, setOpen, ref] = usePopover();
-  const several = cities.length > 1;
+function LangItems({ close }: { close(): void }) {
+  const { lang, setLang } = useI18n();
   return (
-    <div className="citymenu" ref={ref}>
-      <button
-        type="button"
-        className="citymenu__btn"
-        aria-haspopup={several ? "listbox" : undefined}
-        aria-expanded={several ? open : undefined}
-        aria-label={`${t("top.city")}: ${cityLabel(city)}`}
-        onClick={() => several && setOpen((o) => !o)}
-      >
-        <Icon name="pin" size={15} />
-        <span className="citymenu__name">{city.name}</span>
-        <span className="citymenu__country">{city.country}</span>
-        {several && <Icon name="chevron" size={13} className="citymenu__chev" />}
-      </button>
-      {open && (
-        <ul className="citymenu__list" role="listbox" aria-label={t("top.city")}>
-          {cities.map((c) => (
-            <li key={c.id}>
-              <button
-                type="button"
-                role="option"
-                aria-selected={c.id === city.id}
-                className={c.id === city.id ? "is-on" : ""}
-                onClick={() => {
-                  onCity(c.id);
-                  setOpen(false);
-                }}
-              >
-                <b>{c.name}</b>
-                <span>{c.country}</span>
-                {c.reports != null && <small className="num">{tn("top.cityReports", c.reports)}</small>}
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
+    <>
+      {LANGS.map((l: Lang) => (
+        <button
+          key={l}
+          type="button"
+          role="menuitemradio"
+          aria-checked={l === lang}
+          lang={l}
+          className={`pop__item ${l === lang ? "is-on" : ""}`}
+          onClick={() => {
+            setLang(l);
+            close();
+          }}
+        >
+          <span className="pop__code">{l.toUpperCase()}</span>
+          <span className="pop__main">
+            <b>{LANG_NAME[l]}</b>
+          </span>
+          {l === lang && <Icon name="check" size={15} />}
+        </button>
+      ))}
+    </>
   );
 }
 
-function DemoMenu({ seed, city, onSeed, onClear }: { seed: SeedState; city: City; onSeed(): void; onClear(): void }) {
-  const { t } = useI18n();
-  const [open, setOpen, ref] = usePopover();
+function MoreMenu(p: Props & { close(): void }) {
+  const { t, lang, setLang } = useI18n();
   const [confirm, setConfirm] = useState(false);
-  useEffect(() => {
-    if (!open) setConfirm(false);
-  }, [open]);
-  const canSeed = city.has_scenario !== false;
-
+  const canSeed = p.city.has_scenario !== false;
   return (
-    <div className="demo" ref={ref}>
+    <>
+      <div className="pop__section">{t("menu.demo")}</div>
       <button
         type="button"
-        className={`demo__btn ${seed.running ? "is-running" : ""}`}
-        aria-haspopup="menu"
-        aria-expanded={open}
-        aria-label={t("demo.button")}
-        title={t("demo.button")}
-        onClick={() => setOpen((o) => !o)}
-        style={
-          seed.running && seed.total
-            ? ({ "--p": `${Math.round((seed.received / seed.total) * 100)}%` } as React.CSSProperties)
-            : undefined
-        }
+        role="menuitem"
+        className="pop__item"
+        disabled={p.seed.running || !canSeed}
+        onClick={() => {
+          p.onSeed();
+          p.close();
+        }}
       >
-        {seed.running ? <span className="spinner spinner--sm" aria-hidden="true" /> : <Icon name="flask" size={15} />}
-        <span className="num">
-          {seed.running
-            ? seed.total
-              ? t("demo.receivedOf", { n: seed.received, total: seed.total })
-              : t("demo.received", { n: seed.received })
-            : t("demo.button")}
+        <Icon name="play" size={15} />
+        <span className="pop__main">
+          <b>{t("demo.replay", { city: p.city.name })}</b>
+          <small>{canSeed ? t("demo.replaySub") : t("demo.noScenario", { city: p.city.name })}</small>
         </span>
       </button>
-      {open && (
-        <div className="demo__menu" role="menu">
-          <button
-            type="button"
-            role="menuitem"
-            disabled={seed.running || !canSeed}
-            onClick={() => {
-              onSeed();
-              setOpen(false);
-            }}
-          >
-            <Icon name="play" size={15} />
-            <span>
-              <b>{t("demo.replay", { city: city.name })}</b>
-              <small>{canSeed ? t("demo.replaySub") : t("demo.noScenario", { city: city.name })}</small>
-            </span>
-          </button>
-          <button
-            type="button"
-            role="menuitem"
-            className={confirm ? "is-danger" : ""}
-            disabled={seed.running}
-            onClick={() => {
-              if (!confirm) return setConfirm(true);
-              onClear();
-              setOpen(false);
-            }}
-          >
-            <Icon name="trash" size={15} />
-            <span>
-              <b>{confirm ? t("demo.clearConfirm") : t("demo.clear")}</b>
-              <small>{t("demo.clearSub", { city: city.name })}</small>
-            </span>
-          </button>
-          <a role="menuitem" href={href(`/report?city=${encodeURIComponent(city.id)}`)} target="_blank" rel="noreferrer">
-            <Icon name="camera" size={15} />
-            <span>
-              <b>{t("demo.residentOpen")}</b>
-              <small>{t("demo.residentSub")}</small>
-            </span>
-          </a>
-          {seed.message && <div className="demo__msg">{seed.message}</div>}
-        </div>
-      )}
-    </div>
+      <button
+        type="button"
+        role="menuitem"
+        className={`pop__item ${confirm ? "is-danger" : ""}`}
+        disabled={p.seed.running}
+        onClick={() => {
+          if (!confirm) return setConfirm(true);
+          p.onClear();
+          p.close();
+        }}
+      >
+        <Icon name="trash" size={15} />
+        <span className="pop__main">
+          <b>{confirm ? t("demo.clearConfirm") : t("demo.clear")}</b>
+          <small>{t("demo.clearSub", { city: p.city.name })}</small>
+        </span>
+      </button>
+      {p.seed.message && <div className="pop__note">{p.seed.message}</div>}
+
+      <div className="pop__sep" />
+      <a role="menuitem" className="pop__item" href={href(`/report?city=${encodeURIComponent(p.city.id)}`)} target="_blank" rel="noreferrer" onClick={p.close}>
+        <Icon name="camera" size={15} />
+        <span className="pop__main">
+          <b>{t("menu.resident")}</b>
+        </span>
+        <Icon name="external" size={13} />
+      </a>
+      <button
+        type="button"
+        role="menuitem"
+        className="pop__item"
+        onClick={() => {
+          p.onAbout();
+          p.close();
+        }}
+      >
+        <Icon name="info" size={15} />
+        <span className="pop__main">
+          <b>{t("menu.about")}</b>
+        </span>
+      </button>
+      <button
+        type="button"
+        role="menuitem"
+        className="pop__item"
+        onClick={() => {
+          p.onTheme();
+          p.close();
+        }}
+      >
+        <Icon name={p.theme === "dark" ? "sun" : "moon"} size={15} />
+        <span className="pop__main">
+          <b>{p.theme === "dark" ? t("menu.light") : t("menu.dark")}</b>
+        </span>
+      </button>
+
+      <div className="pop__sep" />
+      <div className="pop__row">
+        <Icon name="globe" size={15} />
+        <span className="pop__main">
+          <b>{t("lang.label")}</b>
+        </span>
+        <span className="pop__seg" role="group" aria-label={t("lang.label")}>
+          {LANGS.map((l) => (
+            <button key={l} type="button" className={l === lang ? "is-on" : ""} aria-pressed={l === lang} onClick={() => setLang(l)}>
+              {l.toUpperCase()}
+            </button>
+          ))}
+        </span>
+      </div>
+    </>
   );
 }

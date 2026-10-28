@@ -10,6 +10,7 @@ import {
   dispatchDrafts,
   flagT,
   isClip,
+  isWhatsApp,
   needT,
   reasonT,
   reportLang,
@@ -23,6 +24,7 @@ import type { Report, ReportStatus, Vehicle } from "../lib/types";
 import { ClipMedia } from "./ClipMedia";
 import { DepthGauge } from "./DepthGauge";
 import { Evidence } from "./Evidence";
+import { PendingChip, SourceLabel } from "./Queue";
 
 interface Props {
   report: Report;
@@ -138,7 +140,9 @@ export function ReportDetail({ report: r, vehicle, now, onClose, onStatus, onLoc
             {t(`band.${band(p)}` as Key)} · <span className="num">{clock(r.at)}</span>
           </div>
           <div className="detail__sub">
-            {ageT(r.at, now, t)} · {t("detail.via", { source: r.source })} · <ReportStatusTag status={r.status} />
+            {ageT(r.at, now, t)} · {isWhatsApp(r) ? <SourceLabel /> : t("detail.via", { source: r.source })} ·{" "}
+            <ReportStatusTag status={r.status} />
+            {r.location_pending && <PendingChip />}
           </div>
         </div>
         <button type="button" className="iconbtn" onClick={onLocate} aria-label={t("detail.locate")} title={t("detail.locate")}>
@@ -166,7 +170,7 @@ export function ReportDetail({ report: r, vehicle, now, onClose, onStatus, onLoc
                   {t("photo.original")}
                 </button>
                 <button type="button" role="tab" aria-selected={view === "overlay"} className={view === "overlay" ? "is-on" : ""} onClick={() => setView("overlay")}>
-                  <Icon name="spark" size={14} /> {t("photo.models")}
+                  <Icon name="layers" size={14} /> {t("photo.models")}
                 </button>
               </div>
               <a className="photo__open" href={view === "original" ? r.image_url : r.overlay_url} target="_blank" rel="noreferrer" aria-label={t("photo.open")}>
@@ -196,7 +200,6 @@ export function ReportDetail({ report: r, vehicle, now, onClose, onStatus, onLoc
               {showTranslation && (
                 <blockquote className="quote quote--translation" lang="en">
                   <span className="quote__label">
-                    <Icon name="spark" size={13} />
                     <span className="langtag langtag--en">{t("words.translated")}</span>
                   </span>
                   {translation}

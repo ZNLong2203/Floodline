@@ -115,6 +115,27 @@ interface Hover {
   props: SegmentProps;
 }
 
+/** Glide a marker to a new position (a WhatsApp sender shared their location); jump if it barely moved. */
+function moveMarker(entry: { marker: Marker; anim?: number }, lon: number, lat: number) {
+  const from = entry.marker.getLngLat();
+  const d = Math.hypot(from.lng - lon, from.lat - lat);
+  if (d < 1e-7) return;
+  if (entry.anim) cancelAnimationFrame(entry.anim);
+  if (d < 2e-5 || window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
+    entry.marker.setLngLat([lon, lat]);
+    return;
+  }
+  const t0 = performance.now();
+  const ms = 1200;
+  const step = (now: number) => {
+    const k = Math.min(1, (now - t0) / ms);
+    const e = k < 0.5 ? 4 * k * k * k : 1 - (-2 * k + 2) ** 3 / 2;
+    entry.marker.setLngLat([from.lng + (lon - from.lng) * e, from.lat + (lat - from.lat) * e]);
+    entry.anim = k < 1 ? requestAnimationFrame(step) : undefined;
+  };
+  entry.anim = requestAnimationFrame(step);
+}
+
 export function MapView(props: Props) {
   const { t, lang } = useI18n();
   const box = useRef<HTMLDivElement>(null);
@@ -123,7 +144,7 @@ export function MapView(props: Props) {
   const [hover, setHover] = useState<Hover | null>(null);
   const latest = useRef(props);
   latest.current = props;
-  const markers = useRef(new Map<string, { marker: Marker; el: HTMLButtonElement }>());
+  const markers = useRef(new Map<string, { marker: Marker; el: HTMLButtonElement; anim?: number }>());
   const ends = useRef<{ a: Marker | null; b: Marker | null }>({ a: null, b: null });
 
   /** Push the latest segment data into the map, with this vehicle's status at a fixed key. */
@@ -343,7 +364,7 @@ export function MapView(props: Props) {
     const b = new LngLatBounds([f.points[0][1], f.points[0][0]], [f.points[0][1], f.points[0][0]]);
     f.points.forEach(([lat, lon]) => b.extend([lon, lat]));
     map.fitBounds(b, {
-      padding: { top: 70, bottom: 60, left: 60, right: 60 },
+      padding: { top: 70, bottom: 120, left: 60, right: 60 },
       maxZoom: Math.max(props.city.zoom ?? 14, 14),
       duration: 1200,
     });
@@ -419,6 +440,7 @@ export function MapView(props: Props) {
         "is-fresh": props.fresh.has(r.id),
         "is-selected": props.selectedId === r.id,
         "is-highlighted": props.highlight.has(r.id),
+        "mk--pending": Boolean(r.location_pending),
       };
       let entry = markers.current.get(r.id);
       if (!entry) {
@@ -434,7 +456,7 @@ export function MapView(props: Props) {
         entry = { marker, el };
         markers.current.set(r.id, entry);
       }
-      const { el, marker } = entry;
+      const { el } = entry;
       el.dataset.id = r.id;
       for (const [c, on] of Object.entries(want)) el.classList.toggle(c, on);
       el.style.setProperty("--s", `${Math.round(22 + p * 0.2)}px`);
@@ -444,10 +466,11 @@ export function MapView(props: Props) {
       const summary = summaryOf(r, lang);
       el.setAttribute("aria-label", t("marker.aria", { p, depth, summary }));
       el.title = `P${p} · ${depth}\n${summary}`;
-      marker.setLngLat([r.lon, r.lat]);
+      moveMarker(entry, r.lon, r.lat);
     }
     for (const [id, entry] of markers.current) {
       if (!seen.has(id)) {
+        if (entry.anim) cancelAnimationFrame(entry.anim);
         entry.marker.remove();
         markers.current.delete(id);
       }

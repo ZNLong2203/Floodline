@@ -130,6 +130,10 @@ export function priorityOf(r: Report): number {
   return r.triage?.priority ?? 0;
 }
 
+export function isWhatsApp(r: Report): boolean {
+  return r.channel === "whatsapp" || r.source === "whatsapp";
+}
+
 export function isClip(r: Report): boolean {
   return r.analysis?.kind === "clip" || Boolean(r.video_url);
 }

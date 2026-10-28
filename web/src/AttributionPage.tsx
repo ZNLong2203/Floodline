@@ -165,13 +165,15 @@ export default function AttributionPage() {
 
   return (
     <div className="attr">
-      <header className="rp__head">
+      <header className="rp__bar">
         <a href={href("/")} className="rp__brand">
           <Logo size={28} />
           <span className="wordmark">Floodline</span>
         </a>
-        <span className="rp__city">{t("attr.pageTitle")}</span>
-        <LangToggle className="langtoggle--dark" />
+        <span className="attr__barright">
+          <span className="muted">{t("attr.pageTitle")}</span>
+          <LangToggle />
+        </span>
       </header>
       <main className="attr__main">
         <h1>{t("attr.title")}</h1>

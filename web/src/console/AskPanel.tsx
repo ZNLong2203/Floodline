@@ -3,9 +3,10 @@ import { Icon } from "../components/Icon";
 import { Markdown } from "../components/Markdown";
 import { PriorityBadge } from "../components/Status";
 import { api, ApiError } from "../lib/api";
+import { vehicleName } from "../lib/catalog";
 import { distance, summaryOf } from "../lib/format";
-import { useI18n } from "../lib/i18n";
-import type { AskResponse, AskStep, City, Report, RouteResponse } from "../lib/types";
+import { type Key, useI18n, type Vars } from "../lib/i18n";
+import type { AskResponse, AskStep, City, Report, RouteResponse, Vehicle } from "../lib/types";
 
 interface Turn {
   id: number;
@@ -19,6 +20,7 @@ interface Turn {
 
 interface Props {
   city: City;
+  vehicles: Vehicle[];
   reports: Report[];
   hidden?: boolean;
   onRoute(route: RouteResponse | null): void;
@@ -27,16 +29,54 @@ interface Props {
   onClose(): void;
 }
 
-// The API does not stream, so the thinking state shows the usual tool sequence as an animation.
-const TOOL_SEQUENCE = ["list_reports", "find_place", "street_status", "plan_route", "report_detail"];
+type T = (k: Key, v?: Vars) => string;
 
 const num = (v: unknown): number | null => (typeof v === "number" && Number.isFinite(v) ? v : null);
+const str = (v: unknown): string => (typeof v === "string" ? v : v == null ? "" : String(v));
 
 function depthRange(v: unknown): string | null {
   return Array.isArray(v) && v.length === 2 ? `${Number(v[0]).toFixed(2)}–${Number(v[1]).toFixed(2)} m` : null;
 }
 
-/** One line per tool result, for the "How I got this" list. */
+/** One plain sentence of what the assistant looked at: "Checked open reports · street: Chi Lăng · route for rescue truck". */
+function checkedLine(steps: AskStep[], t: T, vname: (id: string) => string): string {
+  const parts: string[] = [];
+  const seen = new Set<string>();
+  const add = (p: string) => {
+    if (p && !seen.has(p)) {
+      seen.add(p);
+      parts.push(p);
+    }
+  };
+  const reportIds: string[] = [];
+  for (const s of steps) {
+    const a = s.args ?? {};
+    switch (s.tool) {
+      case "list_reports":
+        add(t("ask.c.open"));
+        break;
+      case "street_status":
+        add(t("ask.c.street", { name: str(a.street) }));
+        break;
+      case "find_place":
+        add(t("ask.c.place", { name: str(a.query) }));
+        break;
+      case "plan_route":
+        add(t("ask.c.route", { vehicle: vname(str(a.vehicle)).toLowerCase() }));
+        break;
+      case "report_detail":
+        if (!reportIds.includes(str(a.report_id))) reportIds.push(str(a.report_id));
+        break;
+      default:
+        add(s.tool.replace(/_/g, " "));
+    }
+  }
+  if (reportIds.length === 1) add(t("ask.c.report", { id: reportIds[0] }));
+  else if (reportIds.length > 1) add(t("ask.c.reports", { n: reportIds.length }));
+  return parts.length ? t("ask.checked", { list: parts.join(" · ") }) : "";
+}
+
+/** A one-line result for the technical "Details" list. */
 function compactResult(step: AskStep): string {
   const r = (step.result ?? {}) as Record<string, unknown>;
   if (typeof r !== "object") return String(r);
@@ -44,13 +84,7 @@ function compactResult(step: AskStep): string {
   switch (step.tool) {
     case "list_reports": {
       const list = Array.isArray(r.reports) ? (r.reports as Record<string, unknown>[]) : [];
-      const top = list[0];
-      return [
-        `${num(r.count) ?? list.length} reports`,
-        top ? `top P${top.priority} ${top.street ? `· ${top.street}` : ""}` : null,
-      ]
-        .filter(Boolean)
-        .join(" · ");
+      return `${num(r.count) ?? list.length} reports`;
     }
     case "find_place": {
       const m = Array.isArray(r.matches) ? (r.matches as Record<string, unknown>[]) : [];
@@ -65,94 +99,49 @@ function compactResult(step: AskStep): string {
       const shortest = num(r.shortest_route_m);
       const safe = num(r.safe_route_m);
       const blocked = num(r.impassable_segments_on_shortest);
-      if (r.no_safe_road)
-        return `no safe road for ${r.vehicle ?? "vehicle"}${shortest ? ` · shortest ${distance(shortest)}` : ""}${blocked ? `, ${blocked} impassable` : ""}`;
-      return `safe ${safe ? distance(safe) : "?"}${shortest ? ` vs ${distance(shortest)}` : ""}${blocked ? ` · avoids ${blocked}` : ""}`;
+      if (r.no_safe_road) return `no safe road${shortest ? ` · shortest ${distance(shortest)}` : ""}${blocked ? `, ${blocked} impassable` : ""}`;
+      return `safe ${safe ? distance(safe) : "?"}${shortest ? ` vs ${distance(shortest)}` : ""}`;
     }
     case "report_detail": {
       const d = depthRange(r.depth_m);
-      return [`P${r.priority ?? "?"}`, r.people != null ? `${r.people} people` : null, d, r.street || null]
-        .filter(Boolean)
-        .join(" · ");
+      return [`P${r.priority ?? "?"}`, r.people != null ? `${r.people} people` : null, d].filter(Boolean).join(" · ");
     }
     default: {
       const s = JSON.stringify(r);
-      return s.length > 140 ? `${s.slice(0, 140)}…` : s;
+      return s.length > 120 ? `${s.slice(0, 120)}…` : s;
     }
   }
-}
-
-function compactArgs(args: Record<string, unknown>): string {
-  return Object.entries(args ?? {})
-    .map(([k, v]) => `${k}=${typeof v === "string" ? v : typeof v === "number" ? (Math.round(v * 1e4) / 1e4).toString() : JSON.stringify(v)}`)
-    .join("  ");
 }
 
 function Thinking({ started }: { started: number }) {
   const { t } = useI18n();
   const [now, setNow] = useState(() => performance.now());
   useEffect(() => {
-    const id = window.setInterval(() => setNow(performance.now()), 250);
+    const id = window.setInterval(() => setNow(performance.now()), 500);
     return () => window.clearInterval(id);
   }, []);
-  const s = (now - started) / 1000;
-  const step = Math.floor(s / 3.2);
-  const shown = TOOL_SEQUENCE.slice(0, Math.min(TOOL_SEQUENCE.length, step + 1));
   return (
-    <div className="ask__thinking" role="status" aria-live="polite">
-      <div className="ask__thinkhead">
-        <span className="ask__orb" aria-hidden="true">
-          <Icon name="spark" size={15} />
-        </span>
-        <b>{t("ask.thinking")}</b>
-        <span className="num muted">{Math.floor(s)} s</span>
+    <div className="ask__card ask__thinking" role="status" aria-live="polite">
+      <div className="ask__thinkrow">
+        <span className="spinner spinner--sm" aria-hidden="true" />
+        <span>{t("ask.thinking")}</span>
+        <span className="num muted">{Math.floor((now - started) / 1000)} s</span>
       </div>
-      <div className="ask__toolseq" aria-hidden="true">
-        {shown.map((name, i) => (
-          <span key={name} className={i === shown.length - 1 && step < TOOL_SEQUENCE.length ? "is-now" : ""}>
-            {i > 0 && <span className="ask__arrow">→</span>}
-            <code>{name}</code>
-          </span>
-        ))}
-        <span className="ask__ellipsis">…</span>
+      <div className="ask__bar" aria-hidden="true">
+        <span />
       </div>
-      <p className="muted">{t("ask.thinkingSub")}</p>
     </div>
   );
 }
 
-/** The tool calls in order, consecutive repeats folded: list_reports → find_place ×2 → plan_route. */
-function ToolChain({ steps }: { steps: AskStep[] }) {
-  const { tn } = useI18n();
-  if (!steps.length) return null;
-  const runs: { tool: string; n: number }[] = [];
-  for (const s of steps) {
-    const last = runs[runs.length - 1];
-    if (last && last.tool === s.tool) last.n++;
-    else runs.push({ tool: s.tool, n: 1 });
-  }
-  return (
-    <div className="ask__chain" aria-label={tn("ask.how", steps.length)}>
-      <span className="ask__chainn num">{steps.length}</span>
-      {runs.map((r, i) => (
-        <span key={i} className="ask__chainstep">
-          {i > 0 && <span className="ask__arrow">→</span>}
-          <code>{r.tool}</code>
-          {r.n > 1 && <span className="ask__times">×{r.n}</span>}
-        </span>
-      ))}
-    </div>
-  );
-}
-
-function Steps({ steps }: { steps: AskStep[] }) {
-  const { tn, t } = useI18n();
+function Details({ steps }: { steps: AskStep[] }) {
+  const { t } = useI18n();
   const [openStep, setOpenStep] = useState<number | null>(null);
   if (!steps.length) return null;
   return (
-    <details className="ask__how">
+    <details className="ask__details">
       <summary>
-        <Icon name="layers" size={14} /> {tn("ask.how", steps.length)}
+        {t("ask.details")} <span className="muted num">· {steps.length}</span>
       </summary>
       <ol className="ask__steps">
         {steps.map((s, i) => (
@@ -160,19 +149,16 @@ function Steps({ steps }: { steps: AskStep[] }) {
             <button type="button" className="ask__step" onClick={() => setOpenStep(openStep === i ? null : i)} aria-expanded={openStep === i}>
               <span className="ask__stepn num">{i + 1}</span>
               <span className="ask__stepbody">
-                <code className="ask__tool">{s.tool}</code>
-                {compactArgs(s.args) && <span className="ask__args">{compactArgs(s.args)}</span>}
+                <code>
+                  {s.tool}({Object.entries(s.args ?? {})
+                    .map(([k, v]) => `${k}=${typeof v === "string" ? JSON.stringify(v) : JSON.stringify(v)}`)
+                    .join(", ")}
+                  )
+                </code>
                 <span className="ask__res">→ {compactResult(s)}</span>
               </span>
             </button>
-            {openStep === i && (
-              <div className="ask__json">
-                <div className="eyebrow">{t("ask.args")}</div>
-                <pre>{JSON.stringify(s.args, null, 1)}</pre>
-                <div className="eyebrow">{t("ask.result")}</div>
-                <pre>{JSON.stringify(s.result, null, 1)}</pre>
-              </div>
-            )}
+            {openStep === i && <pre className="ask__json">{JSON.stringify({ args: s.args, result: s.result }, null, 1)}</pre>}
           </li>
         ))}
       </ol>
@@ -180,15 +166,17 @@ function Steps({ steps }: { steps: AskStep[] }) {
   );
 }
 
-export function AskPanel({ city, reports, hidden, onRoute, onHighlight, onOpenReport, onClose }: Props) {
+export function AskPanel({ city, vehicles, reports, hidden, onRoute, onHighlight, onOpenReport, onClose }: Props) {
   const { t, lang } = useI18n();
   const [turns, setTurns] = useState<Turn[]>([]);
   const [examples, setExamples] = useState<string[]>([]);
   const [text, setText] = useState("");
   const scroller = useRef<HTMLDivElement>(null);
+  const turnEls = useRef(new Map<number, HTMLDivElement>());
   const abort = useRef<AbortController | null>(null);
   const nextId = useRef(1);
   const pending = turns.some((x) => x.state === "pending");
+  const vname = (id: string) => vehicleName(vehicles.find((v) => v.id === id), lang) || id;
 
   useEffect(() => {
     setTurns([]);
@@ -200,7 +188,6 @@ export function AskPanel({ city, reports, hidden, onRoute, onHighlight, onOpenRe
   }, [city.id]);
 
   // While thinking, follow the bottom; once answered, show the answer from its start.
-  const turnEls = useRef(new Map<number, HTMLDivElement>());
   useEffect(() => {
     const sc = scroller.current;
     const last = turns[turns.length - 1];
@@ -226,19 +213,18 @@ export function AskPanel({ city, reports, hidden, onRoute, onHighlight, onOpenRe
     } catch (e) {
       if ((e as Error).name === "AbortError") return;
       const noKey = e instanceof ApiError && e.status === 503;
-      const msg = e instanceof ApiError && e.network ? t("ask.unreachable") : noKey ? (e as Error).message : t("ask.error", { msg: (e as Error).message });
+      const msg =
+        e instanceof ApiError && e.network ? t("ask.unreachable") : noKey ? (e as Error).message : t("ask.error", { msg: (e as Error).message });
       setTurns((ts) => ts.map((x) => (x.id === id ? { ...x, state: "error", error: msg, noKey } : x)));
     }
   };
 
   const byId = new Map(reports.map((r) => [r.id, r]));
+  const showExamples = examples.length > 0 && !pending && (!turns.length || Boolean(turns[turns.length - 1].noKey));
 
   return (
     <section className="ask" aria-label={t("ask.title")} hidden={hidden}>
       <header className="ask__head">
-        <span className="ask__orb ask__orb--lg" aria-hidden="true">
-          <Icon name="spark" size={17} />
-        </span>
         <div className="ask__headtext">
           <h2>{t("ask.title")}</h2>
           <p>{t("ask.sub")}</p>
@@ -276,10 +262,7 @@ export function AskPanel({ city, reports, hidden, onRoute, onHighlight, onOpenRe
               else turnEls.current.delete(turn.id);
             }}
           >
-            <div className="ask__q">
-              <span className="ask__who">{t("ask.you")}</span>
-              <p>{turn.question}</p>
-            </div>
+            <p className="ask__q">{turn.question}</p>
             {turn.state === "pending" && <Thinking started={turn.started} />}
             {turn.state === "error" && (
               <div className={`ask__err ${turn.noKey ? "ask__err--soft" : ""}`} role="alert">
@@ -291,41 +274,44 @@ export function AskPanel({ city, reports, hidden, onRoute, onHighlight, onOpenRe
               </div>
             )}
             {turn.state === "done" && turn.res && (
-              <div className="ask__a">
-                <div className="ask__ahead">
-                  <span className="ask__orb" aria-hidden="true">
-                    <Icon name="spark" size={13} />
-                  </span>
-                  <b>Muse Spark</b>
-                  {turn.res.recorded && <span className="ask__rec">{t("ask.recorded")}</span>}
-                </div>
-                <ToolChain steps={turn.res.steps ?? []} />
+              <div className="ask__card ask__a">
+                {(() => {
+                  const line = checkedLine(turn.res.steps ?? [], t, vname);
+                  return line ? (
+                    <p className="ask__checked">
+                      <Icon name="check" size={14} /> <span>{line}</span>
+                    </p>
+                  ) : null;
+                })()}
                 <Markdown text={turn.res.answer} />
                 {turn.res.route && (
                   <button type="button" className={`ask__route ${turn.res.route.route ? "" : "is-blocked"}`} onClick={() => onRoute(turn.res!.route)}>
                     <Icon name={turn.res.route.route ? "route" : "alert"} size={15} />
-                    {turn.res.route.route
-                      ? `${t("ask.routeOn")} · ${distance(turn.res.route.route.length_m)}`
-                      : t("ask.routeBlocked")}
+                    {turn.res.route.route ? `${t("ask.routeOn")} · ${distance(turn.res.route.route.length_m)}` : t("ask.routeBlocked")}
                   </button>
                 )}
                 {!!turn.res.reports?.length && (
                   <div className="ask__reports">
                     <div className="eyebrow">{t("ask.reports")}</div>
-                    <div className="ask__chips">
+                    <ul>
                       {turn.res.reports.slice(0, 8).map((rid) => {
                         const r = byId.get(rid);
                         return (
-                          <button key={rid} type="button" className="ask__chip" onClick={() => r && onOpenReport(rid)} disabled={!r} title={r ? summaryOf(r, lang) : rid}>
-                            <PriorityBadge priority={r?.triage?.priority} size="sm" />
-                            <span>{r ? summaryOf(r, lang) : rid}</span>
-                          </button>
+                          <li key={rid}>
+                            <button type="button" className="ask__report" onClick={() => r && onOpenReport(rid)} disabled={!r} title={r ? summaryOf(r, lang) : rid}>
+                              <PriorityBadge priority={r?.triage?.priority} size="sm" />
+                              <span>{r ? summaryOf(r, lang) : rid}</span>
+                            </button>
+                          </li>
                         );
                       })}
-                    </div>
+                    </ul>
                   </div>
                 )}
-                <Steps steps={turn.res.steps ?? []} />
+                <div className="ask__foot2">
+                  <Details steps={turn.res.steps ?? []} />
+                  {turn.res.recorded && <span className="ask__rec">{t("ask.recorded")}</span>}
+                </div>
               </div>
             )}
           </div>
@@ -333,15 +319,18 @@ export function AskPanel({ city, reports, hidden, onRoute, onHighlight, onOpenRe
       </div>
 
       <div className="ask__foot">
-        {examples.length > 0 && (!turns.length || turns[turns.length - 1].noKey) && (
+        {showExamples && (
           <div className="ask__examples">
             <div className="eyebrow">{t("ask.examples")}</div>
-            {examples.map((q) => (
-              <button key={q} type="button" className="ask__example" disabled={pending} onClick={() => ask(q)}>
-                <Icon name="spark" size={13} />
-                <span>{q}</span>
-              </button>
-            ))}
+            <ul>
+              {examples.map((q) => (
+                <li key={q}>
+                  <button type="button" className="ask__example" onClick={() => ask(q)}>
+                    {q}
+                  </button>
+                </li>
+              ))}
+            </ul>
           </div>
         )}
         <form
@@ -368,6 +357,7 @@ export function AskPanel({ city, reports, hidden, onRoute, onHighlight, onOpenRe
             {pending ? <span className="spinner spinner--sm" /> : <Icon name="send" size={16} />}
           </button>
         </form>
+        <p className="ask__powered">{t("ask.powered")}</p>
       </div>
     </section>
   );

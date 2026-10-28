@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Icon } from "../components/Icon";
 import { StatusGlyph } from "../components/Status";
 import { api, ApiError } from "../lib/api";
 import { defaultVehicle, vehicleName } from "../lib/catalog";
@@ -46,6 +47,8 @@ export default function Console() {
   const [askRoute, setAskRoute] = useState<RouteResponse | null>(null);
   const [highlight, setHighlight] = useState<Set<string>>(new Set());
   const [about, setAbout] = useState(false);
+  // Below 1024 px only one of list and map fits: a toggle picks which.
+  const [view, setView] = useState<"map" | "list">("map");
   const [seed, setSeed] = useState<SeedState>({ running: false, received: 0, total: null, message: null });
   const [toast, setToast] = useState<{ text: string; tone: "ok" | "bad" } | null>(null);
   const toastTimer = useRef<number | undefined>(undefined);
@@ -107,6 +110,7 @@ export default function Console() {
   const select = useCallback(
     (id: string) => {
       setSelectedId(id);
+      setView("list");
       const r = data.reports.find((x) => x.id === id);
       if (r) setFocus({ lat: r.lat, lon: r.lon, key: Date.now() });
     },
@@ -192,7 +196,7 @@ export default function Console() {
   }, [data.reports, data.loading, city.id]);
 
   return (
-    <div className={`console side--${side}`}>
+    <div className={`console side--${side}`} data-view={view}>
       <TopBar
         cities={cities}
         city={city}
@@ -210,6 +214,7 @@ export default function Console() {
         onAsk={() => {
           setAskOpen((o) => !o);
           setSelectedId(null);
+          setView("list");
         }}
         seed={seed}
         onSeed={runSeed}
@@ -284,6 +289,7 @@ export default function Console() {
           {askOpen && (
             <AskPanel
               city={city}
+              vehicles={vehicles}
               reports={data.reports}
               hidden={Boolean(selected)}
               onRoute={(r) => {
@@ -321,6 +327,14 @@ export default function Console() {
           )}
         </div>
       </main>
+      <div className="viewtoggle seg" role="tablist" aria-label={t("view.aria")}>
+        <button type="button" role="tab" aria-selected={view === "list"} className={view === "list" ? "is-on" : ""} onClick={() => setView("list")}>
+          <Icon name="list" size={15} /> {t("view.list")}
+        </button>
+        <button type="button" role="tab" aria-selected={view === "map"} className={view === "map" ? "is-on" : ""} onClick={() => setView("map")}>
+          <Icon name="map" size={15} /> {t("view.map")}
+        </button>
+      </div>
       {about && <About catalog={data.catalog} health={data.health} city={city} onClose={() => setAbout(false)} />}
     </div>
   );

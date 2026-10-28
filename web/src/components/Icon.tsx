@@ -32,6 +32,12 @@ const PATHS: Record<string, string> = {
   send: "M4 12 20 4l-6 16-3-7-7-1Z",
   flag: "M5 21V4m0 0h11l-2 4 2 4H5",
   video: "M3 6.5h12v11H3zM15 10.5l6-3.5v10l-6-3.5",
+  chat: "M4 5h16v11H9l-5 4V5Z",
+  more: "M5 12h.01M12 12h.01M19 12h.01",
+  down: "M6 9l6 6 6-6",
+  list: "M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01",
+  map: "M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Zm0 0v14m6-12v14",
+  globe: "M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm-9-9h18M12 3c2.5 2.6 3.8 5.6 3.8 9S14.5 18.4 12 21c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3Z",
 };
 
 export type IconName = keyof typeof PATHS;
