@@ -132,5 +132,6 @@ def triage(
         schema=SCHEMA,
         effort="low",
     )
+    facts["local_language"] = local_language  # what summary_local and dispatch_local are in
     priority, why = score(facts, est.mean_m if est else None)
     return {"priority": priority, "reasons": why, "facts": facts}

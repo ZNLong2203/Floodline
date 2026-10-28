@@ -205,7 +205,9 @@ class Telegram(ChatIntake):
             self.api.call("sendChatAction", {"chat_id": chat, "action": "typing"})
             data = self.fetch(msg[kind]["file_id"])
             place = self._city_for(chat)
-            self._words(chat, lang, transcribe_upload(self.client, data, place.language))
+            self._words(
+                chat, lang, transcribe_upload(self.client, data, place.language), spoken=True
+            )
         elif kind == "text":
             text = msg["text"].strip()
             if text.startswith("/") or text.lower() in {"hi", "hello", "help", "xin chào", "hola"}:

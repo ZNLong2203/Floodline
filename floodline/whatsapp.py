@@ -193,7 +193,9 @@ class WhatsApp(ChatIntake):
 
             data = self.fetch(message["audio"]["id"])
             place = self._city_for(sender)
-            self._words(sender, lang, transcribe_upload(self.client, data, place.language))
+            self._words(
+                sender, lang, transcribe_upload(self.client, data, place.language), spoken=True
+            )
         elif kind == "text":
             body = message["text"]["body"].strip()
             if body.lower() in {"hi", "hello", "help", "?", "xin chào", "chào", "hola", "ayuda"}:

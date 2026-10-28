@@ -148,12 +148,17 @@ export function reportLang(r: Report): string {
   return "";
 }
 
-/** The summary in the reader's language: local text when they share the resident's language, else English. */
+/** The language summary_local and dispatch_local are written in: the city's, else the resident's. */
+export function localLang(r: Report): string {
+  return langCode(r.triage?.facts?.local_language) || reportLang(r);
+}
+
+/** The summary in the reader's language: local text when they read the local language, else English. */
 export function summaryOf(r: Report, lang: string = "en"): string {
   const f = r.triage?.facts;
   const local = f?.summary_local || f?.summary_vi || r.analysis?.perception?.summary_vi;
   const english = f?.summary_en;
-  const same = lang === reportLang(r) || (!reportLang(r) && lang !== "en");
+  const same = lang === localLang(r) || (!localLang(r) && lang !== "en");
   return (same ? local || english : english || local) || r.note || "–";
 }
 
@@ -164,8 +169,8 @@ export function dispatchDrafts(r: Report, lang: string = "en"): { lang: string; 
   const local = f.dispatch_local || f.dispatch_vi;
   const out: { lang: string; text: string }[] = [];
   if (f.dispatch_en) out.push({ lang: "en", text: f.dispatch_en });
-  if (local && local !== f.dispatch_en) out.push({ lang: reportLang(r) || "vi", text: local });
-  return lang !== "en" && lang === reportLang(r) ? out.reverse() : out;
+  if (local && local !== f.dispatch_en) out.push({ lang: localLang(r) || "vi", text: local });
+  return lang !== "en" && lang === localLang(r) ? out.reverse() : out;
 }
 
 export function verdictFor(r: Report, vehicle: string): Passability | null {

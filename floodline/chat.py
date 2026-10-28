@@ -320,7 +320,7 @@ class ChatIntake:
             return (lat1 + lat2) / 2, (lon1 + lon2) / 2, streets[0]
         return None
 
-    def _words(self, sender: str, lang: str, words: str) -> None:
+    def _words(self, sender: str, lang: str, words: str, spoken: bool = False) -> None:
         if not words:
             return
         s = self._session(sender)
@@ -337,21 +337,24 @@ class ChatIntake:
                 s.lat, s.lon = lat, lon
                 report.lat, report.lon = lat, lon
                 report.extra["location_pending"] = False
-                if COORDS.search(words):  # a bare position, nothing to add to the report
+                if len(words) > len(name) + 15:  # more than the place: keep what they said
+                    self._attach(report, words, spoken)
+                else:
                     self.store.save(report)
                     self.publish("report.updated", report.public())
-                else:
-                    self._attach(report, words)
                 self.send_text(sender, TEXT[lang]["located_at"].format(place=name))
                 return
-        self._attach(report, words)
+        self._attach(report, words, spoken)
         self.send_text(sender, TEXT[lang]["words"].format(words=words[:200]))
 
-    def _attach(self, report: StoredReport, words: str) -> None:
-        """Add the sender's words to the report and re-run triage with them."""
+    def _attach(self, report: StoredReport, words: str, spoken: bool) -> None:
+        """Add the sender's words (a voice note or text) to the report and re-run triage."""
         from floodline.triage import score, triage
 
-        report.transcript = ((report.transcript or "") + " " + words).strip()
+        if spoken:
+            report.transcript = ((report.transcript or "") + " " + words).strip()
+        else:
+            report.note = ((report.note or "") + "\n" + words).strip()
         place = cities.get(report.city)
 
         seen = SimpleNamespace(  # what triage reads from an analysis

@@ -116,6 +116,7 @@ def test_typed_street_or_map_link_places_the_report(tmp_path):
     assert kind == "report.updated" and report["location_pending"] is False
     assert abs(report["lat"] - 16.459) < 0.01
     assert "Lê Lợi" in api.texts()[-1]
+    assert "Le Loi" not in report["note"] and not report["transcript"]  # a place, not a message
 
     tg, api, events = bot(tmp_path, language="en")
     tg.handle_update(update(3, photo=[{"file_id": "p"}]))

@@ -120,6 +120,8 @@ export interface TriageFacts {
   address_hint: string;
   /** The resident's language ("vi", or a name such as "Vietnamese"). */
   language?: string;
+  /** The language summary_local and dispatch_local are written in (the city's). */
+  local_language?: string;
   /** The resident's words (note and transcript) translated into English. */
   message_en?: string;
   summary_en?: string;
