@@ -247,10 +247,10 @@ function DemoMenu({ seed, city, onSeed, onClear }: { seed: SeedState; city: City
               <small>{t("demo.clearSub", { city: city.name })}</small>
             </span>
           </button>
-          <a role="menuitem" href={href("/report")} target="_blank" rel="noreferrer">
+          <a role="menuitem" href={href(`/report?city=${encodeURIComponent(city.id)}`)} target="_blank" rel="noreferrer">
             <Icon name="camera" size={15} />
             <span>
-              <b>{t("demo.resident")}</b>
+              <b>{t("demo.residentOpen")}</b>
               <small>{t("demo.residentSub")}</small>
             </span>
           </a>

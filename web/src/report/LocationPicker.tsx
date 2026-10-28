@@ -26,6 +26,13 @@ export function LocationPicker({ cities, city, onCity, value, onChange }: Props)
   const [accuracy, setAccuracy] = useState<number | null>(null);
   const [away, setAway] = useState<{ city: City; km: number } | null>(null);
   const [showMap, setShowMap] = useState(false);
+  // A location can also be set from outside (a sample photo): never wipe it from here.
+  const current = useRef(value);
+  current.current = value;
+  useEffect(() => {
+    if (value && phase !== "ok" && phase !== "manual") setPhase("manual");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value]);
 
   const locate = () => {
     if (!("geolocation" in navigator)) {
@@ -44,12 +51,14 @@ export function LocationPicker({ cities, city, onCity, value, onChange }: Props)
           onChange(p);
         } else {
           setAway(near);
+          if (current.current) return;
           if (near) onCity(near.city.id);
           setPhase("outside");
           onChange(null);
         }
       },
       () => {
+        if (current.current) return;
         setPhase("denied");
         onChange(null);
       },

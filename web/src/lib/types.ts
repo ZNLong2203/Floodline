@@ -160,6 +160,8 @@ export interface Report {
   photo_credit?: string;
   /** On report.created events during a scenario replay. */
   seed?: { index: number; total: number };
+  /** Server notes, e.g. "message not read: this demo replays recorded answers only". */
+  warnings?: string[];
 }
 
 export interface Vehicle {
@@ -284,6 +286,14 @@ export interface City {
   presets?: CityPreset[];
   has_scenario?: boolean;
   reports?: number;
+  /** How many sample photos /api/samples offers for this city. */
+  samples?: number;
+}
+
+/** A recorded photo a visitor can send from /report when the server has no API key. */
+export interface Sample {
+  path: string;
+  url: string;
 }
 
 export interface AskStep {

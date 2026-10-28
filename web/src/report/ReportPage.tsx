@@ -4,9 +4,9 @@ import { StatusGlyph } from "../components/Status";
 import { api, ApiError, href, isMock } from "../lib/api";
 import { residentVehicles, vehicleName } from "../lib/catalog";
 import { emergencyNumber, FALLBACK_CITIES, saveCity, savedCity } from "../lib/cities";
-import { pct, reportLang, STATUS, summaryOf } from "../lib/format";
+import { pct, reportLang, STATUS, summaryOf, warnT } from "../lib/format";
 import { type Key, LangToggle, useI18n } from "../lib/i18n";
-import type { City, Report } from "../lib/types";
+import type { City, Report, Sample } from "../lib/types";
 import { type LatLon, LocationPicker } from "./LocationPicker";
 import { VoiceRecorder } from "./VoiceRecorder";
 
@@ -54,6 +54,13 @@ export default function ReportPage() {
   const gallery = useRef<HTMLInputElement>(null);
   const recorder = useRef<HTMLInputElement>(null);
   const online = useOnline();
+  // The public demo replays recorded answers: only sample photos, sent without words, analyse.
+  const [replayOnly, setReplayOnly] = useState(false);
+  const [samples, setSamples] = useState<Sample[]>([]);
+  const [sample, setSample] = useState<string | null>(null);
+  const [sampleLoading, setSampleLoading] = useState<string | null>(null);
+  const [sampleError, setSampleError] = useState(false);
+  const wordsOff = replayOnly && Boolean(sample);
 
   useEffect(() => {
     document.title = t("rp.docTitle");
@@ -64,7 +71,44 @@ export default function ReportPage() {
       .cities()
       .then((cs) => Array.isArray(cs) && cs.length && setCities(cs))
       .catch(() => undefined);
+    api
+      .health()
+      .then((h) => setReplayOnly(!h.has_key || h.mode === "replay"))
+      .catch(() => undefined);
   }, []);
+
+  useEffect(() => {
+    setSamples([]);
+    api
+      .samples(city.id)
+      .then((list) => setSamples(Array.isArray(list) ? list : []))
+      .catch(() => setSamples([]));
+  }, [city.id]);
+
+  const pickSample = async (s: Sample, i: number) => {
+    setSampleLoading(s.path);
+    setSampleError(false);
+    try {
+      const res = await fetch(s.url);
+      if (!res.ok) throw new Error(String(res.status));
+      const blob = await res.blob();
+      const name = s.path.split("/").pop() || "sample.jpg";
+      setPhoto(new File([blob], name, { type: blob.type || "image/jpeg" }));
+      setClipSeconds(null);
+      setSample(s.path);
+      // Somewhere in this city, a little apart for each sample so markers do not stack.
+      const [lat, lon] = city.center;
+      setWhere([lat + ((i % 2) - 0.5) * 0.004, lon + (Math.floor(i / 2) - 0.5) * 0.004]);
+      if (replayOnly) {
+        setNote("");
+        setAudio(null);
+      }
+    } catch {
+      setSampleError(true);
+    } finally {
+      setSampleLoading(null);
+    }
+  };
 
   useEffect(() => {
     if (!photo) {
@@ -93,6 +137,7 @@ export default function ReportPage() {
     if (f) {
       setPhoto(f);
       setClipSeconds(null);
+      setSample(null);
     }
     e.target.value = "";
   };
@@ -113,8 +158,8 @@ export default function ReportPage() {
           video: isVideo ? photo : null,
           lat: where[0],
           lon: where[1],
-          note: note.trim(),
-          audio,
+          note: wordsOff ? "" : note.trim(),
+          audio: wordsOff ? null : audio,
           source: "web",
           city: city.id,
         },
@@ -154,6 +199,7 @@ export default function ReportPage() {
 
   const reset = () => {
     setPhoto(null);
+    setSample(null);
     setAudio(null);
     setNote("");
     setResult(null);
@@ -195,6 +241,9 @@ export default function ReportPage() {
             <h2 id="s-photo" className="rp__label">
               <span className="rp__n">1</span> {t("rp.step1")}
             </h2>
+            {replayOnly && (
+              <SampleStrip samples={samples} selected={sample} loading={sampleLoading} error={sampleError} featured onPick={pickSample} />
+            )}
             <input ref={camera} type="file" accept="image/*" capture="environment" hidden onChange={pick} />
             <input ref={recorder} type="file" accept="video/*" capture="environment" hidden onChange={pick} />
             <input ref={gallery} type="file" accept="image/*,video/*" hidden onChange={pick} />
@@ -216,6 +265,7 @@ export default function ReportPage() {
                 ) : (
                   <img src={preview} alt={t("rp.photoAlt")} />
                 )}
+                {sample && <span className="rp__samplebadge">{t("rp.sampleBadge")}</span>}
                 {isVideo && clipSeconds != null && (clipSeconds < 8 || clipSeconds > 35) && (
                   <div className="rp__cliphint" role="status">
                     {t("rp.clipLength", { s: Math.round(clipSeconds) })}
@@ -254,6 +304,9 @@ export default function ReportPage() {
                 </button>
               </>
             )}
+            {!replayOnly && (
+              <SampleStrip samples={samples} selected={sample} loading={sampleLoading} error={sampleError} onPick={pickSample} />
+            )}
           </section>
 
           <section className="rp__step" aria-labelledby="s-loc">
@@ -267,19 +320,27 @@ export default function ReportPage() {
             <h2 id="s-voice" className="rp__label">
               <span className="rp__n">3</span> {t("rp.step3")} <small>{t("rp.optional")}</small>
             </h2>
-            <VoiceRecorder value={audio} onChange={setAudio} />
-            <label className="rp__notelabel" htmlFor="note">
-              {t("rp.note")}
-            </label>
-            <textarea
-              id="note"
-              className="rp__note"
-              rows={3}
-              maxLength={600}
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-              placeholder={t("rp.notePh")}
-            />
+            {wordsOff ? (
+              <p className="rp__wordsoff">
+                <Icon name="info" size={16} /> {t("rp.sampleWordsOff")}
+              </p>
+            ) : (
+              <>
+                <VoiceRecorder value={audio} onChange={setAudio} />
+                <label className="rp__notelabel" htmlFor="note">
+                  {t("rp.note")}
+                </label>
+                <textarea
+                  id="note"
+                  className="rp__note"
+                  rows={3}
+                  maxLength={600}
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
+                  placeholder={t("rp.notePh")}
+                />
+              </>
+            )}
           </section>
 
           <div className="rp__submitbar">
@@ -475,6 +536,19 @@ function Result({ report, emergency, onAgain }: { report: Report; emergency: str
         </ul>
       )}
 
+      {!!report.warnings?.length && (
+        <div className="rp__warnings" role="status">
+          <b>{t("rp.warnings")}</b>
+          <ul>
+            {report.warnings.map((w) => (
+              <li key={w}>
+                <Icon name="info" size={15} /> {warnT(w, t)}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       <p className="rp__safety">
         {t("rp.noWade")} {t("rp.emergency", { n: emergency })}
       </p>
@@ -483,5 +557,67 @@ function Result({ report, emergency, onAgain }: { report: Report; emergency: str
         <Icon name="camera" size={18} /> {t("rp.again")}
       </button>
     </main>
+  );
+}
+
+function SampleStrip({
+  samples,
+  selected,
+  loading,
+  error,
+  featured = false,
+  onPick,
+}: {
+  samples: Sample[];
+  selected: string | null;
+  loading: string | null;
+  error: boolean;
+  featured?: boolean;
+  onPick(s: Sample, i: number): void;
+}) {
+  const { t } = useI18n();
+  if (!samples.length) return null;
+  return (
+    <div className={`samples ${featured ? "samples--featured" : ""}`}>
+      {featured && (
+        <div className="samples__callout">
+          <Icon name="flask" size={16} /> <b>{t("rp.samplesReplay")}</b>
+        </div>
+      )}
+      <div className="samples__head">
+        <b>{t("rp.samples")}</b>
+        <small>{t("rp.samplesSub")}</small>
+      </div>
+      <div className="samples__grid">
+        {samples.map((s, i) => (
+          <button
+            key={s.path}
+            type="button"
+            className={`samples__item ${selected === s.path ? "is-on" : ""}`}
+            aria-pressed={selected === s.path}
+            aria-label={t("rp.sampleAlt", { n: i + 1 })}
+            disabled={Boolean(loading)}
+            onClick={() => onPick(s, i)}
+          >
+            <img src={s.url} alt="" loading="lazy" />
+            {loading === s.path && (
+              <span className="samples__busy" aria-label={t("rp.sampleLoading")}>
+                <span className="spinner spinner--sm" />
+              </span>
+            )}
+            {selected === s.path && (
+              <span className="samples__check" aria-hidden="true">
+                <Icon name="check" size={14} strokeWidth={2.8} />
+              </span>
+            )}
+          </button>
+        ))}
+      </div>
+      {error && (
+        <div className="samples__err" role="alert">
+          {t("rp.sampleError")}
+        </div>
+      )}
+    </div>
   );
 }

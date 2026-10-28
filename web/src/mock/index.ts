@@ -324,6 +324,9 @@ export function createMockApi(): FloodlineApi {
     async attribution() {
       return { photos: [], videos: [] };
     },
+    async samples() {
+      return [];
+    },
     async askExamples() {
       return [MOCK_QUESTION];
     },

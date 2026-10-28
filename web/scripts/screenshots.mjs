@@ -418,6 +418,38 @@ if (only?.includes("valencia")) {
   await ctx.close();
 }
 
+// ------------------------------------------------------------- sample photos end to end (ONLY=samples)
+// Against a local replay backend (no key): pick a sample, send it, see the result.
+if (only?.includes("samples")) {
+  const lang = process.env.SAMPLE_LANG ?? "en";
+  const ctx = await browser.newContext({
+    viewport: { width: 390, height: 844 },
+    deviceScaleFactor: 2,
+    isMobile: true,
+    hasTouch: true,
+    locale: lang === "vi" ? "vi-VN" : lang === "es" ? "es-ES" : "en-US",
+    geolocation: { latitude: 37.4848, longitude: -122.1484 },
+    permissions: ["geolocation"],
+  });
+  const page = await ctx.newPage();
+  page.on("pageerror", (e) => console.error("pageerror:", e.message));
+  await page.goto(`${base}/report?city=${process.env.SAMPLE_CITY ?? "hue"}`);
+  await page.waitForSelector(".samples__item", { timeout: 20000 });
+  await wait(2500);
+  await shot(page, `samples-strip-${lang}`);
+  await page.click(".samples__item >> nth=0");
+  await page.waitForSelector(".rp__samplebadge", { timeout: 15000 });
+  await wait(1500);
+  await shot(page, `samples-selected-${lang}`, { fullPage: true });
+  const t0 = Date.now();
+  await page.click(".rp__submitbar .btn");
+  await page.waitForSelector(".rp__result, .rp__error", { timeout: 90000 });
+  console.log(`sample analysed in ${((Date.now() - t0) / 1000).toFixed(1)} s`, await page.locator(".rp__error h1").textContent().catch(() => "ok"));
+  await wait(1500);
+  await shot(page, `samples-result-${lang}`, { fullPage: true });
+  await ctx.close();
+}
+
 // ------------------------------------------------------------- resident page, EN and VI (ONLY=resident, mock)
 if (only?.includes("resident")) {
   for (const [lang, locale, geo] of [

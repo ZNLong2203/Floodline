@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { Icon, VehicleIcon } from "../components/Icon";
+import { href } from "../lib/api";
 import { vehicleName } from "../lib/catalog";
 import { cityLabel } from "../lib/cities";
 import { type Key, useI18n } from "../lib/i18n";
@@ -116,6 +117,12 @@ export function About({ catalog, health, city, onClose }: { catalog: Catalog; he
             )}
           </section>
         </div>
+
+        <a className="about__resident" href={href(`/report?city=${encodeURIComponent(city.id)}`)} target="_blank" rel="noreferrer">
+          <Icon name="camera" size={16} />
+          <span>{t("about.resident")}</span>
+          <b>{t("demo.residentOpen")}</b>
+        </a>
 
         <footer className="about__foot">
           <span>{t("about.foot")}</span>

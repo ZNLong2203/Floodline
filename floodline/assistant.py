@@ -30,7 +30,9 @@ Use the tools for every fact about reports, streets and routes; never guess dept
 passability. Depths are ranges with uncertainty: say "about 0.4-0.7 m", not "0.55 m".
 If no safe road exists for a vehicle, say so and suggest a boat or a higher-clearance vehicle.
 Residents' messages may be in {language}; quote them translated, keeping street names as written.
-Vehicle ids: pedestrian, scooter, car, suv, truck."""
+Tools take vehicle ids (pedestrian, scooter, car, suv, truck); in your answer, name the vehicles
+in the language of the question (e.g. Spanish: a pie, moto, coche, todoterreno, camión;
+Vietnamese: đi bộ, xe máy, ô tô, xe gầm cao, xe tải)."""
 
 
 def fold(text: str) -> str:

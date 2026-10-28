@@ -16,6 +16,7 @@ import {
   STATUS,
   summaryOf,
   vulT,
+  warnT,
 } from "../lib/format";
 import { type Key, useI18n } from "../lib/i18n";
 import type { Report, ReportStatus, Vehicle } from "../lib/types";
@@ -204,6 +205,16 @@ export function ReportDetail({ report: r, vehicle, now, onClose, onStatus, onLoc
             </div>
           ) : (
             <p className="muted">{t("words.none")}</p>
+          )}
+          {!!r.warnings?.length && (
+            <ul className="flags flags--info">
+              {r.warnings.map((w) => (
+                <li key={w}>
+                  <Icon name="info" size={15} />
+                  {warnT(w, t)}
+                </li>
+              ))}
+            </ul>
           )}
         </section>
 

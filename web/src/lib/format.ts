@@ -82,6 +82,13 @@ export function flagT(w: string, t: (k: Key, vars?: Vars) => string): string {
   return s === k ? capitalise(w.replace(/^photo:\s*/, "").replace(/_/g, " ")) : s;
 }
 
+/** A server warning in the UI language (the replay-only demo's two notes are known). */
+export function warnT(w: string, t: (k: Key, vars?: Vars) => string): string {
+  if (/message not read/i.test(w)) return t("warn.message");
+  if (/voice note not transcribed/i.test(w)) return t("warn.voice");
+  return w;
+}
+
 export function clock(at: number): string {
   return new Date(at * 1000).toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" });
 }
@@ -132,6 +139,8 @@ export function reportLang(r: Report): string {
   const f = r.triage?.facts;
   if (f?.language) return langCode(f.language);
   if (f?.summary_vi || f?.dispatch_vi) return "vi";
+  // No triage facts (e.g. the replay-only demo could not read the message): the only text is Spark's Vietnamese summary.
+  if (!f && r.analysis?.perception?.summary_vi) return "vi";
   return "";
 }
 

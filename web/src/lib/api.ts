@@ -1,6 +1,7 @@
 import type {
   AskResponse,
   AttributionData,
+  Sample,
   Catalog,
   City,
   Health,
@@ -42,6 +43,8 @@ export interface FloodlineApi {
   ask(question: string, city?: string, signal?: AbortSignal): Promise<AskResponse>;
   /** Questions with a recorded answer for this city. */
   askExamples(city?: string): Promise<string[]>;
+  /** Recorded sample photos for the resident page. */
+  samples(city?: string): Promise<Sample[]>;
   /** Author, licence and source of every demo photo and clip (data/demo/photos.json). */
   attribution(): Promise<AttributionData>;
   /** Subscribe to live events. Returns an unsubscribe function. */
@@ -149,6 +152,7 @@ const real: FloodlineApi = {
       signal,
     }),
   askExamples: (city) => call(withCity("/api/ask/examples", city)),
+  samples: (city) => call(withCity("/api/samples", city)),
   attribution: () => call("/api/attribution"),
   subscribe(onEvent, onState) {
     onState("connecting");
@@ -190,6 +194,7 @@ export const api: FloodlineApi = isMock
       demoReset: (c) => mock().then((a) => a.demoReset(c)),
       ask: (q, c, s) => mock().then((a) => a.ask(q, c, s)),
       askExamples: (c) => mock().then((a) => a.askExamples(c)),
+      samples: (c) => mock().then((a) => a.samples(c)),
       // Credits are static data: use the backend's when it is running.
       attribution: () => call<AttributionData>("/api/attribution").catch(() => ({ photos: [], videos: [] })),
       subscribe(onEvent, onState) {
