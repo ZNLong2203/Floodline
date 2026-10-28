@@ -1,0 +1,18 @@
+.git
+.env
+.venv
+private
+var
+data/datasets
+data/cache
+evals/runs
+web/node_modules
+web/dist
+web/screenshots
+**/__pycache__
+.pytest_cache
+.ruff_cache
+
+# Never upload secrets or private notes to Cloud Build
+.env
+private/
