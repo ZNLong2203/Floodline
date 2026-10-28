@@ -15,6 +15,12 @@ gcloud run deploy floodline --source . --region us-central1 \
   --set-env-vars FLOODLINE_MODEL_MODE=replay
 ```
 
+The chat channels call the models live. Put the secrets in Secret Manager
+(`uv run python scripts/push_secrets.py` copies them from `.env` without printing them), add
+`--set-secrets MODEL_API_KEY=model-api-key:latest,TELEGRAM_BOT_TOKEN=telegram-bot-token:latest,TELEGRAM_WEBHOOK_SECRET=telegram-webhook-secret:latest`
+and `TELEGRAM_MODEL_MODE=live` to the deploy, then register the webhook once:
+`uv run floodline telegram-webhook https://<service-url>`.
+
 `--max-instances 1` keeps one store and one live-event stream; scenario reports keep the age they
 have in the story, so the demo never goes stale. To analyse visitors' own photos, deploy with
 `MODEL_API_KEY` from Secret Manager and `FLOODLINE_MODEL_MODE=live`, and set a spend limit on the

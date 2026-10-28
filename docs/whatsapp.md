@@ -1,6 +1,8 @@
 # WhatsApp intake
 
-Residents report through WhatsApp, with no app to install:
+Residents report through WhatsApp, with no app to install. It shares its logic with the
+[Telegram bot](telegram.md) (`floodline/chat.py`); the public demo runs on Telegram while the
+WhatsApp Business account behind our test number is under review.
 
 | They send | Floodline replies | On the coordinators' map |
 |---|---|---|

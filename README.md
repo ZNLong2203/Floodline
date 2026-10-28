@@ -45,7 +45,8 @@ queue ordered by a published formula.
 
 ## What Floodline does
 
-1. **Reads a photo, a clip or a voice note** sent from a phone (`/report`, in the resident's language).
+1. **Reads a photo, a clip or a voice note** sent from a phone, through the Telegram bot or the
+   `/report` page, and replies with the measured depth and a verdict per vehicle.
 2. **Measures the depth with an honest interval**, showing every reading it used and rejected.
 3. **Decides per vehicle**: passable, risky or impassable, by the probability of exceeding that
    vehicle's limit, with limits taken from published flood-safety guidance.
@@ -116,10 +117,11 @@ FLOODLINE_MODEL_MODE=replay uv run floodline seed --city valencia   # and in Val
 FLOODLINE_MODEL_MODE=replay uv run floodline serve                  # http://127.0.0.1:8000
 ```
 
-Open the console at `/`, choose **Xe tải cứu hộ** (rescue truck), and plan the route
+Open the console at `/`, choose **Rescue truck**, and plan the route
 *Central Hospital → Citadel (north)*: the fastest way, ignoring the water, crosses four segments a
-truck can't, so the route goes round. *→ Chợ Đông Ba* has no safe road left. Click the red Chi Lăng report for the evidence,
-open **Ask** and try an example question, or switch the city to Valencia.
+truck can't, so the route goes round. *→ Đông Ba market* has no safe road left. Click the red
+Chi Lăng report for the evidence, open **Ask** and try an example question, or switch the city to
+Valencia.
 
 With a key from [dev.meta.ai](https://dev.meta.ai) in `.env` (`MODEL_API_KEY=…`), new photos are
 analysed live:
@@ -150,13 +152,15 @@ uv run floodline serve                      # then send a photo from /report on 
 ## Repository
 
 ```
-floodline/      pipeline, models, geometry, calibration, fusion, routing, triage, API
+floodline/      pipeline, models, geometry, calibration, fusion, routing, triage, API,
+                Telegram and WhatsApp intake
 evals/          evaluation harness and cross-validated calibration
+scripts/        build the street extracts and the catalog, push secrets for deployment
 data/           catalog of sizes and limits (sourced), calibration, cities (Huế, Valencia),
                 their streets (OSM), demo photos and clips (Wikimedia Commons), scenarios,
                 recorded model answers
 web/            coordinator console and resident page (React, MapLibre)
-docs/           architecture, estimation, evaluation, triage
+docs/           architecture, estimation, evaluation, triage, Telegram, WhatsApp, deploying
 ```
 
 ## Credits
