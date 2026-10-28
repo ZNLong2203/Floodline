@@ -1,8 +1,10 @@
 """Telegram intake: anyone can open the bot and report, no app to install beyond Telegram.
 
 The bot speaks English by default; with TELEGRAM_LANGUAGE=auto it follows the
-sender's Telegram language (Vietnamese, Spanish, otherwise English). It offers a one-tap "share my location" button, and drops the report on
-the coordinators' map. Webhook calls must carry the secret given to setWebhook.
+sender's Telegram language (Vietnamese, Spanish, otherwise English). It offers
+a one-tap "share my location" button (phone apps only; elsewhere the sender types
+a street or landmark) and drops the report on the coordinators' map. Webhook
+calls must carry the secret given to setWebhook.
 The bot token is part of every request URL, so errors are logged by method and
 status only, never with the URL or the exception text.
 """
@@ -32,10 +34,13 @@ SHARE = {
     "vi": "📍 Gửi vị trí của tôi",
     "es": "📍 Compartir ubicación",
 }
-ASK = {
-    "en": "📍 Tap “Share my location” below so the rescue team can find it.",
-    "vi": "📍 Bấm “Gửi vị trí của tôi” bên dưới để đội cứu hộ tìm được.",
-    "es": "📍 Pulsa «Compartir ubicación» abajo para que el equipo te encuentre.",
+ASK = {  # the location button only works in the phone apps, hence the typed fallback
+    "en": "📍 Tap “Share my location” below (phone app), or type the street name or a landmark "
+    "nearby, so the rescue team can find it.",
+    "vi": "📍 Bấm “Gửi vị trí của tôi” bên dưới (app điện thoại), hoặc gõ tên đường hay một địa "
+    "điểm gần đó, để đội cứu hộ tìm được.",
+    "es": "📍 Pulsa «Compartir ubicación» abajo (app del móvil), o escribe el nombre de la calle "
+    "o un lugar cercano, para que el equipo te encuentre.",
 }
 WELCOME = {
     "en": "Floodline measures floodwater from your photos and tells rescue teams which "

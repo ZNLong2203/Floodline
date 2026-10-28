@@ -2,7 +2,9 @@
 
     photo or clip   -> "measuring…", then the verdict per vehicle and the overlay,
                        in the sender's language; the report appears on the map
-    location        -> moves the sender's latest report to where they are
+    location        -> moves the sender's latest report to where they are; while a
+                       report waits for one, a typed street, landmark, map link or
+                       "lat, lon" does the same
     voice note/text -> transcribed, attached to the latest report, triage re-run
 
 A channel subclasses ChatIntake and provides the transport: fetch a media file,
@@ -13,6 +15,7 @@ channels call the models live.
 
 from __future__ import annotations
 
+import re
 import time
 from collections import deque
 from collections.abc import Callable
@@ -25,6 +28,8 @@ from floodline.meta.client import ModelClient
 from floodline.store import Store, StoredReport
 
 SESSION_MINUTES = 30
+# "16.4637, 107.5909", also inside map links (…/@16.4637,107.5909,17z or ?q=16.46,107.59)
+COORDS = re.compile(r"(-?\d{1,2}\.\d{2,})\s*,\s*(-?\d{1,3}\.\d{2,})")
 ICONS = {"pedestrian": "🚶", "scooter": "🛵", "car": "🚗", "suv": "🚙", "truck": "🚚"}
 
 TEXT = {
@@ -37,8 +42,10 @@ TEXT = {
         "no_reading": "🌊 Floodline · we couldn't measure the water in this {kind}. Try a photo with "
         "a person, scooter or car standing in the water.",
         "on_map": "Your report is on the coordinators' map.",
-        "ask_location": "📍 Share your location (📎 → Location) so the rescue team can find it.",
+        "ask_location": "📍 Share your location (📎 → Location), or type the street name or a "
+        "landmark nearby, so the rescue team can find it.",
         "located": "📍 Thanks — your report is now at your location on the map.",
+        "located_at": "📍 Thanks — your report is now at {place} on the map.",
         "words": "📝 Added to your report: “{words}”",
         "safety": "Don't walk or drive through moving water.",
         "busy": "Floodline is busy — please try again in a few minutes.",
@@ -57,8 +64,10 @@ TEXT = {
         "no_reading": "🌊 Floodline · chưa đo được mực nước trong {kind} này. Hãy chụp có người, xe "
         "máy hoặc ô tô đang đứng trong nước.",
         "on_map": "Báo cáo của bạn đã hiện trên bản đồ của đội điều phối.",
-        "ask_location": "📍 Gửi vị trí của bạn (📎 → Vị trí) để đội cứu hộ tìm được.",
+        "ask_location": "📍 Gửi vị trí của bạn (📎 → Vị trí), hoặc gõ tên đường hay một địa điểm "
+        "gần đó, để đội cứu hộ tìm được.",
         "located": "📍 Cảm ơn — báo cáo đã được đặt đúng vị trí của bạn trên bản đồ.",
+        "located_at": "📍 Cảm ơn — báo cáo đã được đặt tại {place} trên bản đồ.",
         "words": "📝 Đã thêm vào báo cáo: “{words}”",
         "safety": "Không lội hay đi xe qua chỗ nước chảy xiết.",
         "busy": "Floodline đang quá tải — vui lòng thử lại sau vài phút.",
@@ -77,8 +86,10 @@ TEXT = {
         "no_reading": "🌊 Floodline · no pudimos medir el agua en este {kind}. Prueba con una foto "
         "con una persona, moto o coche dentro del agua.",
         "on_map": "Tu aviso ya está en el mapa de los coordinadores.",
-        "ask_location": "📍 Comparte tu ubicación (📎 → Ubicación) para que el equipo te encuentre.",
+        "ask_location": "📍 Comparte tu ubicación (📎 → Ubicación), o escribe el nombre de la calle "
+        "o un lugar cercano, para que el equipo te encuentre.",
         "located": "📍 Gracias — tu aviso ya está en tu ubicación en el mapa.",
+        "located_at": "📍 Gracias — tu aviso ya está en {place} en el mapa.",
         "words": "📝 Añadido a tu aviso: «{words}»",
         "safety": "No camines ni conduzcas por agua en movimiento.",
         "busy": "Floodline está ocupado — inténtalo de nuevo en unos minutos.",
@@ -276,6 +287,39 @@ class ChatIntake:
             self.publish("report.updated", report.public())
         self.send_text(sender, TEXT[lang]["located"])
 
+    def _place_in(self, text: str, city: cities.City) -> tuple[float, float, str] | None:
+        """A place the sender typed: coordinates or a map link, a landmark, or a street."""
+        if m := COORDS.search(text):
+            lat, lon = float(m[1]), float(m[2])
+            # only near a city we map, so "0.50, 0.60 m" is not read as a position
+            if any(
+                abs(lat - c.center[0]) < 1 and abs(lon - c.center[1]) < 1
+                for c in cities.all_cities().values()
+            ):
+                return lat, lon, f"{lat:.5f}, {lon:.5f}"
+        from floodline.assistant import Tools, fold
+
+        key = f" {re.sub(r'[^a-z0-9]+', ' ', fold(text))} "
+        tools = Tools(city, self.store, dict, lambda *a: {})
+
+        def said(name: str) -> bool:
+            folded = re.sub(r"[^a-z0-9]+", " ", fold(name)).strip()
+            return len(folded) >= 4 and f" {folded} " in key
+
+        for names, (lat, lon) in tools._landmarks():
+            if any(said(n) for n in names):
+                return lat, lon, names[0]
+        streets = sorted(
+            {seg.name for seg in tools.roads.segments.values() if seg.name and said(seg.name)},
+            key=len,
+            reverse=True,
+        )
+        if streets:
+            segs = [seg for seg in tools.roads.segments.values() if seg.name == streets[0]]
+            (lon1, lat1), (lon2, lat2) = segs[len(segs) // 2].coords
+            return (lat1 + lat2) / 2, (lon1 + lon2) / 2, streets[0]
+        return None
+
     def _words(self, sender: str, lang: str, words: str) -> None:
         if not words:
             return
@@ -286,6 +330,25 @@ class ChatIntake:
             s.at = time.time()
             self.send_text(sender, TEXT[lang]["help"])
             return
+        if report.extra.get("location_pending"):
+            found = self._place_in(words, cities.get(report.city))
+            if found:
+                lat, lon, name = found
+                s.lat, s.lon = lat, lon
+                report.lat, report.lon = lat, lon
+                report.extra["location_pending"] = False
+                if COORDS.search(words):  # a bare position, nothing to add to the report
+                    self.store.save(report)
+                    self.publish("report.updated", report.public())
+                else:
+                    self._attach(report, words)
+                self.send_text(sender, TEXT[lang]["located_at"].format(place=name))
+                return
+        self._attach(report, words)
+        self.send_text(sender, TEXT[lang]["words"].format(words=words[:200]))
+
+    def _attach(self, report: StoredReport, words: str) -> None:
+        """Add the sender's words to the report and re-run triage with them."""
         from floodline.triage import score, triage
 
         report.transcript = ((report.transcript or "") + " " + words).strip()
@@ -304,4 +367,3 @@ class ChatIntake:
             report.triage = {"priority": priority, "reasons": why, "facts": None}
         self.store.save(report)
         self.publish("report.updated", report.public())
-        self.send_text(sender, TEXT[lang]["words"].format(words=words[:200]))

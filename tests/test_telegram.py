@@ -106,3 +106,20 @@ def test_secret_header():
     assert check_secret("s", "s")
     assert not check_secret("s", "x")
     assert not check_secret("", "")
+
+
+def test_typed_street_or_map_link_places_the_report(tmp_path):
+    tg, api, events = bot(tmp_path, language="en")
+    tg.handle_update(update(1, photo=[{"file_id": "p"}]))
+    tg.handle_update(update(2, text="Le Loi street, near the bridge"))
+    kind, report = events[-1]
+    assert kind == "report.updated" and report["location_pending"] is False
+    assert abs(report["lat"] - 16.459) < 0.01
+    assert "Lê Lợi" in api.texts()[-1]
+
+    tg, api, events = bot(tmp_path, language="en")
+    tg.handle_update(update(3, photo=[{"file_id": "p"}]))
+    tg.handle_update(update(4, text="water is 0.50, 0.60 m here"))  # not a position
+    assert events[-1][1]["location_pending"] is True
+    tg.handle_update(update(5, text="https://www.google.com/maps/@16.4712,107.5866,17z"))
+    assert (events[-1][1]["lat"], events[-1][1]["lon"]) == (16.4712, 107.5866)
