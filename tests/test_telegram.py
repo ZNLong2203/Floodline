@@ -116,7 +116,7 @@ def test_typed_street_or_map_link_places_the_report(tmp_path):
     assert kind == "report.updated" and report["location_pending"] is False
     assert abs(report["lat"] - 16.459) < 0.01
     assert "Lê Lợi" in api.texts()[-1]
-    assert "Le Loi" not in report["note"] and not report["transcript"]  # a place, not a message
+    assert "near the bridge" in report["note"] and not report["transcript"]  # text, not voice
 
     tg, api, events = bot(tmp_path, language="en")
     tg.handle_update(update(3, photo=[{"file_id": "p"}]))
@@ -124,3 +124,11 @@ def test_typed_street_or_map_link_places_the_report(tmp_path):
     assert events[-1][1]["location_pending"] is True
     tg.handle_update(update(5, text="https://www.google.com/maps/@16.4712,107.5866,17z"))
     assert (events[-1][1]["lat"], events[-1][1]["lon"]) == (16.4712, 107.5866)
+
+
+def test_a_bare_street_name_only_moves_the_report(tmp_path):
+    tg, _, events = bot(tmp_path, language="en")
+    tg.handle_update(update(1, photo=[{"file_id": "p"}]))
+    tg.handle_update(update(2, text="Le Loi street"))
+    report = events[-1][1]
+    assert report["location_pending"] is False and not report["note"]
