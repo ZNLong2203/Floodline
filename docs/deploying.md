@@ -11,7 +11,7 @@ FLOODLINE_MODEL_MODE=replay uv run floodline seed --city valencia
 
 # 2. build with Cloud Build and deploy to Cloud Run
 gcloud run deploy floodline --source . --region us-central1 \
-  --memory 2Gi --cpu 2 --min-instances 0 --max-instances 1 --timeout 3600 \
+  --memory 2Gi --cpu 2 --min-instances 1 --cpu-boost --max-instances 1 --timeout 3600 \
   --set-env-vars FLOODLINE_MODEL_MODE=replay
 ```
 
