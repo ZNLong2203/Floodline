@@ -34,6 +34,9 @@ class Settings(BaseSettings):
     )
     cassette_dir: Path = Field(DATA / "cassettes", validation_alias=_env("FLOODLINE_CASSETTES"))
     state_dir: Path = Field(ROOT / "var", validation_alias=_env("FLOODLINE_STATE_DIR"))
+    # Public demo: Replay re-plays the stored night instead of re-analysing it, and Clear is off,
+    # so one visitor can't empty the map for the next.
+    demo_lock: bool = Field(False, validation_alias=_env("FLOODLINE_DEMO_LOCK"))
 
 
 @lru_cache

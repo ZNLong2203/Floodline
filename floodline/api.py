@@ -312,6 +312,8 @@ async def demo_seed(reset: bool = True, city: str | None = None) -> dict[str, An
         raise HTTPException(404, f"{place.name} has no scenario")
     if _seeding.locked():
         raise HTTPException(409, "already seeding")
+    if settings().demo_lock:
+        return await _replay_stored(place)
     async with _seeding:
         if reset:
             store.clear(place.id)
@@ -332,8 +334,23 @@ async def demo_seed(reset: bool = True, city: str | None = None) -> dict[str, An
     return {"created": len(created)}
 
 
+async def _replay_stored(place: cities.City) -> dict[str, Any]:
+    """Re-play the stored scenario over SSE, oldest first, without re-analysing or deleting."""
+    async with _seeding:
+        reports = [r for r in store.all(place.id) if r.extra.get("scenario")]
+        reports.sort(key=lambda r: r.effective_at)
+        _publish("reports.reset", {"city": place.id})
+        for n, report in enumerate(reports, start=1):
+            await asyncio.sleep(0.9)
+            payload = {**report.public(), "seed": {"index": n, "total": len(reports)}}
+            _publish("report.created", payload)
+    return {"created": len(reports), "replayed": True}
+
+
 @app.post("/api/demo/reset")
 def demo_reset(city: str | None = None) -> dict[str, Any]:
+    if settings().demo_lock:
+        raise HTTPException(403, "Clearing is turned off on the public demo; Replay re-plays it.")
     place = _city(city)
     store.clear(place.id)
     _publish("reports.reset", {"city": place.id})
@@ -389,6 +406,7 @@ def health() -> dict[str, Any]:
         "ok": True,
         "mode": cfg.model_mode,
         "has_key": bool(cfg.model_api_key),
+        "demo_lock": cfg.demo_lock,
         "reports": len(store.reports),
         "cities": list(cities.all_cities()),
     }
