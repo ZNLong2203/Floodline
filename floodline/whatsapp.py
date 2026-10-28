@@ -235,6 +235,14 @@ class WhatsApp:
                     len(messages),
                     len(statuses),
                 )
+                for st in statuses:
+                    errors = [f"{e.get('code')} {e.get('title')}" for e in st.get("errors", [])]
+                    log.info(
+                        "whatsapp status %s to …%s %s",
+                        st.get("status"),
+                        str(st.get("recipient_id", ""))[-4:],
+                        "; ".join(errors),
+                    )
                 for message in messages:
                     if self.handle(message):
                         handled += 1
