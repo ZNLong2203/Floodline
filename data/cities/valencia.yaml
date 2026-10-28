@@ -39,3 +39,9 @@ presets:
     name_local: Ayuntamiento de Alfafar → Hospital Universitario Doctor Peset
     from: [39.42269, -0.39066]
     to: [39.45321, -0.39446]
+# Recorded photos a visitor can send from /report on the keyless demo
+samples:
+  - valencia/photos/xirivella-2024-boy-wading-car-wake-01.jpg
+  - valencia/photos/catarroja-2024-street-people-wading-cars-01.jpg
+  - valencia/photos/alaquas-2024-cars-muddy-water-01.jpg
+  - valencia/photos/alfafar-2024-flooded-street-submerged-car-01.jpg

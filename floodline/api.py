@@ -111,20 +111,32 @@ async def create_report(
         image, overlay, clip = result.image_jpeg, result.overlay_jpeg, None
 
     transcript = None
+    warnings: list[str] = []
     if audio is not None:
         from floodline.voice import transcribe_upload
 
-        transcript = await asyncio.to_thread(
-            transcribe_upload, client, await audio.read(), place.language
-        )
+        try:
+            transcript = await asyncio.to_thread(
+                transcribe_upload, client, await audio.read(), place.language
+            )
+        except CassetteMissingError:
+            warnings.append("voice note not transcribed: this demo replays recorded answers only")
     elif video is not None and result.spark_video.get("speech"):
         transcript = result.spark_video["speech"]
 
+    from floodline.triage import score
     from floodline.triage import triage as run_triage
 
-    triage = await asyncio.to_thread(
-        run_triage, client, result, note, transcript, local_language=place.language
-    )
+    try:
+        triage = await asyncio.to_thread(
+            run_triage, client, result, note, transcript, local_language=place.language
+        )
+    except CassetteMissingError:
+        # The measurement replayed but these words were never recorded: rank by depth alone.
+        est = result.estimate
+        priority, why = score({}, est.mean_m if est else None)
+        triage = {"priority": priority, "reasons": why, "facts": None}
+        warnings.append("message not read: this demo replays recorded answers only")
     report = StoredReport(
         id=store.new_id(),
         lat=lat,
@@ -136,6 +148,7 @@ async def create_report(
         transcript=transcript,
         source=source,
         city=place.id,
+        extra={"warnings": warnings} if warnings else {},
     )
     store.save(report, image=image, overlay=overlay, clip=clip)
     _publish("report.created", report.public())
@@ -325,6 +338,23 @@ def demo_reset(city: str | None = None) -> dict[str, Any]:
     store.clear(place.id)
     _publish("reports.reset", {"city": place.id})
     return {"ok": True}
+
+
+@app.get("/api/samples")
+def samples(city: str | None = None) -> list[dict[str, Any]]:
+    """Recorded photos a visitor can send from /report when the server has no API key."""
+    place = _city(city)
+    return [{"path": p, "url": f"/api/demo-media/{p}"} for p in place.samples]
+
+
+@app.get("/api/demo-media/{path:path}")
+def demo_media(path: str) -> FileResponse:
+    root = (DATA / "demo").resolve()
+    target = (root / path).resolve()
+    if root not in target.parents or not target.is_file():
+        raise HTTPException(404)
+    media = "video/mp4" if target.suffix == ".mp4" else "image/jpeg"
+    return FileResponse(target, media_type=media)
 
 
 @app.get("/api/attribution")

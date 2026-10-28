@@ -1,0 +1,120 @@
+{
+ "request": {
+  "messages": [
+   {
+    "content": "You extract facts from flood help requests for rescue coordinators, who may not speak the resident's language. Report only what the resident said or the photo facts show; never invent people or needs. Keep street names and house numbers exactly as written.",
+    "role": "system"
+   },
+   {
+    "content": [
+     {
+      "text": "Resident's message (may be empty):\n(none)\n\nWhat the photo showed: {'people_in_photo': {'children_or_elderly': False, 'count': 5, 'on_roof_or_upper_floor': False, 'signalling_for_help': False}, 'depth_m': [0.0, 3.4], 'photo_summary': 'Nhóm 5 người mặc áo phao đang chèo thuyền chở hàng cứu trợ qua vùng đồng ruộng bị ngập sâu, không có người mắc kẹt cần cứu khẩn.'}\n\nExtract the facts. language: the ISO 639-1 code of the resident's message, e.g. vi, es, en (the code for Vietnamese if there is none). message_en: the message translated to English, faithfully, empty if there is none. summary_en / summary_local: one line for the coordinator, in English and in Vietnamese. dispatch_en / dispatch_local: a short message a coordinator could send to a rescue team, including the depth range, in English and in Vietnamese.",
+      "type": "text"
+     }
+    ],
+    "role": "user"
+   }
+  ],
+  "model": "muse-spark-1.3",
+  "reasoning_effort": "low",
+  "response_format": {
+   "json_schema": {
+    "name": "flood_triage",
+    "schema": {
+     "additionalProperties": false,
+     "properties": {
+      "address_hint": {
+       "type": "string"
+      },
+      "dispatch_en": {
+       "type": "string"
+      },
+      "dispatch_local": {
+       "type": "string"
+      },
+      "injury_or_medical": {
+       "type": "boolean"
+      },
+      "language": {
+       "type": "string"
+      },
+      "message_en": {
+       "type": "string"
+      },
+      "needs": {
+       "items": {
+        "enum": [
+         "evacuation",
+         "boat",
+         "medical",
+         "food",
+         "water",
+         "power",
+         "info"
+        ],
+        "type": "string"
+       },
+       "type": "array"
+      },
+      "people_count": {
+       "type": "integer"
+      },
+      "summary_en": {
+       "type": "string"
+      },
+      "summary_local": {
+       "type": "string"
+      },
+      "trapped": {
+       "type": "boolean"
+      },
+      "vulnerable": {
+       "items": {
+        "enum": [
+         "elderly",
+         "child",
+         "infant",
+         "pregnant",
+         "disabled",
+         "sick"
+        ],
+        "type": "string"
+       },
+       "type": "array"
+      },
+      "water_rising": {
+       "enum": [
+        "yes",
+        "no",
+        "unknown"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "people_count",
+      "vulnerable",
+      "injury_or_medical",
+      "water_rising",
+      "trapped",
+      "needs",
+      "address_hint",
+      "language",
+      "message_en",
+      "summary_en",
+      "summary_local",
+      "dispatch_en",
+      "dispatch_local"
+     ],
+     "type": "object"
+    },
+    "strict": true
+   },
+   "type": "json_schema"
+  }
+ },
+ "response": {
+  "content": "{\"address_hint\": \"\", \"dispatch_en\": \"No emergency rescue needed: 5 people with relief boat in flooded fields, depth 0.0-3.4m. Monitor only.\", \"dispatch_local\": \"Kh\\u00f4ng c\\u1ea7n c\\u1ee9u kh\\u1ea9n: 5 ng\\u01b0\\u1eddi \\u0111\\u00e3 c\\u00f3 thuy\\u1ec1n ch\\u1edf h\\u00e0ng c\\u1ee9u tr\\u1ee3 \\u1edf v\\u00f9ng \\u0111\\u1ed3ng ng\\u1eadp, \\u0111\\u1ed9 s\\u00e2u 0,0-3,4m. Ch\\u1ec9 c\\u1ea7n theo d\\u00f5i.\", \"injury_or_medical\": false, \"language\": \"vi\", \"message_en\": \"\", \"needs\": [], \"people_count\": 5, \"summary_en\": \"5 adults in life jackets transporting relief goods by boat across flooded fields (0.0-3.4m), not trapped and not signalling for help.\", \"summary_local\": \"5 ng\\u01b0\\u1eddi m\\u1eb7c \\u00e1o phao \\u0111ang ch\\u00e8o thuy\\u1ec1n ch\\u1edf h\\u00e0ng c\\u1ee9u tr\\u1ee3 qua \\u0111\\u1ed3ng ru\\u1ed9ng ng\\u1eadp s\\u00e2u (0,0-3,4m), kh\\u00f4ng m\\u1eafc k\\u1eb9t, kh\\u00f4ng c\\u1ea7n c\\u1ee9u kh\\u1ea9n.\", \"trapped\": false, \"vulnerable\": [], \"water_rising\": \"unknown\"}",
+  "model": "muse-spark-1.3"
+ }
+}

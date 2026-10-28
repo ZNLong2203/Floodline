@@ -23,3 +23,9 @@ presets:
     name_local: Ga Huế → Ngọ Môn
     from: [16.4570, 107.5781]
     to: [16.4685, 107.5785]
+# Recorded photos a visitor can send from /report on the keyless demo
+samples:
+  - photos/quangngai-2013-girl-wading-01.jpg
+  - photos/quangngai-2013-scooters-pushed-school-01.jpg
+  - photos/hanoi-2008-people-thigh-deep-doorway-01.jpg
+  - photos/hue-2020-boat-relief-01.jpg

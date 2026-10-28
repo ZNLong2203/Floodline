@@ -36,6 +36,7 @@ class City:
     presets: list[dict] = field(default_factory=list)
     person_height_m: tuple[float, float] | None = None
     sources: list[str] = field(default_factory=list)
+    samples: list[str] = field(default_factory=list)  # paths under data/demo
 
     def public(self) -> dict:
         return {
@@ -48,6 +49,7 @@ class City:
             "story": self.story,
             "presets": self.presets,
             "has_scenario": self.scenario_file is not None,
+            "samples": len(self.samples),
         }
 
     @property
@@ -71,6 +73,7 @@ def _load(path: Path) -> City:
         presets=raw.get("presets", []),
         person_height_m=tuple(height) if height else None,
         sources=raw.get("sources", []),
+        samples=raw.get("samples", []),
     )
 
 

@@ -1,0 +1,120 @@
+{
+ "request": {
+  "messages": [
+   {
+    "content": "You extract facts from flood help requests for rescue coordinators, who may not speak the resident's language. Report only what the resident said or the photo facts show; never invent people or needs. Keep street names and house numbers exactly as written.",
+    "role": "system"
+   },
+   {
+    "content": [
+     {
+      "text": "Resident's message (may be empty):\n(none)\n\nWhat the photo showed: {'people_in_photo': {'children_or_elderly': False, 'count': 4, 'on_roof_or_upper_floor': False, 'signalling_for_help': False}, 'depth_m': [0.06, 0.72], 'photo_summary': 'Sân nhà ngập khoảng đầu gối đến ngang đùi, có 4 người đang lội nước nhưng không có dấu hiệu kêu cứu khẩn cấp.'}\n\nExtract the facts. language: the ISO 639-1 code of the resident's message, e.g. vi, es, en (the code for Vietnamese if there is none). message_en: the message translated to English, faithfully, empty if there is none. summary_en / summary_local: one line for the coordinator, in English and in Vietnamese. dispatch_en / dispatch_local: a short message a coordinator could send to a rescue team, including the depth range, in English and in Vietnamese.",
+      "type": "text"
+     }
+    ],
+    "role": "user"
+   }
+  ],
+  "model": "muse-spark-1.3",
+  "reasoning_effort": "low",
+  "response_format": {
+   "json_schema": {
+    "name": "flood_triage",
+    "schema": {
+     "additionalProperties": false,
+     "properties": {
+      "address_hint": {
+       "type": "string"
+      },
+      "dispatch_en": {
+       "type": "string"
+      },
+      "dispatch_local": {
+       "type": "string"
+      },
+      "injury_or_medical": {
+       "type": "boolean"
+      },
+      "language": {
+       "type": "string"
+      },
+      "message_en": {
+       "type": "string"
+      },
+      "needs": {
+       "items": {
+        "enum": [
+         "evacuation",
+         "boat",
+         "medical",
+         "food",
+         "water",
+         "power",
+         "info"
+        ],
+        "type": "string"
+       },
+       "type": "array"
+      },
+      "people_count": {
+       "type": "integer"
+      },
+      "summary_en": {
+       "type": "string"
+      },
+      "summary_local": {
+       "type": "string"
+      },
+      "trapped": {
+       "type": "boolean"
+      },
+      "vulnerable": {
+       "items": {
+        "enum": [
+         "elderly",
+         "child",
+         "infant",
+         "pregnant",
+         "disabled",
+         "sick"
+        ],
+        "type": "string"
+       },
+       "type": "array"
+      },
+      "water_rising": {
+       "enum": [
+        "yes",
+        "no",
+        "unknown"
+       ],
+       "type": "string"
+      }
+     },
+     "required": [
+      "people_count",
+      "vulnerable",
+      "injury_or_medical",
+      "water_rising",
+      "trapped",
+      "needs",
+      "address_hint",
+      "language",
+      "message_en",
+      "summary_en",
+      "summary_local",
+      "dispatch_en",
+      "dispatch_local"
+     ],
+     "type": "object"
+    },
+    "strict": true
+   },
+   "type": "json_schema"
+  }
+ },
+ "response": {
+  "content": "{\"address_hint\": \"\", \"dispatch_en\": \"Check yard with water depth 0.06-0.72m, 4 people wading, no emergency signal observed.\", \"dispatch_local\": \"Ki\\u1ec3m tra s\\u00e2n ng\\u1eadp 0,06-0,72m, 4 ng\\u01b0\\u1eddi \\u0111ang l\\u1ed9i n\\u01b0\\u1edbc, ch\\u01b0a th\\u1ea5y d\\u1ea5u hi\\u1ec7u k\\u00eau c\\u1ee9u kh\\u1ea9n c\\u1ea5p.\", \"injury_or_medical\": false, \"language\": \"vi\", \"message_en\": \"\", \"needs\": [], \"people_count\": 4, \"summary_en\": \"4 people wading in yard water knee to thigh deep (~0.06-0.72m), no distress signal.\", \"summary_local\": \"S\\u00e2n ng\\u1eadp kho\\u1ea3ng \\u0111\\u1ea7u g\\u1ed1i \\u0111\\u1ebfn ngang \\u0111\\u00f9i (~0,06-0,72m), c\\u00f3 4 ng\\u01b0\\u1eddi \\u0111ang l\\u1ed9i n\\u01b0\\u1edbc, kh\\u00f4ng c\\u00f3 d\\u1ea5u hi\\u1ec7u k\\u00eau c\\u1ee9u kh\\u1ea9n c\\u1ea5p.\", \"trapped\": false, \"vulnerable\": [], \"water_rising\": \"unknown\"}",
+  "model": "muse-spark-1.3"
+ }
+}
