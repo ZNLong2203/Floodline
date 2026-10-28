@@ -2,7 +2,8 @@
 .env
 .venv
 private
-var
+var/*
+!var/reports
 data/datasets
 data/cache
 evals/runs

@@ -26,8 +26,10 @@ ENV FLOODLINE_MODEL_MODE=replay \
     FLOODLINE_STATE_DIR=/app/var \
     PATH="/app/.venv/bin:$PATH" \
     PORT=8080
-# Load both demo scenarios into the image, from the recorded answers.
-RUN floodline seed --city hue && floodline seed --city valencia
+# The demo scenarios, seeded beforehand from the recorded answers with
+#   floodline seed --city hue && floodline seed --city valencia
+# (seeding the clips takes minutes on a one-CPU build machine, so it isn't done here).
+COPY var/reports var/reports
 
 EXPOSE 8080
 CMD ["sh", "-c", "uvicorn floodline.api:app --host 0.0.0.0 --port ${PORT} --proxy-headers"]
