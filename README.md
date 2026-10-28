@@ -5,6 +5,12 @@
 
 **Every street, measured from the photos people already send.**
 
+**Live demo: https://floodline-193992092607.us-central1.run.app** — the coordinator console, with
+[/report](https://floodline-193992092607.us-central1.run.app/report) for residents. It replays
+recorded model answers, so it needs no key: explore Huế and Valencia, plan routes, try the example
+questions in **Ask**, and send a sample photo from `/report`. The first visit can take ~15 s while
+the server wakes up.
+
 When a city floods, residents send photos, clips and voice calls for help by the thousand, in their
 own language. Rescue coordinators read them one by one, and still can't answer the question that
 decides who gets reached tonight: *which streets can a scooter, a car or a rescue truck still get
