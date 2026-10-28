@@ -5,7 +5,7 @@ Anyone can open the bot and report a flood; no app beyond Telegram.
 | They send | Floodline replies | On the coordinators' map |
 |---|---|---|
 | a photo or a 10–30 s clip | "measuring…", then the overlay and a verdict per vehicle | a new report (`source: telegram`) |
-| their location (one-tap button) | "your report is now at your location" | the report moves there |
+| their location (one-tap button, phone apps), or a typed street, landmark, map link or "lat, lon" | "your report is now at …" | the report moves there |
 | a voice note or text | "added to your report: …" | transcript added, triage re-run |
 
 The bot replies in English. Set `TELEGRAM_LANGUAGE=auto` to follow each sender's Telegram language
