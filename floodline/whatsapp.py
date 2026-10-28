@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import hashlib
 import hmac
+import logging
 import time
 from collections import deque
 from collections.abc import Callable
@@ -28,6 +29,7 @@ from floodline.config import Settings
 from floodline.meta.client import ModelClient
 from floodline.store import Store, StoredReport
 
+log = logging.getLogger("floodline.whatsapp")
 SESSION_MINUTES = 30
 ICONS = {"pedestrian": "🚶", "scooter": "🛵", "car": "🚗", "suv": "🚙", "truck": "🚚"}
 
@@ -225,7 +227,15 @@ class WhatsApp:
         handled = 0
         for entry in payload.get("entry", []):
             for change in entry.get("changes", []):
-                for message in change.get("value", {}).get("messages", []):
+                value = change.get("value", {})
+                messages, statuses = value.get("messages", []), value.get("statuses", [])
+                log.info(
+                    "whatsapp %s: %d message(s), %d status(es)",
+                    change.get("field"),
+                    len(messages),
+                    len(statuses),
+                )
+                for message in messages:
                     if self.handle(message):
                         handled += 1
         return handled
@@ -235,10 +245,24 @@ class WhatsApp:
         if not sender or mid in self.seen:
             return False
         self.seen[mid] = time.time()
-        if self.allowed and sender not in self.allowed:
+        kind = message.get("type")
+        allowed = not self.allowed or sender in self.allowed
+        log.info(
+            "whatsapp message %s from …%s: %s",
+            kind,
+            sender[-4:],
+            "ok" if allowed else "not allowed",
+        )
+        if not allowed:
             return False
         lang, _ = language_and_city(sender)
-        kind = message.get("type")
+        if kind == "document" and message["document"].get("mime_type", "").startswith(
+            ("image/", "video/")
+        ):
+            # Desktop WhatsApp often sends a dropped picture or clip as a file.
+            doc = message["document"]
+            kind = "video" if doc["mime_type"].startswith("video/") else "image"
+            message = {**message, "type": kind, kind: doc}
         if kind in ("image", "video"):
             self._media_report(
                 sender,

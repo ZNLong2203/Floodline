@@ -100,3 +100,11 @@ def test_signature_and_language():
     assert not verify_signature("", body, sig)
     assert language_and_city("34600000000") == ("es", "valencia")
     assert language_and_city("4479000000")[0] == "en"
+
+
+def test_picture_sent_as_a_document_is_measured(tmp_path):
+    wa, _, events = channel(tmp_path)
+    wa.handle(
+        message("w9", "document", {"id": "m1", "mime_type": "image/jpeg", "filename": "flood.jpg"})
+    )
+    assert events and events[-1][0] == "report.created"

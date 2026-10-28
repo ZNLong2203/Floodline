@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import logging
 import time
 from pathlib import Path
 from typing import Any
@@ -29,6 +30,7 @@ from floodline.meta.client import CassetteMissingError, ModelClient
 from floodline.pipeline import analyse
 from floodline.store import Store, StoredReport
 
+logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
 app = FastAPI(title="Floodline", version="0.2.0")
 store = Store(settings().state_dir / "reports")
 client = ModelClient()
