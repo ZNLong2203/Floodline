@@ -458,8 +458,10 @@ def health() -> dict[str, Any]:
     return {
         "ok": True,
         "mode": cfg.model_mode,
-        "has_key": bool(cfg.model_api_key),
+        # Whether the web app analyses new uploads; WhatsApp may be live while the web replays.
+        "has_key": bool(cfg.model_api_key) and cfg.model_mode != "replay",
         "demo_lock": cfg.demo_lock,
+        "whatsapp": bool(cfg.whatsapp_token and cfg.whatsapp_phone_number_id),
         "reports": len(store.reports),
         "cities": list(cities.all_cities()),
     }
