@@ -27,7 +27,7 @@ class FakeApi:
         return [d["text"] for m, d in self.calls if m == "sendMessage"]
 
 
-def bot(tmp_path, allowed="", photo=SAMPLE):
+def bot(tmp_path, allowed="", photo=SAMPLE, language="auto"):
     cfg = Settings(
         _env_file=None,
         MODEL_API_KEY="",
@@ -36,6 +36,7 @@ def bot(tmp_path, allowed="", photo=SAMPLE):
         TELEGRAM_BOT_TOKEN="t",
         TELEGRAM_WEBHOOK_SECRET="s",
         TELEGRAM_ALLOWED=allowed,
+        TELEGRAM_LANGUAGE=language,
     )
     events: list = []
     api = FakeApi(photo)
@@ -66,6 +67,14 @@ def test_photo_gets_overlay_verdict_and_location_button(tmp_path):
     assert last["reply_markup"]["keyboard"][0][0]["request_location"] is True
     kind, report = events[-1]
     assert kind == "report.created" and report["source"] == "telegram" and report["city"] == "hue"
+
+
+def test_english_by_default_whatever_the_senders_language(tmp_path):
+    tg, api, events = bot(tmp_path, language="en")
+    tg.handle_update(update(1, lang="vi", photo=[{"file_id": "p"}]))
+    assert api.texts()[0].startswith("Got it")
+    assert "Scooter:" in api.texts()[-1]
+    assert events[-1][1]["city"] == "hue"
 
 
 def test_shared_location_moves_the_report_and_spanish_goes_to_valencia(tmp_path):

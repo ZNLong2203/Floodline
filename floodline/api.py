@@ -31,6 +31,8 @@ from floodline.pipeline import analyse
 from floodline.store import Store, StoredReport
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(name)s: %(message)s")
+# httpx logs every request URL at INFO, and Telegram puts the bot token in the URL.
+logging.getLogger("httpx").setLevel(logging.WARNING)
 app = FastAPI(title="Floodline", version="0.2.0")
 store = Store(settings().state_dir / "reports")
 client = ModelClient()

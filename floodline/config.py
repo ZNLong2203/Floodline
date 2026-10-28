@@ -59,6 +59,9 @@ class Settings(BaseSettings):
     )  # chat ids; empty = all
     telegram_hourly_limit: int = Field(20, validation_alias=_env("TELEGRAM_HOURLY_LIMIT"))
     telegram_daily_limit: int = Field(150, validation_alias=_env("TELEGRAM_DAILY_LIMIT"))
+    telegram_language: str = Field(
+        "en", validation_alias=_env("TELEGRAM_LANGUAGE")
+    )  # en / vi / es, or "auto" to follow each sender's Telegram language
     telegram_model_mode: Literal["live", "record", "replay"] = Field(
         "live", validation_alias=_env("TELEGRAM_MODEL_MODE")
     )

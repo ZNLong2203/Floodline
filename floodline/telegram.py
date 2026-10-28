@@ -1,7 +1,7 @@
 """Telegram intake: anyone can open the bot and report, no app to install beyond Telegram.
 
-The bot speaks the sender's Telegram language (Vietnamese, Spanish, otherwise
-English), offers a one-tap "share my location" button, and drops the report on
+The bot speaks English by default; with TELEGRAM_LANGUAGE=auto it follows the
+sender's Telegram language (Vietnamese, Spanish, otherwise English). It offers a one-tap "share my location" button, and drops the report on
 the coordinators' map. Webhook calls must carry the secret given to setWebhook.
 The bot token is part of every request URL, so errors are logged by method and
 status only, never with the URL or the exception text.
@@ -160,7 +160,9 @@ class Telegram(ChatIntake):
         if not chat or (self.allowed and chat not in self.allowed):
             log.info("telegram update from a chat that is not allowed")
             return False
-        code = (msg.get("from", {}).get("language_code") or "")[:2]
+        code = self.cfg.telegram_language
+        if code == "auto":
+            code = (msg.get("from", {}).get("language_code") or "")[:2]
         lang = self.langs.setdefault(chat, code if code in TEXT else "en")
         kind = next(
             (
