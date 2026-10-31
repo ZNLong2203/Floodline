@@ -1,8 +1,7 @@
 # WhatsApp intake
 
-Residents report through WhatsApp, with no app to install. It shares its logic with the
-[Telegram bot](telegram.md) (`floodline/chat.py`); the public demo runs on Telegram while the
-WhatsApp Business account behind our test number is under review.
+The WhatsApp Cloud API adapter shares its intake logic with the
+[Telegram bot](telegram.md) (`floodline/chat.py`). The public demo uses Telegram.
 
 | They send | Floodline replies | On the coordinators' map |
 |---|---|---|
