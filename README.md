@@ -153,14 +153,14 @@ uv run floodline serve                      # then send a photo from /report on 
 
 ```
 floodline/      pipeline, models, geometry, calibration, fusion, routing, triage, API,
-                Telegram and WhatsApp intake
+                Telegram intake
 evals/          evaluation harness and cross-validated calibration
 scripts/        build the street extracts and the catalog, push secrets for deployment
 data/           catalog of sizes and limits (sourced), calibration, cities (Huế, Valencia),
                 their streets (OSM), demo photos and clips (Wikimedia Commons), scenarios,
                 recorded model answers
 web/            coordinator console and resident page (React, MapLibre)
-docs/           architecture, estimation, evaluation, triage, Telegram, WhatsApp, deploying
+docs/           architecture, estimation, evaluation, triage, Telegram, deploying
 ```
 
 ## Credits
